@@ -299,15 +299,16 @@ for(i=0;i<scm;i++){
 
 int test_BLS12_G1_SCM_Jacobian(int scm){
     int i,n=0;
-    float scm_time=0,scm_lazy_time=0;
+    float scm_time=0,scm_lazy_time=0,scm_tble_time=0;
     struct timeval tv_A,tv_B;
     printf("====================================================================================\n");
     printf("BLS12_G1_SCM test\n");
-    EFp12 A_EFp12,B_EFp12,test1,test2;
+    EFp12 A_EFp12,B_EFp12,test1,test2,test3;
     EFp12_init(&A_EFp12);
     EFp12_init(&B_EFp12);
     EFp12_init(&test1);
     EFp12_init(&test2);
+    EFp12_init(&test3);
     mpz_t scalar;
     mpz_init(scalar);
     
@@ -330,17 +331,23 @@ for(i=0;i<scm;i++){
     gettimeofday(&tv_B,NULL);
     scm_lazy_time+=timedifference_msec(tv_A,tv_B);
 
+    gettimeofday(&tv_A,NULL);
+    BLS12_EFp12_G1_SCM_2split_JSF_Jacobian_table(&test3,&A_EFp12,scalar);
+    gettimeofday(&tv_B,NULL);
+    scm_tble_time+=timedifference_msec(tv_A,tv_B);
 
-    if(EFp12_cmp(&test1,&test2)!=0){
+    if(EFp12_cmp(&test1,&test2)!=0 || EFp12_cmp(&test1,&test3)!=0){
         printf("failed!\n\n");
 	EFp12_printf(&test1,"");
 	EFp12_printf(&test2,"\n");
+	EFp12_printf(&test3,"\n");
 	printf("\n\n");
 	return 1;
     }
 }
-    printf("BLS12 G1 SCM.               : %.4f[ms]\n",scm_time/scm);
-    printf("BLS12 G1 SCM Jacobian lazy. : %.4f[ms]\n",scm_lazy_time/scm);
+    printf("BLS12 G1 SCM.                : %.4f[ms]\n",scm_time/scm);
+    printf("BLS12 G1 SCM Jacobian lazy.  : %.4f[ms]\n",scm_lazy_time/scm);
+    printf("BLS12 G1 SCM Jacobian table. : %.4f[ms]\n",scm_tble_time/scm);
 
     return 0;
 }
@@ -348,20 +355,23 @@ for(i=0;i<scm;i++){
 
 int test_BLS12_G2_SCM_Jacobian(int scm){
     int i,n=0;
-    float scm_time=0,scm_lazy_time=0;
+    float scm_time=0,scm_lazy_time=0,scm_lazy_time3=0,scm_tble_time=0;
     struct timeval tv_A,tv_B;
     printf("====================================================================================\n");
     printf("BLS12_G2_SCM test\n");
-    EFp12 A_EFp12,B_EFp12,test1,test2;
+    EFp12 A_EFp12,B_EFp12,test1,test2,test3,test4;
     EFp12_init(&A_EFp12);
     EFp12_init(&B_EFp12);
     EFp12_init(&test1);
     EFp12_init(&test2);
+    EFp12_init(&test3);
+    EFp12_init(&test4);
     mpz_t scalar;
     mpz_init(scalar);
     
     gmp_randinit_default (state);
     gmp_randseed_ui(state,(unsigned long)time(NULL));
+    gmp_randseed_ui(state,1);
 
 for(i=0;i<scm;i++){
 
@@ -369,27 +379,32 @@ for(i=0;i<scm;i++){
     EFp12_generate_G2(&A_EFp12);
 
     gettimeofday(&tv_A,NULL);
-    BLS12_EFp12_G2_SCM_4split_lazy(&test1,&A_EFp12,scalar);
+    BLS12_EFp12_G2_SCM_4split(&test1,&A_EFp12,scalar);
     gettimeofday(&tv_B,NULL);
     scm_time+=timedifference_msec(tv_A,tv_B);
-
 
     gettimeofday(&tv_A,NULL);
     BLS12_EFp12_G2_SCM_4split_Jacobian_lazy(&test2,&A_EFp12,scalar);
     gettimeofday(&tv_B,NULL);
     scm_lazy_time+=timedifference_msec(tv_A,tv_B);
 
+    gettimeofday(&tv_A,NULL);
+    BLS12_EFp12_G2_SCM_4split_Jacobian_table(&test4,&A_EFp12,scalar);
+    gettimeofday(&tv_B,NULL);
+    scm_tble_time+=timedifference_msec(tv_A,tv_B);
 
-    if(EFp12_cmp(&test1,&test2)!=0){
+if(EFp12_cmp(&test1,&test2)!=0 || EFp12_cmp(&test1,&test4)!=0){
         printf("failed!\n\n");
 	EFp12_printf(&test1,"");
-	EFp12_printf(&test2,"\n");
+	EFp12_printf(&test2,"\n\n");
+	EFp12_printf(&test4,"\n\n");
 	printf("\n\n");
 	return 1;
     }
 }
-    printf("BLS12 G2 SCM.               : %.4f[ms]\n",scm_time/scm);
-    printf("BLS12 G2 SCM Jacobian lazy. : %.4f[ms]\n",scm_lazy_time/scm);
+    printf("BLS12 G2 SCM.                : %.4f[ms]\n",scm_time/scm);
+    printf("BLS12 G2 SCM Jacobian lazy.  : %.4f[ms]\n",scm_lazy_time/scm);
+    printf("BLS12 G2 SCM Jacobian table. : %.4f[ms]\n",scm_tble_time/scm);
 
     return 0;
 }

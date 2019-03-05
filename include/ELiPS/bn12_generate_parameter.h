@@ -5,10 +5,10 @@
 #include <ELiPS/Fp2.h>
 #include <ELiPS/bn12_generate_curve.h>
 
-void BN12_get_epsilon();
-void BN12_get_Two_inv();
-void BN12_set_basis();
-void BN12_set_frobenius_constant();
-void BN12_set_curve_parameter();
+extern void BN12_get_epsilon();
+extern void BN12_get_Two_inv();
+extern void BN12_set_basis();
+extern void BN12_set_frobenius_constant();
+extern void BN12_set_curve_parameter();
 
 #endif

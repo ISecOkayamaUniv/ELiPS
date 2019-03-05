@@ -24,9 +24,9 @@ void EFp12_set(EFp12 *ANS,EFp12 *A){
     ANS->infinity=A->infinity;
 }
 
-void EFp12_set_ui(EFp12 *ANS,unsigned long int UI){
-    Fp12_set_ui(&ANS->x,UI);
-    Fp12_set_ui(&ANS->y,UI);
+void EFp12_set_ui(EFp12 *ANS,unsigned long int UI1,unsigned long int UI2){
+    Fp12_set_ui(&ANS->x,UI1);
+    Fp12_set_ui(&ANS->y,UI2);
     ANS->infinity=0;
 }
 
@@ -56,9 +56,10 @@ void EFp12_rational_point(EFp12 *P){
     Fp12 tmp1,tmp2;
     Fp12_init(&tmp1);
     Fp12_init(&tmp2);
-	gmp_randinit_default (state);
-	gmp_randseed_ui(state,(unsigned long)time(NULL));
-	gmp_randseed_ui(state,1);
+
+    gmp_randinit_default (state);
+    gmp_randseed_ui(state,(unsigned long)time(NULL));
+    gmp_randseed_ui(state,1);
     
     while(1){
         Fp12_set_random(&P->x,state);
@@ -77,7 +78,7 @@ void BN12_EFp12_generate_G1(EFp12 *P){
     EFp_init(&tmp_P);
     
     EFp_rational_point(&tmp_P);
-    EFp12_set_ui(P,0);
+    EFp12_set_ui(P,0,0);
     Fp_set(&P->x.x0.x0.x0,&tmp_P.x);
     Fp_set(&P->y.x0.x0.x0,&tmp_P.y);
     P->infinity=tmp_P.infinity;
@@ -89,7 +90,7 @@ void BLS12_EFp12_generate_G1(EFp12 *P){
     mpz_init(exp);
     
     EFp_rational_point(&tmp_P);
-    EFp12_set_ui(P,0);
+    EFp12_set_ui(P,0,0);
     mpz_tdiv_q(exp,EFp_total,order_z);
     EFp_SCM(&tmp_P,&tmp_P,exp);
     Fp_set(&P->x.x0.x0.x0,&tmp_P.x);
@@ -120,8 +121,8 @@ void EFp12_generate_G2(EFp12 *Q){
 }
 
 void EFp12_ECD(EFp12 *ANS,EFp12 *P){
-	static EFp12 tmp1_EFp12;
-	static Fp12 tmp1_Fp12,tmp2_Fp12,tmp3_Fp12;
+    static EFp12 tmp1_EFp12;
+    static Fp12 tmp1_Fp12,tmp2_Fp12,tmp3_Fp12;
     if(Fp12_cmp_zero(&P->y)==0){
         ANS->infinity=1;
         return;
@@ -147,8 +148,8 @@ void EFp12_ECD(EFp12 *ANS,EFp12 *P){
 }
 
 void EFp12_ECD_lazy(EFp12 *ANS,EFp12 *P){
-	static EFp12 tmp1_EFp12;
-	static Fp12 tmp1_Fp12,tmp2_Fp12,tmp3_Fp12;
+    static EFp12 tmp1_EFp12;
+    static Fp12 tmp1_Fp12,tmp2_Fp12,tmp3_Fp12;
     if(Fp12_cmp_zero(&P->y)==0){
         ANS->infinity=1;
         return;
@@ -174,8 +175,8 @@ void EFp12_ECD_lazy(EFp12 *ANS,EFp12 *P){
 }
 
 void EFp12_ECA(EFp12 *ANS,EFp12 *P1,EFp12 *P2){
-	static EFp12 tmp1_EFp12,tmp2_EFp12;
-	static Fp12 tmp1_Fp12,tmp2_Fp12,tmp3_Fp12;
+    static EFp12 tmp1_EFp12,tmp2_EFp12;
+    static Fp12 tmp1_Fp12,tmp2_Fp12,tmp3_Fp12;
     if(P1->infinity==1){
         EFp12_set(ANS,P2);
         return;
@@ -207,8 +208,8 @@ void EFp12_ECA(EFp12 *ANS,EFp12 *P1,EFp12 *P2){
     Fp12_sub(&ANS->y,&tmp2_Fp12,&tmp1_EFp12.y);
 }
 void EFp12_ECA_lazy(EFp12 *ANS,EFp12 *P1,EFp12 *P2){
-	static EFp12 tmp1_EFp12,tmp2_EFp12;
-	static Fp12 tmp1_Fp12,tmp2_Fp12,tmp3_Fp12;
+    static EFp12 tmp1_EFp12,tmp2_EFp12;
+    static Fp12 tmp1_Fp12,tmp2_Fp12,tmp3_Fp12;
     if(P1->infinity==1){
         EFp12_set(ANS,P2);
         return;

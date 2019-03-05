@@ -136,6 +136,7 @@ void BLS12_Miller_algo_for_opt_ate_lazy(Fp12 *ANS,EFp12 *P,EFp12 *Q){
     
     Fp12_set(ANS,&f);
 }
+
 void BLS12_Miller_algo_for_x_ate(Fp12 *ANS,EFp12 *P,EFp12 *Q){
     EFp12 Buf;
     EFp12_init(&Buf);

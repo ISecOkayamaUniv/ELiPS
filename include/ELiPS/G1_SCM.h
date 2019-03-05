@@ -3,7 +3,7 @@
 
 #include <ELiPS/twist.h>
 #include <ELiPS/JSF.h>
-#include <ELiPS/test.h>
+#include <ELiPS/time.h>
 
 
 /**
@@ -13,7 +13,7 @@
  * @param[in]P --a pointer in EFp12.
  * @param[in]scalar --a pointer in mpz.
  */
-void EFp12_G1_SCM_plain(EFp12 *ANS,EFp12 *P,mpz_t scalar);
+extern void EFp12_G1_SCM_plain(EFp12 *ANS,EFp12 *P,mpz_t scalar);
 
 /**
  * @brief Scalar multiplication a EFp12 type struct on G1 (Lazy Reduction)
@@ -22,7 +22,7 @@ void EFp12_G1_SCM_plain(EFp12 *ANS,EFp12 *P,mpz_t scalar);
  * @param[in]P --a pointer in EFp12.
  * @param[in]scalar --a pointer in mpz.
  */
-void EFp12_G1_SCM_plain_lazy(EFp12 *ANS,EFp12 *P,mpz_t scalar);
+extern void EFp12_G1_SCM_plain_lazy(EFp12 *ANS,EFp12 *P,mpz_t scalar);
 
 /**
  * @brief Scalar multiplication a EFp12 type struct on G1 for BN12 (GLV-2split)
@@ -31,7 +31,7 @@ void EFp12_G1_SCM_plain_lazy(EFp12 *ANS,EFp12 *P,mpz_t scalar);
  * @param[in]P --a pointer in EFp12.
  * @param[in]scalar --a pointer in mpz.
  */
-void BN12_EFp12_G1_SCM_2split(EFp12 *ANS,EFp12 *P,mpz_t scalar);
+extern void BN12_EFp12_G1_SCM_2split(EFp12 *ANS,EFp12 *P,mpz_t scalar);
 
 /**
  * @brief Scalar multiplication a EFp12 type struct on G1 for BN12 (GLV-2split + JSF)
@@ -40,7 +40,7 @@ void BN12_EFp12_G1_SCM_2split(EFp12 *ANS,EFp12 *P,mpz_t scalar);
  * @param[in]P --a pointer in EFp12.
  * @param[in]scalar --a pointer in mpz.
  */
-void BN12_EFp12_G1_SCM_2split_JSF(EFp12 *ANS,EFp12 *P,mpz_t scalar);
+extern void BN12_EFp12_G1_SCM_2split_JSF(EFp12 *ANS,EFp12 *P,mpz_t scalar);
 
 /**
  * @brief Scalar multiplication a EFp12 type struct on G1 for BN12 (GLV-2split + JSF +Lazy Reduction)
@@ -49,7 +49,7 @@ void BN12_EFp12_G1_SCM_2split_JSF(EFp12 *ANS,EFp12 *P,mpz_t scalar);
  * @param[in]P --a pointer in EFp12.
  * @param[in]scalar --a pointer in mpz.
  */
-void BN12_EFp12_G1_SCM_2split_JSF_lazy(EFp12 *ANS,EFp12 *P,mpz_t scalar);
+extern void BN12_EFp12_G1_SCM_2split_JSF_lazy(EFp12 *ANS,EFp12 *P,mpz_t scalar);
 
 /**
  * @brief Scalar multiplication a EFp12 type struct on G1 for BLS12 (GLV-2split)
@@ -58,7 +58,7 @@ void BN12_EFp12_G1_SCM_2split_JSF_lazy(EFp12 *ANS,EFp12 *P,mpz_t scalar);
  * @param[in]P --a pointer in EFp12.
  * @param[in]scalar --a pointer in mpz.
  */
-void BLS12_EFp12_G1_SCM_2split(EFp12 *ANS,EFp12 *P,mpz_t scalar);
+extern void BLS12_EFp12_G1_SCM_2split(EFp12 *ANS,EFp12 *P,mpz_t scalar);
 
 /**
  * @brief Scalar multiplication a EFp12 type struct on G1 for BLS12 (GLV-2split + JSF)
@@ -67,7 +67,7 @@ void BLS12_EFp12_G1_SCM_2split(EFp12 *ANS,EFp12 *P,mpz_t scalar);
  * @param[in]P --a pointer in EFp12.
  * @param[in]scalar --a pointer in mpz.
  */
-void BLS12_EFp12_G1_SCM_2split_JSF(EFp12 *ANS,EFp12 *P,mpz_t scalar);
+extern void BLS12_EFp12_G1_SCM_2split_JSF(EFp12 *ANS,EFp12 *P,mpz_t scalar);
 
 /**
  * @brief Scalar multiplication a EFp12 type struct on G1 for BLS12 (GLV-2split + JSF + Jacobian)
@@ -76,7 +76,7 @@ void BLS12_EFp12_G1_SCM_2split_JSF(EFp12 *ANS,EFp12 *P,mpz_t scalar);
  * @param[in]P --a pointer in EFp12.
  * @param[in]scalar --a pointer in mpz.
  */
-void BLS12_EFp12_G1_SCM_2split_JSF_lazy(EFp12 *ANS,EFp12 *P,mpz_t scalar);
+extern void BLS12_EFp12_G1_SCM_2split_JSF_lazy(EFp12 *ANS,EFp12 *P,mpz_t scalar);
 
 /**
  * @brief Scalar multiplication a EFp12 type struct on G1 for BLS12 (GLV-2split + JSF + Jacobian + Lazy Reduction)
@@ -85,6 +85,15 @@ void BLS12_EFp12_G1_SCM_2split_JSF_lazy(EFp12 *ANS,EFp12 *P,mpz_t scalar);
  * @param[in]P --a pointer in EFp12.
  * @param[in]scalar --a pointer in mpz.
  */
-void BLS12_EFp12_G1_SCM_2split_JSF_Jacobian_lazy(EFp12 *ANS,EFp12 *P,mpz_t scalar);
+extern void BLS12_EFp12_G1_SCM_2split_JSF_Jacobian_lazy(EFp12 *ANS,EFp12 *P,mpz_t scalar);
+
+/**
+ * @brief Scalar multiplication a EFp12 type struct on G1 for BLS12 (GLV-2split + JSF + Jacobian + Lazy Reduction)
+ *
+ * @param[out]ANS --a pointer of answer.
+ * @param[in]P --a pointer in EFp12.
+ * @param[in]scalar --a pointer in mpz.
+ */
+extern void BLS12_EFp12_G1_SCM_2split_JSF_Jacobian_table(EFp12 *ANS,EFp12 *P,mpz_t scalar);
 
 #endif

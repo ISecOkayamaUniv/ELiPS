@@ -7,30 +7,30 @@
  * @brief generate X.
  *
  */
-void BLS12_generate_X();
+extern void BLS12_generate_X();
 
 /**
  * @brief generate prime.
  *
  */
-int  BLS12_generate_prime();
+extern int  BLS12_generate_prime();
 
 /**
  * @brief generate order.
  *
  */
-int  BLS12_generate_order();
+extern int  BLS12_generate_order();
 
 /**
  * @brief generate trace.
  *
  */
-void BLS12_generate_trace();
+extern void BLS12_generate_trace();
 
 /**
  * @brief weil's theorem.
  *
  */
-void BLS12_weil();
+extern void BLS12_weil();
 
 #endif

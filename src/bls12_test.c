@@ -155,10 +155,10 @@ int BLS12_test_opt_ate_pairing(){
     BLS12_Opt_ate_pairing(&Z,&P,&Q);
     Fp12_pow(&test1,&Z,s12);
 
-    printf("Miller's Algo. (Opt-ate) : %.2f[ms]\n",MILLER_OPTATE);
-    printf("Final Exp. (easy)  : %.2f[ms]\n",FINALEXP_OPT_EASY);
-    printf("Final Exp. (hard)  : %.2f[ms]\n",FINALEXP_OPT_HARD);
-    printf("Final Exp. (total) : %.2f[ms]\n",MILLER_OPTATE+FINALEXP_OPT_EASY+FINALEXP_OPT_HARD);
+    //printf("Miller's Algo. (Opt-ate) : %.2f[ms]\n",MILLER_OPTATE);
+    //printf("Final Exp. (easy)  : %.2f[ms]\n",FINALEXP_OPT_EASY);
+    //printf("Final Exp. (hard)  : %.2f[ms]\n",FINALEXP_OPT_HARD);
+    //printf("Final Exp. (total) : %.2f[ms]\n",MILLER_OPTATE+FINALEXP_OPT_EASY+FINALEXP_OPT_HARD);
     Fp12_printf(&test1,"");
     printf("\n\n");
     
@@ -166,10 +166,10 @@ int BLS12_test_opt_ate_pairing(){
     printf("test2\n\n");
     printf("opt_ate([s1]P,[s2]Q)\n");
     BLS12_Opt_ate_pairing(&test2,&s1P,&s2Q);
-    printf("Miller's Algo. (Opt-ate) : %.2f[ms]\n",MILLER_OPTATE);
-    printf("Final Exp. (easy)  : %.2f[ms]\n",FINALEXP_OPT_EASY);
-    printf("Final Exp. (hard)  : %.2f[ms]\n",FINALEXP_OPT_HARD);
-    printf("Final Exp. (total) : %.2f[ms]\n",MILLER_OPTATE+FINALEXP_OPT_EASY+FINALEXP_OPT_HARD);
+    //printf("Miller's Algo. (Opt-ate) : %.2f[ms]\n",MILLER_OPTATE);
+    //printf("Final Exp. (easy)  : %.2f[ms]\n",FINALEXP_OPT_EASY);
+    //printf("Final Exp. (hard)  : %.2f[ms]\n",FINALEXP_OPT_HARD);
+    //printf("Final Exp. (total) : %.2f[ms]\n",MILLER_OPTATE+FINALEXP_OPT_EASY+FINALEXP_OPT_HARD);
     Fp12_printf(&test2,"");
     printf("\n\n");
     
@@ -177,10 +177,10 @@ int BLS12_test_opt_ate_pairing(){
     printf("test3\n\n");
     printf("opt_ate([s2]P,[s1]Q)\n");
     BLS12_Opt_ate_pairing(&test3,&s2P,&s1Q);
-    printf("Miller's Algo. (Opt-ate) : %.2f[ms]\n",MILLER_OPTATE);
-    printf("Final Exp. (easy)  : %.2f[ms]\n",FINALEXP_OPT_EASY);
-    printf("Final Exp. (hard)  : %.2f[ms]\n",FINALEXP_OPT_HARD);
-    printf("Final Exp. (total) : %.2f[ms]\n",MILLER_OPTATE+FINALEXP_OPT_EASY+FINALEXP_OPT_HARD);
+    //printf("Miller's Algo. (Opt-ate) : %.2f[ms]\n",MILLER_OPTATE);
+    //printf("Final Exp. (easy)  : %.2f[ms]\n",FINALEXP_OPT_EASY);
+    //printf("Final Exp. (hard)  : %.2f[ms]\n",FINALEXP_OPT_HARD);
+    //printf("Final Exp. (total) : %.2f[ms]\n",MILLER_OPTATE+FINALEXP_OPT_EASY+FINALEXP_OPT_HARD);
     Fp12_printf(&test3,"");
     printf("\n\n");
     
@@ -531,7 +531,8 @@ void BLS12_compare_pairings(){
     printf("\n");
 */
     
-    /*printf("------------------------------------------------------------------------------------\n");
+    /*
+    printf("------------------------------------------------------------------------------------\n");
     printf("Sextic twist\n\n");
     gettimeofday(&tv_start,NULL);
     EFp12_to_EFp2(&twisted_Q,&Q);

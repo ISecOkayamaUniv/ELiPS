@@ -76,39 +76,47 @@ void Pseudo_8_sparse_mul(Fp12 *ANS,Fp12 *A,Fp12 *B){
 void Pseudo_8_sparse_mul_lazy(Fp12 *ANS,Fp12 *A,Fp12 *B){
     static Fp2 tmp1_Fp2,tmp2_Fp2,tmp3_Fp2,tmp4_Fp2;
     static Fp12 tmp3_Fp12;
-	Fp2_mul_lazy(&tmp1_Fp2,&A->x0.x0,&B->x1.x0);		//tmp1_Fp2=b3*f0
+	Fp2_mul_lazy(&tmp1_Fp2,&A->x0.x0,&B->x1.x0);
 	Fp2_mul_lazy(&tmp2_Fp2,&A->x0.x1,&B->x1.x1);
-	Fp2_add_lazy(&tmp3_Fp2,&A->x0.x0,&A->x0.x1);		//tmp3_Fp2=f0+f1
-	Fp2_add_lazy(&tmp4_Fp2,&B->x1.x0,&B->x1.x1);		//tmp4_Fp2=b3+b4
-	Fp2_mul_lazy(&tmp3_Fp2,&tmp3_Fp2,&tmp4_Fp2);		//tmp3_Fp2=tmp3_Fp2*tmp4_Fp2
-	Fp2_sub_lazy(&tmp3_Fp2,&tmp3_Fp2,&tmp1_Fp2);			//tmp3_Fp2=tmp3_Fp2-tmp1_Fp2
-		
-	Fp2_sub_lazy(&tmp3_Fp2,&tmp3_Fp2,&tmp2_Fp2);			//tmp3_Fp2=tmp3_Fp2-tmp2_Fp2
-	Fp2_add_final(&tmp3_Fp12.x1.x1,&tmp3_Fp2,&A->x1.x1);	//ans[γ^3]=tmp3_Fp2+f4
-	Fp2_add_lazy(&tmp1_Fp2,&tmp1_Fp2,&A->x1.x0);		//tmp1_Fp2=tmp1_Fp2+f3
-	Fp2_mul_lazy(&tmp3_Fp2,&A->x0.x2,&B->x1.x1);		//tmp3_Fp2=b4*f2
+	Fp2_add_lazy(&tmp3_Fp2,&A->x0.x0,&A->x0.x1);
+	Fp2_add_lazy(&tmp4_Fp2,&B->x1.x0,&B->x1.x1);
+
+	Fp2_mul_lazy(&tmp3_Fp2,&tmp3_Fp2,&tmp4_Fp2);
+	Fp2_sub(&tmp3_Fp2,&tmp3_Fp2,&tmp1_Fp2);		
+	Fp2_sub(&tmp3_Fp2,&tmp3_Fp2,&tmp2_Fp2);
+	Fp2_add(&tmp3_Fp12.x1.x1,&tmp3_Fp2,&A->x1.x1);
+
+	Fp2_add(&tmp1_Fp2,&tmp1_Fp2,&A->x1.x0);
+	Fp2_mul_lazy(&tmp3_Fp2,&A->x0.x2,&B->x1.x1);
 	Fp2_mul_basis(&tmp3_Fp2,&tmp3_Fp2);
-	Fp2_add_final(&tmp3_Fp12.x1.x0,&tmp1_Fp2,&tmp3_Fp2);		//ans[γ]=tmp1_Fp2+tmp3_Fp2
-	Fp2_add_lazy(&tmp1_Fp2,&tmp2_Fp2,&A->x1.x2);		//tmp1_Fp2=tmp2_Fp2+f5
-	Fp2_mul_lazy(&tmp2_Fp2,&A->x0.x2,&B->x1.x0);		//tmp2_Fp2=b3*f2
-	Fp2_add_final(&tmp3_Fp12.x1.x2,&tmp1_Fp2,&tmp2_Fp2);		//ans[γ^5]=tmp1_Fp2+tmp2_Fp2
-	Fp2_mul_lazy(&tmp1_Fp2,&A->x1.x0,&B->x1.x0);		//tmp1_Fp2=b3*f3
-	Fp2_mul_lazy(&tmp2_Fp2,&A->x1.x1,&B->x1.x1);		//tmp2_Fp2=b4*f4
-	Fp2_add_lazy(&tmp3_Fp2,&A->x1.x0,&A->x1.x1);		//tmp3_Fp2=f3+f4
-	Fp2_mul_lazy(&tmp3_Fp2,&tmp3_Fp2,&tmp4_Fp2);			//tmp3_Fp2=tmp3_Fp2*tmp4_Fp2	
-	Fp2_sub_lazy(&tmp3_Fp2,&tmp3_Fp2,&tmp1_Fp2);			//tmp3_Fp2=tmp3_Fp2-tmp1_Fp2
-	Fp2_sub_lazy(&tmp3_Fp2,&tmp3_Fp2,&tmp2_Fp2);			//tmp3_Fp2=tmp3_Fp2-tmp2_Fp2
-	Fp2_add_final(&tmp3_Fp12.x0.x2,&tmp3_Fp2,&A->x0.x2);	//ans[γ^4]=tmp3_Fp2+f4
-	Fp2_add_lazy(&tmp1_Fp2,&tmp1_Fp2,&A->x0.x1);		//tmp1_Fp2=tmp1_Fp2+f1
-	Fp2_mul_lazy(&tmp3_Fp2,&A->x1.x2,&B->x1.x1);		//tmp3_Fp2=b4*f5
-	Fp2_mul_basis(&tmp3_Fp2,&tmp3_Fp2);			//tmp3_Fp2=tmp3_Fp2*(α+1)
-	Fp2_add_final(&tmp3_Fp12.x0.x1,&tmp1_Fp2,&tmp3_Fp2);		//ans[γ^2]=tmp1_Fp2+tmp3_Fp2
-	Fp2_mul_lazy(&tmp1_Fp2,&A->x1.x2,&B->x1.x0);		//tmp1_Fp2=b3*f5	
-	Fp2_add_lazy(&tmp1_Fp2,&tmp1_Fp2,&tmp2_Fp2);			//tmp1_Fp2=tmp1_Fp2+tmp2_Fp2
-	Fp2_mul_basis(&tmp1_Fp2,&tmp1_Fp2);			//tmp1_Fp2=tmp1_Fp2*(α+1)
-	Fp2_add_final(&tmp3_Fp12.x0.x0,&tmp1_Fp2,&A->x0.x0);	//ans[1]=tmp1_Fp2+f0	
+	Fp2_add(&tmp3_Fp12.x1.x0,&tmp1_Fp2,&tmp3_Fp2);
+
+	Fp2_add(&tmp1_Fp2,&tmp2_Fp2,&A->x1.x2);
+	Fp2_mul_lazy(&tmp2_Fp2,&A->x0.x2,&B->x1.x0);
+	Fp2_add(&tmp3_Fp12.x1.x2,&tmp1_Fp2,&tmp2_Fp2);
+
+	Fp2_mul_lazy(&tmp1_Fp2,&A->x1.x0,&B->x1.x0);//tmp1
+	Fp2_mul_lazy(&tmp2_Fp2,&A->x1.x1,&B->x1.x1);//tmp2
+
+	Fp2_add_lazy(&tmp3_Fp2,&A->x1.x0,&A->x1.x1);
+	Fp2_mul_lazy(&tmp3_Fp2,&tmp3_Fp2,&tmp4_Fp2);
+	Fp2_sub(&tmp3_Fp2,&tmp3_Fp2,&tmp1_Fp2);
+	Fp2_sub(&tmp3_Fp2,&tmp3_Fp2,&tmp2_Fp2);
+	Fp2_add(&tmp3_Fp12.x0.x2,&tmp3_Fp2,&A->x0.x2);
+
+	Fp2_add(&tmp1_Fp2,&tmp1_Fp2,&A->x0.x1);
+	Fp2_mul_lazy(&tmp3_Fp2,&A->x1.x2,&B->x1.x1);
+	Fp2_mul_basis(&tmp3_Fp2,&tmp3_Fp2);
+	Fp2_add(&tmp3_Fp12.x0.x1,&tmp1_Fp2,&tmp3_Fp2);
+
+	Fp2_mul_lazy(&tmp1_Fp2,&A->x1.x2,&B->x1.x0);
+	Fp2_add(&tmp1_Fp2,&tmp1_Fp2,&tmp2_Fp2);
+	Fp2_mul_basis(&tmp1_Fp2,&tmp1_Fp2);
+	Fp2_add(&tmp3_Fp12.x0.x0,&tmp1_Fp2,&A->x0.x0);
+
 	Fp12_set(ANS,&tmp3_Fp12);	
 }
+
 
 void ff_ltt(Fp12 *f,EFp2 *T,EFp *P,Fp *L){
     static Fp2 tmp1_Fp2,tmp2_Fp2,tmp3_Fp2,tmp4_Fp2,tmp5_Fp2;
@@ -149,7 +157,7 @@ void ff_ltt_lazy(Fp12 *f,EFp2 *T,EFp *P,Fp *L){
 	EFp2_init(&Tmp_T);
 	EFp2_set(&Tmp_T,T);
 	
-	Fp12_sqr(&tmp1_Fp12,f);
+	Fp12_sqr_lazy(&tmp1_Fp12,f);
 	
 	//ltt
 	Fp2_add(&tmp1_Fp2,&Tmp_T.y,&Tmp_T.y);		//tmp1_Fp2=1/(2*T.y)
@@ -157,15 +165,15 @@ void ff_ltt_lazy(Fp12 *f,EFp2 *T,EFp *P,Fp *L){
 	Fp2_sqr_lazy(&tmp2_Fp2,&Tmp_T.x);			//tmp2_Fp2=3(T.x)^2
 	Fp2_add_lazy(&tmp3_Fp2,&tmp2_Fp2,&tmp2_Fp2);
 	Fp2_add_lazy(&tmp2_Fp2,&tmp3_Fp2,&tmp2_Fp2);
-	Fp2_mul_lazy(&tmp3_Fp2,&tmp1_Fp2,&tmp2_Fp2);				//tmp3_Fp2=tmp1_Fp2*tmp2_Fp2
+	Fp2_mul_lazy(&tmp3_Fp2,&tmp1_Fp2,&tmp2_Fp2);		//tmp3_Fp2=tmp1_Fp2*tmp2_Fp2
 	
-	Fp2_add_lazy(&tmp4_Fp2,&Tmp_T.x,&Tmp_T.x);		//tmp4_Fp2=2T.x
+	Fp2_add(&tmp4_Fp2,&Tmp_T.x,&Tmp_T.x);		//tmp4_Fp2=2T.x
 	Fp2_sqr_lazy(&T->x,&tmp3_Fp2);				//next_T.x=tmp3_Fp2^2-tmp4_Fp2
-	Fp2_sub_final(&T->x,&T->x,&tmp4_Fp2);
-	Fp2_mul_lazy(&tmp5_Fp2,&tmp3_Fp2,&Tmp_T.x);			//tmp5_Fp2=tmp3_Fp2*T.x-T.y
-	Fp2_sub_lazy(&tmp5_Fp2,&tmp5_Fp2,&Tmp_T.y);
+	Fp2_sub(&T->x,&T->x,&tmp4_Fp2);
+	Fp2_mul_lazy(&tmp5_Fp2,&tmp3_Fp2,&Tmp_T.x);		//tmp5_Fp2=tmp3_Fp2*T.x-T.y
+	Fp2_sub(&tmp5_Fp2,&tmp5_Fp2,&Tmp_T.y);
 	Fp2_mul_lazy(&T->y,&tmp3_Fp2,&T->x);			//next_T.y=tmp5_Fp2-tmp3_Fp2*next_T.x
-	Fp2_sub_final(&T->y,&tmp5_Fp2,&T->y);
+	Fp2_sub(&T->y,&tmp5_Fp2,&T->y);
 	
 	//set ltt
 	Fp_set_ui(&tmp2_Fp12.x0.x0.x0,1);
@@ -210,15 +218,15 @@ void f_ltq_lazy(Fp12 *f,EFp2 *T,EFp2 *Q,EFp *P,Fp *L){
 	EFp2_set(&Tmp_T,T);
 	
 	//ltq
-	Fp2_sub_lazy(&tmp1_Fp2,&Q->x,&Tmp_T.x);		//tmp1_Fp2=(Q->x-T.x)^-1
+	Fp2_sub(&tmp1_Fp2,&Q->x,&Tmp_T.x);		//tmp1_Fp2=(Q->x-T.x)^-1
 	Fp2_inv_lazy(&tmp1_Fp2,&tmp1_Fp2);
 	Fp2_sub_lazy(&tmp2_Fp2,&Q->y,&Tmp_T.y);		//tmp2_Fp2=(Q->y-T.y)
 	Fp2_mul_lazy(&tmp3_Fp2,&tmp1_Fp2,&tmp2_Fp2);			//tmp3_Fp2=tmp1_Fp2*tmp2_Fp2
-	Fp2_add_lazy(&tmp4_Fp2,&Tmp_T.x,&Q->x);		//tmp4_Fp2=Q->x+T.x
+	Fp2_add(&tmp4_Fp2,&Tmp_T.x,&Q->x);		//tmp4_Fp2=Q->x+T.x
 	Fp2_sqr_lazy(&T->x,&tmp3_Fp2);			//next_T.x=tmp3_Fp2^2-tmp4_Fp2
 	Fp2_sub(&T->x,&T->x,&tmp4_Fp2);
 	Fp2_mul_lazy(&tmp5_Fp2,&tmp3_Fp2,&Tmp_T.x);		//tmp5_Fp2=tmp3_Fp2*T.x-T.y
-	Fp2_sub_lazy(&tmp5_Fp2,&tmp5_Fp2,&Tmp_T.y);
+	Fp2_sub(&tmp5_Fp2,&tmp5_Fp2,&Tmp_T.y);
 	Fp2_mul_lazy(&T->y,&tmp3_Fp2,&T->x);		//next_T.y=tmp5_Fp2-tmp3_Fp2*next_T.x
 	Fp2_sub(&T->y,&tmp5_Fp2,&T->y);
 	

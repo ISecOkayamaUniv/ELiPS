@@ -7,8 +7,8 @@
 #include <ELiPS/EFp12.h>
 
 //init/set/clear
-void BN12_init();
-void BN12_init_parameters();
-void BN12_clear();
-void BN12_print_parameters();
+extern void BN12_init();
+extern void BN12_init_parameters();
+extern void BN12_clear();
+extern void BN12_print_parameters();
 #endif

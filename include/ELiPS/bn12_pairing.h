@@ -6,9 +6,9 @@
 #include <ELiPS/test.h>
 
 //pairing
-void BN12_Plain_ate_pairing(Fp12 *ANS,EFp12 *P,EFp12 *Q);
-void BN12_Opt_ate_pairing(Fp12 *ANS,EFp12 *P,EFp12 *Q);
-void BN12_Opt_ate_pairing_lazy(Fp12 *ANS,EFp12 *P,EFp12 *Q);
-void BN12_X_ate_pairing(Fp12 *ANS,EFp12 *P,EFp12 *Q);
+extern void BN12_Plain_ate_pairing(Fp12 *ANS,EFp12 *P,EFp12 *Q);
+extern void BN12_Opt_ate_pairing(Fp12 *ANS,EFp12 *P,EFp12 *Q);
+extern void BN12_Opt_ate_pairing_lazy(Fp12 *ANS,EFp12 *P,EFp12 *Q);
+extern void BN12_X_ate_pairing(Fp12 *ANS,EFp12 *P,EFp12 *Q);
 
 #endif

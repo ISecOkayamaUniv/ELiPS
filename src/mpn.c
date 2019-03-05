@@ -95,6 +95,19 @@ void mpn_lshift_ext(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,long int L){
 	}
 	mpn_lshift(ans,tmp,size,L);
 }
+void mpn_rshift_ext(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,long int L){
+	mp_limb_t tmp[size];
+	
+	mpn_copyd(tmp,a,size);
+	while(L>63){
+		mpn_rshift(tmp,tmp,size,63);
+		L=L-63;
+	}
+	mpn_rshift(ans,tmp,size,L);
+}
+void mpn_dbl(mp_limb_t *ans,mp_limb_t *a,mp_size_t size){
+	mpn_lshift(ans,a,size,1);
+}
 void mpn_add_char(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,char *str){
 	mp_limb_t buf[size];
 	
@@ -157,7 +170,6 @@ void mpn_pow(mp_limb_t *ans,mp_size_t ans_size,mp_limb_t *a,mp_size_t a_size,mp_
 		return;
 	}
 	
-	//最上位ビット判定
 	bit_size=mpn_sizeinbase(r,n,2);
 	bit_size--;
 	
@@ -170,7 +182,7 @@ void mpn_pow(mp_limb_t *ans,mp_size_t ans_size,mp_limb_t *a,mp_size_t a_size,mp_
 		//printf("POW\n");
 		mpn_copyd(tmp,Temp,ans_size);
 		mpn_sqr(Temp,tmp,ans_size);
-		//bit判定
+		//bit
 		mpn_rshift(bit,bit,n,1);
 		mpn_and_n(bit_copy,r,bit,n);
 		//bit=1 -> 
@@ -206,7 +218,6 @@ void mpn_pow_ui(mp_limb_t *ans,mp_size_t ans_size,mp_limb_t *a,mp_size_t a_size,
 		return;
 	}
 	
-	//最上位ビット判定
 	bit_size=mpn_sizeinbase(buf,1,2);
 	bit_size--;
 	
@@ -220,7 +231,7 @@ void mpn_pow_ui(mp_limb_t *ans,mp_size_t ans_size,mp_limb_t *a,mp_size_t a_size,
 		//printf("POW\n");
 		mpn_copyd(tmp,Temp,ans_size);
 		mpn_sqr(Temp,tmp,ans_size);
-		//bit判定
+		//bit
 		mpn_rshift(bit,bit,1,1);
 		mpn_and_n(bit_copy,buf,bit,1);
 		//bit=1 -> 

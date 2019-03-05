@@ -243,4 +243,40 @@ void BLS12_set_curve_parameter(){
 void BLS12_set_root2(){
     mpz_set_str(root_2,"10031503624258748060575468630512234256688",10);
 }
+void BLS12_set_montgomery(){
+    static mp_limb_t xp[FPLIMB],xp_tmp[FPLIMB],gp[FPLIMB],prime_tmp[FPLIMB],tmp[FPLIMB],buf[FPLIMB2];
 
+    mpn_init(gp,FPLIMB);
+    mpn_init(xp,FPLIMB);
+    mpn_init(prime_tmp,FPLIMB);
+	
+    mpn_set_ui(xp,FPLIMB,2);
+    m=1;
+    while(1){
+	mpn_copyd(prime_tmp,prime,FPLIMB);
+	mpn_copyd(xp_tmp,xp,FPLIMB);
+	if(mpn_cmp_ui(gp,mpn_gcd(gp,xp_tmp,FPLIMB,prime_tmp,FPLIMB),1)==0&&mpn_cmp(xp,prime,FPLIMB)>=0) break;
+	else{
+	    mpn_mul_ui(xp,xp,FPLIMB,2);
+	    m++;
+	}
+    }
+    mpn_copyd(R,xp,FPLIMB);
+    mpn_sub_ui(R1,R,FPLIMB,1);
+
+    mpn_invert(Ri,R,prime);
+
+    mpn_mul_n(buf,R,R,FPLIMB);
+    Lazy_mod(RR,buf,FPLIMB2);
+
+    mpn_invert(tmp,prime,R);
+    mpn_sub_n(Ni,R,tmp,FPLIMB);
+/*
+    printf("m=%d\n",m);
+    gmp_printf("R=%Nu\n",R,FPLIMB);
+    gmp_printf("R1=%Nu\n",R1,FPLIMB);
+    gmp_printf("Ri=%Nu\n",Ri,FPLIMB);
+    gmp_printf("RR=%Nu\n",RR,FPLIMB);
+    gmp_printf("Ni=%Nu\n",Ni,FPLIMB);
+    */
+}

@@ -102,6 +102,29 @@ typedef struct{
 
 
 /*============================================================================*/
+/* Prjective Elliptic Curve Table                                             */
+/*============================================================================*/
+typedef struct{
+	Fp x,y,z,zz,zzz;
+	int infinity;
+}EFpZT;
+
+typedef struct{
+	Fp2 x,y,z,zz,zzz;
+	int infinity;
+}EFpZT2;
+
+typedef struct{
+	Fp6 x,y,z,zz,zzz;
+	int infinity;
+}EFpZT6;
+
+typedef struct{
+	Fp12 x,y,z,zz,zzz;
+	int infinity;
+}EFpZT12;
+
+/*============================================================================*/
 /* Pairing functions                                                          */
 /*============================================================================*/
 enum f_state{
@@ -120,6 +143,9 @@ Fp2 frobenius_constant[12][6];
 Fp2 skew_frobenius_constant[12][2];
 mp_limb_t curve_b[FPLIMB];
 
+//montgomery
+mp_limb_t R[FPLIMB],Ri[FPLIMB],R1[FPLIMB],RR[FPLIMB],Ni[FPLIMB];
+int m;
 /*============================================================================*/
 /* Test functions                                                             */
 /*============================================================================*/

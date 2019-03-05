@@ -7,13 +7,13 @@
 #include <ELiPS/G3_exp.h>
 
 //test
-void BN12_test_rational_point();
-void BN12_test_plain_ate_pairing();
-void BN12_test_opt_ate_pairing();
-void BN12_test_x_ate_pairing();
-void BN12_test_G1_SCM();
-void BN12_test_G2_SCM();
-void BN12_test_G3_EXP();
-void BN12_compare_pairings();
+extern void BN12_test_rational_point();
+extern void BN12_test_plain_ate_pairing();
+extern void BN12_test_opt_ate_pairing();
+extern void BN12_test_x_ate_pairing();
+extern void BN12_test_G1_SCM();
+extern void BN12_test_G2_SCM();
+extern void BN12_test_G3_EXP();
+extern void BN12_compare_pairings();
 
 #endif

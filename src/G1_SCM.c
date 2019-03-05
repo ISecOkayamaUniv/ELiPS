@@ -760,8 +760,126 @@ void BLS12_EFp12_G1_SCM_2split_JSF_Jacobian_lazy(EFp12 *ANS,EFp12 *P,mpz_t scala
     for(i=JSF_length-1; i>=0; i--){
         EFp_ECD_Jacobian_lazy(&next_tmpZ_P,&next_tmpZ_P);
         EFp_ECA_Jacobian_lazy(&next_tmpZ_P,&next_tmpZ_P,&table[binary[i]]);
-        //EFp_Jacobian(&temp,&next_tmpZ_P);
-	//printf("length=%d,binary[i]=%d:",i,binary[i]);EFp_printf(&temp,"");printf("\n");getchar();
+    }
+    
+    EFp_Jacobian(&next_tmp_P,&next_tmpZ_P);
+    EFp_to_EFp12(ANS,&next_tmp_P);
+    ANS->infinity=next_tmp_P.infinity;
+    
+    mpz_clear(buf);
+    for(i=0; i<2; i++){
+        mpz_clear(s[i]);
+    }
+    gettimeofday(&tv_end,NULL);
+    G1SCM_2SPLIT_JSF=timedifference_msec(tv_start,tv_end);
+}
+void BLS12_EFp12_G1_SCM_2split_JSF_Jacobian_table(EFp12 *ANS,EFp12 *P,mpz_t scalar){
+    gettimeofday(&tv_start,NULL);
+    
+    //s=s0+s1[x^4]
+    int i,length_s[2],loop_length;
+    EFp next_tmp_P,tmp_P,tmp_P_neg,tmp_P_4x,tmp_P_4x_neg;
+    EFp temp;
+    EFpZ next_tmpZ_P,tmpZ_P,tmpZ_P_neg,tmpZ_P_4x,tmpZ_P_4x_neg;
+    EFp_init(&next_tmp_P);
+    EFp_init(&tmp_P);
+    EFp_init(&tmp_P_neg);
+    EFp_init(&tmp_P_4x);
+    EFp_init(&tmp_P_4x_neg);
+
+    EFpZ_init(&next_tmpZ_P);
+    EFpZ_init(&tmpZ_P);
+    EFpZ_init(&tmpZ_P_neg);
+    EFpZ_init(&tmpZ_P_4x);
+    EFpZ_init(&tmpZ_P_4x_neg);
+    mpz_t s[2],buf;
+    mpz_init(buf);
+    for(i=0; i<2; i++){
+        mpz_init(s[i]);
+    }
+    //table
+    EFpZ table[9];
+    for(i=0; i<9; i++){
+        EFpZ_init(&table[i]);
+    }
+    //table
+    EFpZT table2[9];
+    for(i=0; i<9; i++){
+        EFpZT_init(&table2[i]);
+    }
+    
+    //set
+    EFp12_to_EFp(&tmp_P,P);                    //tmp_P
+    EFp_set_neg(&tmp_P_neg,&tmp_P);            //tmp_P_neg
+    EFp_skew_frobenius_map_p2(&tmp_P_4x,&tmp_P);        //tmp_P_4x
+    EFp_set_neg(&tmp_P_4x_neg,&tmp_P_4x);        //tmp_P_4x_neg
+
+    //set Jacobian
+    EFp_to_EFpZ(&tmpZ_P,&tmp_P);
+    EFp_to_EFpZ(&tmpZ_P_neg,&tmp_P_neg);
+    EFp_to_EFpZ(&tmpZ_P_4x,&tmp_P_4x);
+    EFp_to_EFpZ(&tmpZ_P_4x_neg,&tmp_P_4x_neg);
+
+    //set table
+    table[0].infinity=1;                        //00
+    EFp_to_EFpZ(&table[1],&tmp_P);                //01
+    EFp_to_EFpZ(&table[2],&tmp_P_4x);                //10
+    EFp_ECA_Jacobian_lazy(&table[3],&tmpZ_P_4x,&tmpZ_P);       //11
+    EFp_to_EFpZ(&table[4],&tmp_P_neg);            //0-1
+    EFp_to_EFpZ(&table[5],&tmp_P_4x_neg);            //-10
+    EFp_ECA_Jacobian_lazy(&table[6],&tmpZ_P_4x_neg,&tmpZ_P_neg);    //-1-1
+    EFp_ECA_Jacobian_lazy(&table[7],&tmpZ_P_4x,&tmpZ_P_neg);        //1-1
+    EFp_ECA_Jacobian_lazy(&table[8],&tmpZ_P_4x_neg,&tmpZ_P);        //-11
+    
+    for(i=0; i<9; i++){
+	EFpZ_to_EFpZT(&table2[i],&table[i]);
+        Fp_mul(&table2[i].zz,&table[i].z,&table[i].z);
+        Fp_mul(&table2[i].zzz,&table2[i].zz,&table[i].z);
+    }
+
+    //s0,s1
+    mpz_neg(buf,X_z);
+    mpz_pow_ui(buf,buf,2);
+    mpz_tdiv_qr(s[1],s[0],scalar,buf);
+    
+    //get loop_length
+    loop_length=0;
+    for(i=0; i<2; i++){
+        length_s[i]=(int)mpz_sizeinbase(s[i],2);
+        if(loop_length<length_s[i]){
+            loop_length=length_s[i];
+        }
+    }
+    //JSF
+    int JSF_length;
+    int JSF_binary[2][loop_length+1];
+    char check[5];
+    for(i=0; i<loop_length; i++){
+        JSF_binary[0][i]=0;
+        JSF_binary[1][i]=0;
+    }
+    int *JSF_pointer[2];
+    JSF_pointer[0]=JSF_binary[0];
+    JSF_pointer[1]=JSF_binary[1];
+    Joint_sparse_form(JSF_pointer,s,&JSF_length);
+    int binary[JSF_length+1];
+    
+    for(i=JSF_length; i>=0; i--){
+        if(JSF_binary[1][i]==0 && JSF_binary[0][i]==0)         binary[i]=0;
+        else if(JSF_binary[1][i]==0 && JSF_binary[0][i]==1)     binary[i]=1;
+        else if(JSF_binary[1][i]==1 && JSF_binary[0][i]==0)     binary[i]=2;
+        else if(JSF_binary[1][i]==1 && JSF_binary[0][i]==1)    binary[i]=3;
+        else if(JSF_binary[1][i]==0 && JSF_binary[0][i]==-1)    binary[i]=4;
+        else if(JSF_binary[1][i]==-1 && JSF_binary[0][i]==0)    binary[i]=5;
+        else if(JSF_binary[1][i]==-1 && JSF_binary[0][i]==-1)    binary[i]=6;
+        else if(JSF_binary[1][i]==1 && JSF_binary[0][i]==-1)    binary[i]=7;
+        else if(JSF_binary[1][i]==-1 && JSF_binary[0][i]==1)    binary[i]=8;
+    }
+    EFpZ_set(&next_tmpZ_P,&table[binary[JSF_length]]);
+    //SCM
+    for(i=JSF_length-1; i>=0; i--){
+        EFp_ECD_Jacobian_lazy(&next_tmpZ_P,&next_tmpZ_P);
+        EFp_ECA_Jacobian_table(&next_tmpZ_P,&next_tmpZ_P,&table2[binary[i]]);
     }
     
     EFp_Jacobian(&next_tmp_P,&next_tmpZ_P);

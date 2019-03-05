@@ -111,7 +111,6 @@ void BLS12_Fp12_pow_X2(Fp12 *ANS,Fp12 *A){
     }
     Fp12_set(ANS,&tmp);
 }
-
 void BLS12_Fp12_pow_X2_lazy(Fp12 *ANS,Fp12 *A){
     int i;
     Fp12 tmp,A_inv;
@@ -154,8 +153,7 @@ void BLS12_Final_exp_optimal(Fp12 *ANS,Fp12 *A){
     mpz_init(positive_X2);
     
     
-    gettimeofday(&tv_start,NULL);
-    
+    //EASY PART
     mpz_set(positive_X,X_z);
     mpz_tdiv_q_ui(positive_X2,positive_X,2);
     
@@ -168,11 +166,7 @@ void BLS12_Final_exp_optimal(Fp12 *ANS,Fp12 *A){
     Fp12_frobenius_map_p2(&t0,&tmp);//f^(p^2)
     Fp12_mul(&tmp,&t0,&tmp);//f^(p^2)*f
     
-    gettimeofday(&tv_end,NULL);
-    FINALEXP_OPT_EASY=timedifference_msec(tv_start,tv_end);
-    
-    gettimeofday(&tv_start,NULL);
-    
+    //HARD PART
     Fp12_sqr_cyclotomic(&t0, &tmp);
     BLS12_Fp12_pow_X(&t1, &t0);
     
@@ -203,12 +197,7 @@ void BLS12_Final_exp_optimal(Fp12 *ANS,Fp12 *A){
 
     mpz_clear(positive_X);
     mpz_clear(positive_X2);
-
-    
-    gettimeofday(&tv_end,NULL);
-    FINALEXP_OPT_HARD=timedifference_msec(tv_start,tv_end);
 }
-
 void BLS12_Final_exp_optimal_lazy(Fp12 *ANS,Fp12 *A){
     Fp12 tmp,t0,t1,t2,t3,t4,t5, test;
     Fp12_init(&tmp);
@@ -224,27 +213,21 @@ void BLS12_Final_exp_optimal_lazy(Fp12 *ANS,Fp12 *A){
     mpz_init(positive_X2);
     
     
-    gettimeofday(&tv_start,NULL);
-    
+    //EASY PART
     mpz_set(positive_X,X_z);
     mpz_tdiv_q_ui(positive_X2,positive_X,2);
     
     //f←f^(p^6)*f^-1
     Fp12_frobenius_map_p6(&t0,A);//f^(p^6)
-    Fp12_inv(&t1,A);//f^-1
+    Fp12_inv_lazy(&t1,A);//f^-1
     Fp12_mul_lazy(&tmp,&t0,&t1);//f^(p^6)*f^-1
     
     //f←f^(p^2)*f
     Fp12_frobenius_map_p2(&t0,&tmp);//f^(p^2)
     Fp12_mul_lazy(&tmp,&t0,&tmp);//f^(p^2)*f
     
-    gettimeofday(&tv_end,NULL);
-    FINALEXP_OPT_EASY=timedifference_msec(tv_start,tv_end);
     
-
-
-    gettimeofday(&tv_start,NULL);
-    
+    //HARDPART
     Fp12_sqr_cyclotomic_lazy(&t0, &tmp);
     BLS12_Fp12_pow_X_lazy(&t1, &t0);
     
@@ -260,7 +243,7 @@ void BLS12_Final_exp_optimal_lazy(Fp12 *ANS,Fp12 *A){
     
     Fp12_mul_lazy(&t3,&t1,&t3);//t3:=t1*t3;
     Fp12_frobenius_map_p6(&t1,&t1);//t1:=t1^(-1);
-    Fp12_frobenius_map_p3(&t1,&t1);//t1:=t1^(p^3);
+    Fp12_frobenius_map_p3_lazy(&t1,&t1);//t1:=t1^(p^3);
     Fp12_frobenius_map_p2(&t2,&t2);//t2:=t2^(p^2);
     
     
@@ -270,13 +253,10 @@ void BLS12_Final_exp_optimal_lazy(Fp12 *ANS,Fp12 *A){
     Fp12_mul_lazy(&t2,&t2,&tmp);//t2:=t2*f;
     Fp12_mul_lazy(&t1,&t1,&t2);//t1:=t1*t2;
     
-    Fp12_frobenius_map_p1(&t2,&t3);//t2:=t3^p;
+    Fp12_frobenius_map_p1_lazy(&t2,&t3);//t2:=t3^p;
     Fp12_mul_lazy(ANS,&t1,&t2);//t1:=t1*t2;
 
     mpz_clear(positive_X);
     mpz_clear(positive_X2);
-
     
-    gettimeofday(&tv_end,NULL);
-    FINALEXP_OPT_HARD=timedifference_msec(tv_start,tv_end);
 }

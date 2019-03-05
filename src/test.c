@@ -154,7 +154,104 @@ void test_twist(){
     }
     
 }
+int test_mod(int mulmod,int mod){
+    int i,n=0;
+    float add_time=0,dbl_time=0,mul_time=0,sqr_time=0,mod_time=0,mod_mont_time=0;
+    struct timeval tv_A,tv_B;
+    printf("====================================================================================\n");
+    printf("Field Mod test\n");
+    mp_limb_t A[FPLIMB],B[FPLIMB],C[FPLIMB],C1[FPLIMB2];
+    mp_limb_t At[FPLIMB2],Bt[FPLIMB2],Ct[FPLIMB2],test_mul[FPLIMB2];
+    Fp test1,test2;
 
+    gmp_randinit_default (state);
+    gmp_randseed_ui(state,(unsigned long)time(NULL));
+
+for(i=0;i<mulmod;i++){
+    mpn_random(A,FPLIMB);
+    mpn_random(B,FPLIMB);
+
+    Lazy_mod(A,A,FPLIMB);
+    Lazy_mod(B,B,FPLIMB);
+
+    mpn_mul_n(At,A,A,FPLIMB);
+    mpn_mul_n(Bt,B,B,FPLIMB);
+
+    gettimeofday(&tv_A,NULL);
+    mpn_add_n(test_mul,At,At,FPLIMB2);
+    gettimeofday(&tv_B,NULL);
+    add_time+=timedifference_msec(tv_A,tv_B);
+
+    gettimeofday(&tv_A,NULL);
+    mpn_lshift(test_mul,At,FPLIMB2,1);
+    gettimeofday(&tv_B,NULL);
+    dbl_time+=timedifference_msec(tv_A,tv_B);
+
+    gettimeofday(&tv_A,NULL);
+    mpn_mul_n(test_mul,A,A,FPLIMB);
+    gettimeofday(&tv_B,NULL);
+    mul_time+=timedifference_msec(tv_A,tv_B);
+
+    gettimeofday(&tv_A,NULL);
+    mpn_sqr(test_mul,A,FPLIMB);
+    gettimeofday(&tv_B,NULL);
+    sqr_time+=timedifference_msec(tv_A,tv_B);
+
+    gettimeofday(&tv_A,NULL);
+    mpn_mod(&test1,test_mul,FPLIMB2);
+    gettimeofday(&tv_B,NULL);
+    mod_time+=timedifference_msec(tv_A,tv_B);
+
+}
+    printf("Fp add.            : %.6f[ms]\n",add_time/mulmod);
+    printf("Fp dbl.            : %.6f[ms]\n",dbl_time/mulmod);
+    printf("Fp mod.            : %.6f[ms]\n",mod_time/mulmod);
+    printf("Fp sqr.            : %.6f[ms]\n",sqr_time/mulmod);
+    printf("Fp mul.            : %.6f[ms]\n",mul_time/mulmod);
+    printf("Fp add + mul * 2.  : %.6f[ms]\n",(add_time+(mul_time*2))/mulmod);
+mod_time=0;
+for(i=0;i<mod;i++){
+    mpn_random(A,FPLIMB);
+    mpn_random(B,FPLIMB);
+
+    Lazy_mod(A,A,FPLIMB);
+    Lazy_mod(B,B,FPLIMB);
+
+    mpn_mul_n(C1,A,B,FPLIMB);
+
+    Fp_mul_montgomery(At,FPLIMB2,A,FPLIMB);
+    Fp_MR(A,At,FPLIMB2);
+
+    Fp_mul_montgomery(Bt,FPLIMB2,B,FPLIMB);
+    Fp_MR(B,Bt,FPLIMB2);
+
+    mpn_mul_n(Ct,A,B,FPLIMB);
+    Fp_MR(C,Ct,FPLIMB2);
+
+    gettimeofday(&tv_A,NULL);
+    mpn_mod(&test1,C1,FPLIMB2);
+    gettimeofday(&tv_B,NULL);
+    mod_time+=timedifference_msec(tv_A,tv_B);
+
+    gettimeofday(&tv_A,NULL);
+    Fp_MR(C,Ct,FPLIMB2);
+    gettimeofday(&tv_B,NULL);
+    mod_mont_time+=timedifference_msec(tv_A,tv_B);
+
+    Fp_MR(test2.x0,C,FPLIMB);
+
+    if(Fp_cmp(&test1,&test2)!=0){
+        printf("failed!\n\n");
+	Fp_printf(&test1,"");
+	Fp_printf(&test2,"\n");
+	printf("\n\n");
+	return 1;
+    }
+}
+    printf("Fp mod.            : %.6f[ms]\n",mod_time/mod);
+    printf("Fp mod montgomery. : %.6f[ms]\n",mod_mont_time/mod);
+    
+}
 void test_All(){
 	int test_point,test_G1,test_G2,test_G3,test_pairing;
 	int Lazy_Field,Lazy_EFp,Lazy_EFp2,Lazy_EFp12,Lazy_G1,Lazy_G2,Lazy_G3,Lazy_pairing;
@@ -172,22 +269,22 @@ printf("========================================================================
 printf("====================================================================================\n");
     printf("Lazy test\n");
 	
-	Lazy_Field = test_Field_Lazy(10000,10000,10000);
-	Lazy_EFp = test_EFp_Lazy(1000,1000,100);
-	Lazy_EFp2 = test_EFp2_Lazy(100,100,100);
-	Lazy_EFp12 = test_EFp12_Lazy(10,10,10);
-	Lazy_G1 = test_BLS12_G1_SCM_Lazy(100);
-	Lazy_G2 = test_BLS12_G2_SCM_Lazy(10);
-	Lazy_G3 = test_BLS12_G3_exp_Lazy(10);
-	Lazy_pairing = test_BLS12_opt_ate_pairing_Lazy(10);
+	Lazy_Field = test_Field_Lazy(100,100,100);
+	Lazy_EFp = test_EFp_Lazy(100,100,10);
+	Lazy_EFp2 = test_EFp2_Lazy(10,10,10);
+	Lazy_EFp12 = test_EFp12_Lazy(10,10,1);
+	Lazy_G1 = test_BLS12_G1_SCM_Lazy(10);
+	Lazy_G2 = test_BLS12_G2_SCM_Lazy(1);
+	Lazy_G3 = test_BLS12_G3_exp_Lazy(1);
+	Lazy_pairing = test_BLS12_opt_ate_pairing_Lazy(1);
 
 printf("====================================================================================\n");
     printf("Jacobian test\n");
 
 	
-	Jacobian_EFp = test_EFp_Jacobian(1000,1000,100);
-	Jacobian_EFp2 = test_EFp2_Jacobian(1000,1000,100);
-	Jacobian_G1 = test_BLS12_G1_SCM_Jacobian(100);
+	Jacobian_EFp = test_EFp_Jacobian(100,100,10);
+	Jacobian_EFp2 = test_EFp2_Jacobian(100,100,10);
+	Jacobian_G1 = test_BLS12_G1_SCM_Jacobian(10);
 
 
 printf("====================================================================================\n");

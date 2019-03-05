@@ -9,7 +9,7 @@
  *
  * @param[in]A --a pointer to be initialized.
  */
-void Fp12_init(Fp12 *A);
+extern void Fp12_init(Fp12 *A);
 
 /**
  * @brief Print a Fp12 type struct
@@ -17,7 +17,7 @@ void Fp12_init(Fp12 *A);
  * @param[in]A --a pointer to be printed.
  * @param[in]str --a pointer to be printed.
  */
-void Fp12_printf(Fp12 *A,char *str);
+extern void Fp12_printf(Fp12 *A,char *str);
 
 /**
  * @brief Set a Fp12 type struct to a Fp12 type struct
@@ -25,7 +25,7 @@ void Fp12_printf(Fp12 *A,char *str);
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --a pointer to set.
  */
-void Fp12_set(Fp12 *ANS,Fp12 *A);
+extern void Fp12_set(Fp12 *ANS,Fp12 *A);
 
 /**
  * @brief Set an unsigned int to a Fp12 type struct (x0=UI,x1=0,x2=0)
@@ -33,7 +33,15 @@ void Fp12_set(Fp12 *ANS,Fp12 *A);
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --an unsigned long int to set.
  */
-void Fp12_set_ui(Fp12 *ANS,unsigned long int UI);
+extern void Fp12_set_ui(Fp12 *ANS,unsigned long int UI);
+
+/**
+ * @brief Set an unsigned int to a Fp12 type struct (x0=UI,x1=0,x2=0)
+ *
+ * @param[out]ANS --a pointer to be setted.
+ * @param[in]A --an unsigned long int to set.
+ */
+extern void Fp12_set_ui_ui(Fp12 *ANS,unsigned long int UI);
 
 /**
  * @brief Set a mpn type struct to a Fp12 type struct
@@ -41,7 +49,7 @@ void Fp12_set_ui(Fp12 *ANS,unsigned long int UI);
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --a pointer to set.
  */
-void Fp12_set_mpn(Fp12 *ANS,mp_limb_t *A);
+extern void Fp12_set_mpn(Fp12 *ANS,mp_limb_t *A);
 
 /**
  * @brief Negate Fp12 type struct on prime field
@@ -49,7 +57,7 @@ void Fp12_set_mpn(Fp12 *ANS,mp_limb_t *A);
  * @param[out]ANS --a pointer of answer.
  * @param[in]A --a pointer to be negated.
  */
-void Fp12_set_neg(Fp12 *ANS,Fp12 *A);
+extern void Fp12_set_neg(Fp12 *ANS,Fp12 *A);
 
 /**
  * @brief Set a random number to a Fp12 type struct
@@ -57,7 +65,7 @@ void Fp12_set_neg(Fp12 *ANS,Fp12 *A);
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --a random seed.
  */
-void Fp12_set_random(Fp12 *ANS,gmp_randstate_t state);
+extern void Fp12_set_random(Fp12 *ANS,gmp_randstate_t state);
 
 /**
  * @brief Multiplication a Fp12 type struct and a Fp12 type struct on prime field
@@ -66,7 +74,7 @@ void Fp12_set_random(Fp12 *ANS,gmp_randstate_t state);
  * @param[in]A --a pointer in Fp12.
  * @param[in]B --a pointer in Fp12.
  */
-void Fp12_mul(Fp12 *ANS,Fp12 *A,Fp12 *B);
+extern void Fp12_mul(Fp12 *ANS,Fp12 *A,Fp12 *B);
 
 /**
  * @brief Multiplication a Fp12 type struct and a Fp12 type struct on prime field (Lazy Reduction)
@@ -75,7 +83,7 @@ void Fp12_mul(Fp12 *ANS,Fp12 *A,Fp12 *B);
  * @param[in]A --a pointer in Fp12.
  * @param[in]B --a pointer in Fp12.
  */
-void Fp12_mul_lazy(Fp12 *ANS,Fp12 *A,Fp12 *B);
+extern void Fp12_mul_lazy(Fp12 *ANS,Fp12 *A,Fp12 *B);
 
 /**
  * @brief Multiplication a Fp12 type struct and an unsigned long int on prime field
@@ -84,7 +92,7 @@ void Fp12_mul_lazy(Fp12 *ANS,Fp12 *A,Fp12 *B);
  * @param[in]A --a pointer in Fp12.
  * @param[in]B --an unsigned long int.
  */
-void Fp12_mul_ui(Fp12 *ANS,Fp12 *A,unsigned long int UI);
+extern void Fp12_mul_ui(Fp12 *ANS,Fp12 *A,unsigned long int UI);
 
 /**
  * @brief Multiplication a Fp12 type struct and a mpn type struct on prime field
@@ -93,7 +101,7 @@ void Fp12_mul_ui(Fp12 *ANS,Fp12 *A,unsigned long int UI);
  * @param[in]A --a pointer in Fp12.
  * @param[in]B --a pointer in mpn.
  */
-void Fp12_mul_mpn(Fp12 *ANS,Fp12 *A,mp_limb_t *B);
+extern void Fp12_mul_mpn(Fp12 *ANS,Fp12 *A,mp_limb_t *B);
 
 /**
  * @brief Squaring a Fp12 type struct and a Fp12 type struct on prime field
@@ -102,7 +110,7 @@ void Fp12_mul_mpn(Fp12 *ANS,Fp12 *A,mp_limb_t *B);
  * @param[in]A --a pointer in Fp12.
  * @param[in]B --a pointer in Fp12.
  */
-void Fp12_sqr(Fp12 *ANS,Fp12 *A);
+extern void Fp12_sqr(Fp12 *ANS,Fp12 *A);
 
 /**
  * @brief Squaring a Fp12 type struct and a Fp12 type struct on prime field (Lazy Reduciton)
@@ -111,7 +119,16 @@ void Fp12_sqr(Fp12 *ANS,Fp12 *A);
  * @param[in]A --a pointer in Fp12.
  * @param[in]B --a pointer in Fp12.
  */
-void Fp12_sqr_lazy(Fp12 *ANS,Fp12 *A);
+extern void Fp12_sqr_lazy(Fp12 *ANS,Fp12 *A);
+
+/**
+ * @brief Squaring a Fp12 type struct and a Fp12 type struct on prime field
+ *
+ * @param[out]ANS --a pointer of answer.
+ * @param[in]A --a pointer in Fp12.
+ * @param[in]B --a pointer in Fp12.
+ */
+extern void Fp12_sqr_karat(Fp12 *ANS,Fp12 *A);
 
 /**
  * @brief Cyclotomic Squaring a Fp12 type struct and a Fp12 type struct on prime field
@@ -120,7 +137,7 @@ void Fp12_sqr_lazy(Fp12 *ANS,Fp12 *A);
  * @param[in]A --a pointer in Fp12.
  * @param[in]B --a pointer in Fp12.
  */
-void Fp12_sqr_cyclotomic(Fp12 *ANS,Fp12 *A);
+extern void Fp12_sqr_cyclotomic(Fp12 *ANS,Fp12 *A);
 
 /**
  * @brief Cyclotomic Squaring a Fp12 type struct and a Fp12 type struct on prime field (Lazy Reduciton)
@@ -129,7 +146,7 @@ void Fp12_sqr_cyclotomic(Fp12 *ANS,Fp12 *A);
  * @param[in]A --a pointer in Fp12.
  * @param[in]B --a pointer in Fp12.
  */
-void Fp12_sqr_cyclotomic_lazy(Fp12 *ANS,Fp12 *A);
+extern void Fp12_sqr_cyclotomic_lazy(Fp12 *ANS,Fp12 *A);
 
 /**
  * @brief Addition a Fp12 type struct and a Fp12 type struct on prime field
@@ -138,7 +155,7 @@ void Fp12_sqr_cyclotomic_lazy(Fp12 *ANS,Fp12 *A);
  * @param[in]A --a pointer in Fp12.
  * @param[in]B --a pointer in Fp12.
  */
-void Fp12_add(Fp12 *ANS,Fp12 *A,Fp12 *B);
+extern void Fp12_add(Fp12 *ANS,Fp12 *A,Fp12 *B);
 
 /**
  * @brief Addition a Fp12 type struct and a Fp12 type struct on prime field (Lazy Reduction)
@@ -147,7 +164,7 @@ void Fp12_add(Fp12 *ANS,Fp12 *A,Fp12 *B);
  * @param[in]A --a pointer in Fp12.
  * @param[in]B --a pointer in Fp12.
  */
-void Fp12_add_lazy(Fp12 *ANS,Fp12 *A,Fp12 *B);
+extern void Fp12_add_lazy(Fp12 *ANS,Fp12 *A,Fp12 *B);
 
 /**
  * @brief Addition a Fp12 type struct and an unsigned long int on prime field
@@ -156,7 +173,16 @@ void Fp12_add_lazy(Fp12 *ANS,Fp12 *A,Fp12 *B);
  * @param[in]A --a pointer in Fp12.
  * @param[in]B --an unsigned long int.
  */
-void Fp12_add_ui(Fp12 *ANS,Fp12 *A,unsigned long int UI);
+extern void Fp12_add_ui(Fp12 *ANS,Fp12 *A,unsigned long int UI);
+
+/**
+ * @brief Addition a Fp12 type struct and an unsigned long int on prime field
+ *
+ * @param[out]ANS --a pointer of answer.
+ * @param[in]A --a pointer in Fp12.
+ * @param[in]B --an unsigned long int.
+ */
+extern void Fp12_add_ui_ui(Fp12 *ANS,Fp12 *A,unsigned long int UI);
 
 /**
  * @brief Addition a Fp12 type struct and a mpn type struct on prime field
@@ -165,7 +191,7 @@ void Fp12_add_ui(Fp12 *ANS,Fp12 *A,unsigned long int UI);
  * @param[in]A --a pointer in Fp12.
  * @param[in]B --a pointer in mpn.
  */
-void Fp12_add_mpn(Fp12 *ANS,Fp12 *A,mp_limb_t *B);
+extern void Fp12_add_mpn(Fp12 *ANS,Fp12 *A,mp_limb_t *B);
 
 /**
  * @brief Subtraction a Fp12 type struct and a Fp12 type struct on prime field
@@ -174,7 +200,7 @@ void Fp12_add_mpn(Fp12 *ANS,Fp12 *A,mp_limb_t *B);
  * @param[in]A --a pointer in Fp12.
  * @param[in]B --a pointer in Fp12.
  */
-void Fp12_sub(Fp12 *ANS,Fp12 *A,Fp12 *B);
+extern void Fp12_sub(Fp12 *ANS,Fp12 *A,Fp12 *B);
 
 /**
  * @brief Subtraction a Fp12 type struct and a Fp12 type struct on prime field (Lazy Reduction)
@@ -183,7 +209,7 @@ void Fp12_sub(Fp12 *ANS,Fp12 *A,Fp12 *B);
  * @param[in]A --a pointer in Fp12.
  * @param[in]B --a pointer in Fp12.
  */
-void Fp12_sub_lazy(Fp12 *ANS,Fp12 *A,Fp12 *B);
+extern void Fp12_sub_lazy(Fp12 *ANS,Fp12 *A,Fp12 *B);
 
 /**
  * @brief Subtraction a Fp12 type struct and an unsigned long int on prime field
@@ -192,7 +218,16 @@ void Fp12_sub_lazy(Fp12 *ANS,Fp12 *A,Fp12 *B);
  * @param[in]A --a pointer in Fp12.
  * @param[in]B --an unsigned long int.
  */
-void Fp12_sub_ui(Fp12 *ANS,Fp12 *A,unsigned long int UI);
+extern void Fp12_sub_ui(Fp12 *ANS,Fp12 *A,unsigned long int UI);
+
+/**
+ * @brief Subtraction a Fp12 type struct and an unsigned long int on prime field
+ *
+ * @param[out]ANS --a pointer of answer.
+ * @param[in]A --a pointer in Fp12.
+ * @param[in]B --an unsigned long int.
+ */
+extern void Fp12_sub_ui_ui(Fp12 *ANS,Fp12 *A,unsigned long int UI);
 
 /**
  * @brief Subtraction a Fp12 type struct and a mpn type struct on prime field
@@ -201,7 +236,7 @@ void Fp12_sub_ui(Fp12 *ANS,Fp12 *A,unsigned long int UI);
  * @param[in]A --a pointer in Fp12.
  * @param[in]B --a pointer in mpn.
  */
-void Fp12_sub_mpn(Fp12 *ANS,Fp12 *A,mp_limb_t *B);
+extern void Fp12_sub_mpn(Fp12 *ANS,Fp12 *A,mp_limb_t *B);
 
 /**
  * @brief Invert a Fp12 type struct on prime field
@@ -209,7 +244,15 @@ void Fp12_sub_mpn(Fp12 *ANS,Fp12 *A,mp_limb_t *B);
  * @param[out]ANS --a pointer of answer.
  * @param[in]A --a pointer to be inverted.
  */
-void Fp12_inv(Fp12 *ANS,Fp12 *A);
+extern void Fp12_inv(Fp12 *ANS,Fp12 *A);
+
+/**
+ * @brief Invert a Fp12 type struct on prime field (Lazy Reduction)
+ *
+ * @param[out]ANS --a pointer of answer.
+ * @param[in]A --a pointer to be inverted.
+ */
+extern void Fp12_inv_lazy(Fp12 *ANS,Fp12 *A);
 
 /**
  * @brief LegendreSymbol on prime field
@@ -218,7 +261,7 @@ void Fp12_inv(Fp12 *ANS,Fp12 *A);
  * 
  * @return int --a LegendreSymbol (0 or 1 or -1)
  */
-int  Fp12_legendre(Fp12 *A);
+extern int  Fp12_legendre(Fp12 *A);
 
 /**
  * @brief Whether A is a Cubic non residure on prime field
@@ -227,7 +270,7 @@ int  Fp12_legendre(Fp12 *A);
  * 
  * @return int --a CNR (0 or 1 or -1)
  */
-int  Fp12_isCNR(Fp12 *A);
+extern int  Fp12_isCNR(Fp12 *A);
 
 /**
  * @brief Sqrt on prime field
@@ -235,7 +278,7 @@ int  Fp12_isCNR(Fp12 *A);
  * @param[in]A --a pointer in Fp12.
  * @param[out]ANS --a pointer of answer.
  */
-void Fp12_sqrt(Fp12 *ANS,Fp12 *A);
+extern void Fp12_sqrt(Fp12 *ANS,Fp12 *A);
 
 /**
  * @brief Power A by mpz type struct
@@ -246,7 +289,7 @@ void Fp12_sqrt(Fp12 *ANS,Fp12 *A);
  * 
  * @return int --(A=UI 0 or other 1)
  */
-void Fp12_pow(Fp12 *ANS,Fp12 *A,mpz_t scalar);
+extern void Fp12_pow(Fp12 *ANS,Fp12 *A,mpz_t scalar);
 
 /**
  * @brief Compare Fp12 type construct and Fp12 type construct
@@ -256,7 +299,7 @@ void Fp12_pow(Fp12 *ANS,Fp12 *A,mpz_t scalar);
  * 
  * @return int --(A=B 0 or other 1)
  */
-int  Fp12_cmp(Fp12 *A,Fp12 *B);
+extern int  Fp12_cmp(Fp12 *A,Fp12 *B);
 
 /**
  * @brief Compare Fp12 type construct and mpn type construct
@@ -266,7 +309,7 @@ int  Fp12_cmp(Fp12 *A,Fp12 *B);
  * 
  * @return int --(A=UI 0 or other 1)
  */
-int  Fp12_cmp_ui(Fp12 *A,unsigned long int UI);
+extern int  Fp12_cmp_ui(Fp12 *A,unsigned long int UI);
 
 /**
  * @brief Compare Fp12 type construct and mpn type construct
@@ -276,7 +319,7 @@ int  Fp12_cmp_ui(Fp12 *A,unsigned long int UI);
  * 
  * @return int --(A=B 0 or other 1)
  */
-int  Fp12_cmp_mpn(Fp12 *A,mp_limb_t *B);
+extern int  Fp12_cmp_mpn(Fp12 *A,mp_limb_t *B);
 
 /**
  * @brief Compare Fp12 type struct and zero
@@ -285,7 +328,7 @@ int  Fp12_cmp_mpn(Fp12 *A,mp_limb_t *B);
  * 
  * @return int --(one 0 or other 1)
  */
-int  Fp12_cmp_zero(Fp12 *A);
+extern int  Fp12_cmp_zero(Fp12 *A);
 
 /**
  * @brief Compare Fp12 type struct and one
@@ -294,14 +337,16 @@ int  Fp12_cmp_zero(Fp12 *A);
  * 
  * @return int --(zero 0 or other 1)
  */
-int  Fp12_cmp_one(Fp12 *A);
+extern int  Fp12_cmp_one(Fp12 *A);
 
-void Fp12_frobenius_map_p1(Fp12 *ANS,Fp12 *A);
-void Fp12_frobenius_map_p2(Fp12 *ANS,Fp12 *A);
-void Fp12_frobenius_map_p3(Fp12 *ANS,Fp12 *A);
-void Fp12_frobenius_map_p4(Fp12 *ANS,Fp12 *A);
-void Fp12_frobenius_map_p6(Fp12 *ANS,Fp12 *A);
-void Fp12_frobenius_map_p8(Fp12 *ANS,Fp12 *A);
-void Fp12_frobenius_map_p10(Fp12 *ANS,Fp12 *A);
+extern void Fp12_frobenius_map_p1(Fp12 *ANS,Fp12 *A);
+extern void Fp12_frobenius_map_p1_lazy(Fp12 *ANS,Fp12 *A);
+extern void Fp12_frobenius_map_p2(Fp12 *ANS,Fp12 *A);
+extern void Fp12_frobenius_map_p3(Fp12 *ANS,Fp12 *A);
+extern void Fp12_frobenius_map_p3_lazy(Fp12 *ANS,Fp12 *A);
+extern void Fp12_frobenius_map_p4(Fp12 *ANS,Fp12 *A);
+extern void Fp12_frobenius_map_p6(Fp12 *ANS,Fp12 *A);
+extern void Fp12_frobenius_map_p8(Fp12 *ANS,Fp12 *A);
+extern void Fp12_frobenius_map_p10(Fp12 *ANS,Fp12 *A);
 
 #endif

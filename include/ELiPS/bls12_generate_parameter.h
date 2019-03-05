@@ -8,36 +8,42 @@
  * @brief get 1 cube root.
  *
  */
-void BLS12_get_epsilon();
+extern void BLS12_get_epsilon();
 
 /**
  * @brief get inverse element of 2.
  *
  */
-void BLS12_get_Two_inv();
+extern void BLS12_get_Two_inv();
 
 /**
  * @brief set basis.
  *
  */
-void BLS12_set_basis();
+extern void BLS12_set_basis();
 
 /**
  * @brief set frobenius constat.
  *
  */
-void BLS12_set_frobenius_constant();
+extern void BLS12_set_frobenius_constant();
 
 /**
  * @brief set b (y^2=ax^3+[b]).
  *
  */
-void BLS12_set_curve_parameter();
+extern void BLS12_set_curve_parameter();
 
 /**
  * @brief set square root of 2.
  *
  */
-void BLS12_set_root2();
+extern void BLS12_set_root2();
+
+/**
+ * @brief set montgomery reduction paramater.
+ *
+ */
+extern void BLS12_set_montgomery();
 
 #endif

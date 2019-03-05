@@ -717,7 +717,7 @@ for(i=0;i<n;i++){
 
 int test_BLS12_G2_SCM_Lazy(int scm){
     int i,n=0;
-    float scm_time=0,scm_lazy_time=0;
+    float scm_time=0,scm_lazy_time=0,scm_lazy_time2=0,scm_lazy_time3=0;
     struct timeval tv_A,tv_B;
     printf("====================================================================================\n");
     printf("BLS12_G2_SCM test\n");
@@ -758,8 +758,8 @@ for(i=0;i<scm;i++){
 	return 1;
     }
 }
-    printf("BLS12 G2 SCM.      : %.4f[ms]\n",scm_time/scm);
-    printf("BLS12 G2 SCM lazy. : %.4f[ms]\n",scm_lazy_time/scm);
+    printf("BLS12 G2 SCM.       : %.4f[ms]\n",scm_time/scm);
+    printf("BLS12 G2 SCM lazy.  : %.4f[ms]\n",scm_lazy_time/scm);
 
 	return 0;
 }
@@ -820,11 +820,11 @@ for(i=0;i<n;i++){
 
 int test_BLS12_G3_exp_Lazy(int exp){
     int i,n=0;
-    float exp_time=0,exp_lazy_time=0;
+    float exp_time=0,exp_lazy_time=0,exp_lazy_time2=0,exp_lazy_time3=0;
     struct timeval tv_A,tv_B;
     printf("====================================================================================\n");
     printf("BLS12_G3_exp test\n");
-    Fp12 A_Fp12,B_Fp12,test1,test2;
+    Fp12 A_Fp12,B_Fp12,test1,test2,test3,test4;
     EFp12 P,Q;
     EFp12_init(&P);
     EFp12_init(&Q);
@@ -851,7 +851,6 @@ for(i=0;i<exp;i++){
     gettimeofday(&tv_B,NULL);
     exp_time+=timedifference_msec(tv_A,tv_B);
 
-
     gettimeofday(&tv_A,NULL);
     BLS12_Fp12_G3_EXP_4split_lazy(&test2,&A_Fp12,scalar);
     gettimeofday(&tv_B,NULL);
@@ -866,8 +865,9 @@ for(i=0;i<exp;i++){
 	return 1;
     }
 }
-    printf("BLS12 G3 exp.      : %.4f[ms]\n",exp_time/exp);
-    printf("BLS12 G3 exp lazy. : %.4f[ms]\n",exp_lazy_time/exp);
+    printf("BLS12 G3 exp.       : %.4f[ms]\n",exp_time/exp);
+    printf("BLS12 G3 exp lazy.  : %.4f[ms]\n",exp_lazy_time/exp);
+
 
 	return 0;
 
@@ -928,7 +928,7 @@ for(i=0;i<n;i++){
 
 int test_BLS12_opt_ate_pairing_Lazy(int pairing){
     int i,n=0;
-    float opt_time=0,opt_lazy_time=0;
+    float opt_time=0,opt_lazy_time=0,opt_lazy_time2=0,opt_lazy_time3=0;
     struct timeval tv_A,tv_B;
     printf("====================================================================================\n");
     printf("BLS12_Opt-ate pairing\n\n");
@@ -937,11 +937,12 @@ int test_BLS12_opt_ate_pairing_Lazy(int pairing){
     EFp12_init(&P);
     EFp12_init(&Q);
 
-    Fp12 Z,test1,test2,test3;
+    Fp12 Z,test1,test2,test3,test4;
     Fp12_init(&Z);
     Fp12_init(&test1);
     Fp12_init(&test2);
     Fp12_init(&test3);
+    Fp12_init(&test4);
 
 
     gmp_randinit_default (state);
@@ -962,7 +963,6 @@ for(i=0;i<pairing;i++){
     gettimeofday(&tv_B,NULL);
     opt_lazy_time+=timedifference_msec(tv_A,tv_B);
 
-
     if(Fp12_cmp(&test1,&test2)!=0){
         printf("failed!\n\n");
 	Fp12_printf(&test1,"");
@@ -972,8 +972,8 @@ for(i=0;i<pairing;i++){
     }
 }
 
-    printf("BLS12 opt ate.      : %.4f[ms]\n",opt_time/pairing);
-    printf("BLS12 opt ate lazy. : %.4f[ms]\n",opt_lazy_time/pairing);
+    printf("BLS12 opt ate.       : %.4f[ms]\n",opt_time/pairing);
+    printf("BLS12 opt ate lazy.  : %.4f[ms]\n",opt_lazy_time/pairing);
 
 	return 0;
 }

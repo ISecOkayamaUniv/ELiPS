@@ -10,7 +10,7 @@
  * @param[in]a --a pointer to be initialized.
  * @param[in]size --a size of A.
  */
-void mpn_init(mp_limb_t *a,mp_size_t size);
+extern void mpn_init(mp_limb_t *a,mp_size_t size);
 
 /**
  * @brief Set a charcter to a mpn type struct
@@ -19,7 +19,7 @@ void mpn_init(mp_limb_t *a,mp_size_t size);
  * @param[in]mp_size --a size of ans.
  * @param[in]str --a pointer to set.
  */
-void mpn_set_char(mp_limb_t *ans,mp_size_t mp_size,char *str);
+extern void mpn_set_char(mp_limb_t *ans,mp_size_t mp_size,char *str);
 
 /**
  * @brief Set an unsigned long int to a mpn type struct
@@ -28,7 +28,7 @@ void mpn_set_char(mp_limb_t *ans,mp_size_t mp_size,char *str);
  * @param[in]mp_size --a size of ans.
  * @param[in]ui --a unsigned long int to set.
  */
-void mpn_set_ui(mp_limb_t *ans,mp_size_t size,unsigned long int ui);
+extern void mpn_set_ui(mp_limb_t *ans,mp_size_t size,unsigned long int ui);
 
 /**
  * @brief Set an unsigned long int to a mpn type struct
@@ -37,7 +37,7 @@ void mpn_set_ui(mp_limb_t *ans,mp_size_t size,unsigned long int ui);
  * @param[in]mp_size --a size of ans.
  * @param[in]a --a pointer to set.
  */
-void mpn_set_mpz(mp_limb_t *ans,mpz_t a);
+extern void mpn_set_mpz(mp_limb_t *ans,mpz_t a);
 
 /**
  * @brief Modulo a mpn type struct on prime field
@@ -46,7 +46,7 @@ void mpn_set_mpz(mp_limb_t *ans,mpz_t a);
  * @param[in]a --a pointer to be mod.
  * @param[in]a_size --a size of a.
  */
-void mpn_mod(Fp *ans,mp_limb_t *a,mp_size_t size_a);
+extern void mpn_mod(Fp *ans,mp_limb_t *a,mp_size_t size_a);
 
 /**
  * @brief Modulo a mpn type struct
@@ -56,7 +56,7 @@ void mpn_mod(Fp *ans,mp_limb_t *a,mp_size_t size_a);
  * @param[in]a_size --a size of a.
  * @param[in]ui --a unsigned long int to mod.
  */
-void mpn_mod_ui(Fp *ans,mp_limb_t *a,mp_size_t size_a,unsigned long int UI);
+extern void mpn_mod_ui(Fp *ans,mp_limb_t *a,mp_size_t size_a,unsigned long int UI);
 
 /**
  * @brief Compare mpn type construct and char
@@ -67,7 +67,7 @@ void mpn_mod_ui(Fp *ans,mp_limb_t *a,mp_size_t size_a,unsigned long int UI);
  * 
  * @return int --(A==str 0 or other 1)
  */
-int mpn_cmp_char(mp_limb_t *a,char *str);
+extern int mpn_cmp_char(mp_limb_t *a,char *str);
 
 /**
  * @brief Compare mpn type construct and unsigned long int
@@ -78,7 +78,7 @@ int mpn_cmp_char(mp_limb_t *a,char *str);
  * 
  * @return int --(A==UI 0 or other 1)
  */
-int mpn_cmp_ui(mp_limb_t *a,mp_size_t size,unsigned long int ui);
+extern int mpn_cmp_ui(mp_limb_t *a,mp_size_t size,unsigned long int ui);
 
 /**
  * @brief Make sure sizeA or sizeB.
@@ -89,7 +89,7 @@ int mpn_cmp_ui(mp_limb_t *a,mp_size_t size,unsigned long int ui);
  * 
  * @return int --(sizeB 0 or sizeA 1)
  */
-int mpn_chk_limb(mp_limb_t *a,mp_size_t sizeA,mp_size_t sizeB);
+extern int mpn_chk_limb(mp_limb_t *a,mp_size_t sizeA,mp_size_t sizeB);
 
 /**
  * @brief Left Shift mpn type struct on prime field.
@@ -101,7 +101,28 @@ int mpn_chk_limb(mp_limb_t *a,mp_size_t sizeA,mp_size_t sizeB);
  *
  * @note L>64 is OK
  */
-void mpn_lshift_ext(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,long int L);
+extern void mpn_lshift_ext(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,long int L);
+
+/**
+ * @brief righ Shift mpn type struct on prime field.
+ *
+ * @param[out]ans --a pointer of answer.
+ * @param[in]a --a pointer to be shiftted.
+ * @param[in]size --a size of a.
+ * @param[in]sizeB --a long int to shift.
+ *
+ * @note L>64 is OK
+ */
+extern void mpn_rshift_ext(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,long int L);
+
+/**
+ * @brief double mpn type struct on prime field.
+ *
+ * @param[out]ans --a pointer of answer.
+ * @param[in]a --a pointer to be doubled.
+ * @param[in]size --a size of a.
+ */
+extern void mpn_dbl(mp_limb_t *ans,mp_limb_t *a,mp_size_t size);
 
 /**
  * @brief Addition a mpn type struct and char type
@@ -111,7 +132,7 @@ void mpn_lshift_ext(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,long int L);
  * @param[in]size --a size of a.
  * @param[in]str --a char type.
  */
-void mpn_add_char(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,char *str);
+extern void mpn_add_char(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,char *str);
 
 /**
  * @brief Substruction a mpn type struct and char type
@@ -121,7 +142,7 @@ void mpn_add_char(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,char *str);
  * @param[in]size --a size of a.
  * @param[in]str --a char type.
  */
-void mpn_sub_char(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,char *str);
+extern void mpn_sub_char(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,char *str);
 
 /**
  * @brief multiplication a mpn type struct and char type
@@ -131,7 +152,7 @@ void mpn_sub_char(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,char *str);
  * @param[in]size --a size of a.
  * @param[in]str --a char type.
  */
-void mpn_mul_char(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,char *str);
+extern void mpn_mul_char(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,char *str);
 
 /**
  * @brief Addition a mpn type struct and unsigned long int.
@@ -141,7 +162,7 @@ void mpn_mul_char(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,char *str);
  * @param[in]size --a size of a.
  * @param[in]ui --an unsigned long int.
  */
-void mpn_add_ui(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,unsigned long int ui);
+extern void mpn_add_ui(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,unsigned long int ui);
 
 /**
  * @brief Substruction a mpn type struct and unsigned long int.
@@ -151,7 +172,7 @@ void mpn_add_ui(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,unsigned long int ui)
  * @param[in]size --a size of a.
  * @param[in]ui --an unsigned long int.
  */
-void mpn_sub_ui(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,unsigned long int ui);
+extern void mpn_sub_ui(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,unsigned long int ui);
 
 /**
  * @brief Multiplication a mpn type struct and unsigned long int.
@@ -161,7 +182,7 @@ void mpn_sub_ui(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,unsigned long int ui)
  * @param[in]size --a size of a.
  * @param[in]ui --an unsigned long int.
  */
-void mpn_mul_ui(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,unsigned long int ui);
+extern void mpn_mul_ui(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,unsigned long int ui);
 
 /**
  * @brief Exponentiation a mpn type struct.
@@ -173,7 +194,7 @@ void mpn_mul_ui(mp_limb_t *ans,mp_limb_t *a,mp_size_t size,unsigned long int ui)
  * @param[in]r --a pointer in mpn.
  * @param[in]n --a size of r.
  */
-void mpn_pow(mp_limb_t *ans,mp_size_t ans_size,mp_limb_t *a,mp_size_t a_size,mp_limb_t *r,mp_size_t n);
+extern void mpn_pow(mp_limb_t *ans,mp_size_t ans_size,mp_limb_t *a,mp_size_t a_size,mp_limb_t *r,mp_size_t n);
 
 /**
  * @brief Exponentiation a mpn type struct.
@@ -184,7 +205,7 @@ void mpn_pow(mp_limb_t *ans,mp_size_t ans_size,mp_limb_t *a,mp_size_t a_size,mp_
  * @param[in]a_size --a size of a.
  * @param[in]str --a pointer of char.
  */
-void mpn_pow_ui(mp_limb_t *ans,mp_size_t ans_size,mp_limb_t *a,mp_size_t a_size,char *str);
+extern void mpn_pow_ui(mp_limb_t *ans,mp_size_t ans_size,mp_limb_t *a,mp_size_t a_size,char *str);
 
 /**
  * @brief Division a mpn type struct on prime field
@@ -194,7 +215,7 @@ void mpn_pow_ui(mp_limb_t *ans,mp_size_t ans_size,mp_limb_t *a,mp_size_t a_size,
  * @param[in]a_size --a size of a.
  * @param[in]str --a pointer of char.
  */
-void mpn_tdiv_q_char(mp_limb_t *ans,mp_limb_t *a,mp_size_t size_a,char *str);
+extern void mpn_tdiv_q_char(mp_limb_t *ans,mp_limb_t *a,mp_size_t size_a,char *str);
 
 /**
  * @brief Division a mpn type struct on prime field
@@ -204,7 +225,7 @@ void mpn_tdiv_q_char(mp_limb_t *ans,mp_limb_t *a,mp_size_t size_a,char *str);
  * @param[in]a_size --a size of a.
  * @param[in]UI --an unsigned long int.
  */
-void mpn_tdiv_q_ui(mp_limb_t *ans,mp_limb_t *a,mp_size_t size_a,unsigned long int UI);
+extern void mpn_tdiv_q_ui(mp_limb_t *ans,mp_limb_t *a,mp_size_t size_a,unsigned long int UI);
 
 /**
  * @brief Inversion a mpn type struct on prime field
@@ -213,6 +234,6 @@ void mpn_tdiv_q_ui(mp_limb_t *ans,mp_limb_t *a,mp_size_t size_a,unsigned long in
  * @param[in]A --a pointer to be invert.
  * @param[in]p --a pointer of prime.
  */
-void mpn_invert(mp_limb_t *ANS,mp_limb_t *A,mp_limb_t *p);
+extern void mpn_invert(mp_limb_t *ANS,mp_limb_t *A,mp_limb_t *p);
 
 #endif

@@ -20,7 +20,6 @@ void Fp2_set(Fp2 *ANS,Fp2 *A){
 
 void Fp2_set_ui(Fp2 *ANS,unsigned long int UI){
     Fp_set_ui(&ANS->x0,UI);
-    //Fp_set_ui(&ANS->x1,UI);
     Fp_set_ui(&ANS->x1,0);
 }
 void Fp2_set_ui_ui(Fp2 *ANS,unsigned long int UI){
@@ -48,38 +47,38 @@ void Fp2_set_random(Fp2 *ANS,gmp_randstate_t state){
     Fp_set_random(&ANS->x1,state);
 }
 void Fp2_mul(Fp2 *ANS,Fp2 *A,Fp2 *B){
-	static Fp tmp1_Fp,tmp2_Fp,tmp3_Fp,tmp4_Fp;
+    static Fp tmp1_Fp,tmp2_Fp,tmp3_Fp,tmp4_Fp;
 	
-	//set
-	Fp_mul(&tmp1_Fp,&A->x0,&B->x0);//a*c
-	Fp_mul(&tmp2_Fp,&A->x1,&B->x1);//b*d
-	Fp_add(&tmp3_Fp,&A->x0,&A->x1);//a+b
-	Fp_add(&tmp4_Fp,&B->x0,&B->x1);//c+d
-	//x0
-	Fp_sub(&ANS->x0,&tmp1_Fp,&tmp2_Fp);//a*c+b*d*v
-	//x1
-	Fp_mul(&ANS->x1,&tmp3_Fp,&tmp4_Fp);//(a+b)(c+d)
-	Fp_sub(&ANS->x1,&ANS->x1,&tmp1_Fp);
-	Fp_sub(&ANS->x1,&ANS->x1,&tmp2_Fp);
+    //set
+    Fp_mul(&tmp1_Fp,&A->x0,&B->x0);//a*c
+    Fp_mul(&tmp2_Fp,&A->x1,&B->x1);//b*d
+    Fp_add(&tmp3_Fp,&A->x0,&A->x1);//a+b
+    Fp_add(&tmp4_Fp,&B->x0,&B->x1);//c+d
+    //x0
+    Fp_sub(&ANS->x0,&tmp1_Fp,&tmp2_Fp);//a*c+b*d*v
+    //x1
+    Fp_mul(&ANS->x1,&tmp3_Fp,&tmp4_Fp);//(a+b)(c+d)
+    Fp_sub(&ANS->x1,&ANS->x1,&tmp1_Fp);
+    Fp_sub(&ANS->x1,&ANS->x1,&tmp2_Fp);
 }
 void Fp2_mul_lazy(Fp2 *ANS,Fp2 *A,Fp2 *B){
-	static mp_limb_t buf1L[FPLIMB2],buf2L[FPLIMB2],tmpL1[FPLIMB2],tmpL2[FPLIMB2];
-	static mp_limb_t buf[FPLIMB],tmp3[FPLIMB],tmp4[FPLIMB];
+    static mp_limb_t buf1L[FPLIMB2],buf2L[FPLIMB2],tmpL1[FPLIMB2],tmpL2[FPLIMB2];
+    static mp_limb_t buf[FPLIMB],tmp3[FPLIMB],tmp4[FPLIMB];
 
-	//set
-	Lazy_mul(tmpL1,A->x0.x0,B->x0.x0);//a*c
-	Lazy_mul(tmpL2,A->x1.x0,B->x1.x0);//b*d
+    //set
+    Lazy_mul(tmpL1,A->x0.x0,B->x0.x0);//a*c
+    Lazy_mul(tmpL2,A->x1.x0,B->x1.x0);//b*d
 	
-	Lazy_add(tmp3,FPLIMB,A->x0.x0,FPLIMB,A->x1.x0,FPLIMB);
-	Lazy_add(tmp4,FPLIMB,B->x0.x0,FPLIMB,B->x1.x0,FPLIMB);
+    Lazy_add(tmp3,FPLIMB,A->x0.x0,FPLIMB,A->x1.x0,FPLIMB);
+    Lazy_add(tmp4,FPLIMB,B->x0.x0,FPLIMB,B->x1.x0,FPLIMB);
 
-	//x0
-	Lazy_sub_mod(&ANS->x0,tmpL1,tmpL2);
+    //x0
+    Lazy_sub_mod(&ANS->x0,tmpL1,tmpL2);
 
-	//x1
-	Lazy_mul(buf1L,tmp3,tmp4);
-	Lazy_sub(buf2L,FPLIMB2,buf1L,FPLIMB2,tmpL1,FPLIMB2);
-	Lazy_sub_mod(&ANS->x1,buf2L,tmpL2);
+    //x1
+    Lazy_mul(buf1L,tmp3,tmp4);
+    Lazy_sub(buf2L,FPLIMB2,buf1L,FPLIMB2,tmpL1,FPLIMB2);
+    Lazy_sub_mod(&ANS->x1,buf2L,tmpL2);
 }
 void Fp2_mul_ui(Fp2 *ANS,Fp2 *A,unsigned long int UI){
     Fp_mul_ui(&ANS->x0,&A->x0,UI);
@@ -92,15 +91,21 @@ void Fp2_mul_mpn(Fp2 *ANS,Fp2 *A,mp_limb_t *B){
 }
 
 void Fp2_mul_basis(Fp2 *ANS,Fp2 *A){
-	static Fp tmp1_Fp;
+    static Fp tmp1_Fp;
     Fp_set(&tmp1_Fp,&A->x0);
     
     Fp_sub(&ANS->x0,&tmp1_Fp,&A->x1);
     Fp_add(&ANS->x1,&tmp1_Fp,&A->x1);
 }
-
+void Fp2_mul_basis_lazy(Fp2 *ANS,Fp2 *A){
+    static mp_limb_t tmp1[FPLIMB];
+    mpn_copyd(tmp1,A->x0.x0,FPLIMB);
+    
+    Lazy_sub(ANS->x0.x0,FPLIMB,tmp1,FPLIMB,A->x1.x0,FPLIMB);
+    Lazy_add(ANS->x1.x0,FPLIMB,tmp1,FPLIMB,A->x1.x0,FPLIMB);
+}
 void Fp2_inv_basis(Fp2 *ANS,Fp2 *A){
-	static Fp tmp1_Fp,tmp2_Fp;
+    static Fp tmp1_Fp,tmp2_Fp;
     Fp_set(&tmp1_Fp,&A->x0);
     Fp_set(&tmp2_Fp,&A->x1);
     
@@ -111,35 +116,36 @@ void Fp2_inv_basis(Fp2 *ANS,Fp2 *A){
 }
 
 void Fp2_sqr(Fp2 *ANS,Fp2 *A){
-	static Fp tmp1_Fp,tmp2_Fp;
-	Fp_add(&tmp1_Fp,&A->x0,&A->x1);
-	Fp_sub(&tmp2_Fp,&A->x0,&A->x1);
-	//x1
-	Fp_mul(&ANS->x1,&A->x0,&A->x1);
-	Fp_add(&ANS->x1,&ANS->x1,&ANS->x1);
-	//x0
-	Fp_mul(&ANS->x0,&tmp1_Fp,&tmp2_Fp);
+    static Fp tmp1_Fp,tmp2_Fp;
+    Fp_add(&tmp1_Fp,&A->x0,&A->x1);
+    Fp_sub(&tmp2_Fp,&A->x0,&A->x1);
+    //x1
+    Fp_mul(&ANS->x1,&A->x0,&A->x1);
+    Fp_add(&ANS->x1,&ANS->x1,&ANS->x1);
+    //x0
+    Fp_mul(&ANS->x0,&tmp1_Fp,&tmp2_Fp);
 }
 void Fp2_sqr_lazy(Fp2 *ANS,Fp2 *A){
-	static mp_limb_t bufL[FPLIMB2],tmpL3[FPLIMB2];
-	static mp_limb_t tmp1[FPLIMB],tmp2[FPLIMB];
+    static mp_limb_t bufL[FPLIMB2],tmpL3[FPLIMB2];
+    static mp_limb_t tmp1[FPLIMB],tmp2[FPLIMB];
 
-	Lazy_add(tmp1,FPLIMB,A->x0.x0,FPLIMB,A->x1.x0,FPLIMB);
-	Lazy_sub(tmp2,FPLIMB,A->x0.x0,FPLIMB,A->x1.x0,FPLIMB);
+    Lazy_add(tmp1,FPLIMB,A->x0.x0,FPLIMB,A->x1.x0,FPLIMB);
+    Lazy_sub(tmp2,FPLIMB,A->x0.x0,FPLIMB,A->x1.x0,FPLIMB);
 
-	//x1
-	Lazy_mul(tmpL3,A->x0.x0,A->x1.x0);
-	Lazy_add(bufL,FPLIMB2,tmpL3,FPLIMB2,tmpL3,FPLIMB2);
-	mpn_mod(&ANS->x1,bufL,FPLIMB2);
+    //x1
+    Lazy_mul(tmpL3,A->x0.x0,A->x1.x0);
+    Lazy_add(bufL,FPLIMB2,tmpL3,FPLIMB2,tmpL3,FPLIMB2);
+    mpn_mod(&ANS->x1,bufL,FPLIMB2);
 
-	//x0
-	Lazy_mul(bufL,tmp1,tmp2);
-	mpn_mod(&ANS->x0,bufL,FPLIMB2);
+    //x0
+    Lazy_mul(bufL,tmp1,tmp2);
+    mpn_mod(&ANS->x0,bufL,FPLIMB2);
 }
 void Fp2_add(Fp2 *ANS,Fp2 *A,Fp2 *B){
     Fp_add(&ANS->x0,&A->x0,&B->x0);
     Fp_add(&ANS->x1,&A->x1,&B->x1);
 }
+
 void Fp2_add_lazy(Fp2 *ANS,Fp2 *A,Fp2 *B){
     Lazy_add(ANS->x0.x0,FPLIMB,A->x0.x0,FPLIMB,B->x0.x0,FPLIMB);
     Lazy_add(ANS->x1.x0,FPLIMB,A->x1.x0,FPLIMB,B->x1.x0,FPLIMB);
@@ -148,36 +154,39 @@ void Fp2_add_final(Fp2 *ANS,Fp2 *A,Fp2 *B){
     Fp_add_final(&ANS->x0,&A->x0,&B->x0);
     Fp_add_final(&ANS->x1,&A->x1,&B->x1);
 }
+
 void Fp2_add_ui(Fp2 *ANS,Fp2 *A,unsigned long int UI){
+    Fp_add_ui(&ANS->x0,&A->x0,UI);
+    Fp_add_ui(&ANS->x1,&A->x1,0);
+}
+void Fp2_add_ui_ui(Fp2 *ANS,Fp2 *A,unsigned long int UI){
     Fp_add_ui(&ANS->x0,&A->x0,UI);
     Fp_add_ui(&ANS->x1,&A->x1,UI);
 }
-
 void Fp2_add_mpn(Fp2 *ANS,Fp2 *A,mp_limb_t *B){
     Fp_add_mpn(&ANS->x0,&A->x0,B);
     Fp_add_mpn(&ANS->x1,&A->x1,B);
 }
-
 void Fp2_sub(Fp2 *ANS,Fp2 *A,Fp2 *B){
     Fp_sub(&ANS->x0,&A->x0,&B->x0);
     Fp_sub(&ANS->x1,&A->x1,&B->x1);
 }
-
 void Fp2_sub_final(Fp2 *ANS,Fp2 *A,Fp2 *B){
     Fp_sub_final(&ANS->x0,&A->x0,&B->x0);
     Fp_sub_final(&ANS->x1,&A->x1,&B->x1);
 }
-
 void Fp2_sub_lazy(Fp2 *ANS,Fp2 *A,Fp2 *B){
     Lazy_sub(ANS->x0.x0,FPLIMB,A->x0.x0,FPLIMB,B->x0.x0,FPLIMB);
     Lazy_sub(ANS->x1.x0,FPLIMB,A->x1.x0,FPLIMB,B->x1.x0,FPLIMB);
-}
-    
+}  
 void Fp2_sub_ui(Fp2 *ANS,Fp2 *A,unsigned long int UI){
+    Fp_sub_ui(&ANS->x0,&A->x0,UI);
+    Fp_sub_ui(&ANS->x1,&A->x1,0);
+}
+void Fp2_sub_ui_ui(Fp2 *ANS,Fp2 *A,unsigned long int UI){
     Fp_sub_ui(&ANS->x0,&A->x0,UI);
     Fp_sub_ui(&ANS->x1,&A->x1,UI);
 }
-
 void Fp2_sub_mpn(Fp2 *ANS,Fp2 *A,mp_limb_t *B){
     Fp_sub_mpn(&ANS->x0,&A->x0,B);
     Fp_sub_mpn(&ANS->x1,&A->x1,B);
@@ -333,7 +342,6 @@ void Fp2_pow(Fp2 *ANS,Fp2 *A,mpz_t scalar){
     
     Fp2_set(ANS,&tmp);
 }
-
 
 int  Fp2_cmp(Fp2 *A,Fp2 *B){
     if(Fp_cmp(&A->x0,&B->x0)==0 && Fp_cmp(&A->x1,&B->x1)==0){

@@ -11,6 +11,14 @@ void EFpZ_init(EFpZ *P){
     Fp_init(&P->z);
     P->infinity=0;
 }
+void EFpZT_init(EFpZT *P){
+    Fp_init(&P->x);
+    Fp_init(&P->y);
+    Fp_init(&P->z);
+    Fp_init(&P->zz);
+    Fp_init(&P->zzz);
+    P->infinity=0;
+}
 void EFp_printf(EFp *P,char *str){
     printf("%s",str);
     if(P->infinity==0){
@@ -37,6 +45,24 @@ void EFpZ_printf(EFpZ *P,char *str){
         printf("Infinity");
     }
 }
+void EFpZT_printf(EFpZT *P,char *str){
+    printf("%s",str);
+    if(P->infinity==0){
+        printf("(");
+        Fp_printf(&P->x,"");
+        printf(",");
+        Fp_printf(&P->y,"");
+        printf(",");
+        Fp_printf(&P->z,"");
+        printf(",");
+        Fp_printf(&P->zz,"");
+        printf(",");
+        Fp_printf(&P->zzz,"");
+        printf(")");
+    }else{
+        printf("Infinity");
+    }
+}
 void EFp_set(EFp *ANS,EFp *A){
     Fp_set(&ANS->x,&A->x);
     Fp_set(&ANS->y,&A->y);
@@ -48,10 +74,30 @@ void EFpZ_set(EFpZ *ANS,EFpZ *A){
     Fp_set(&ANS->z,&A->z);
     ANS->infinity=A->infinity;
 }
+void EFpZT_set(EFpZT *ANS,EFpZT *A){
+    Fp_set(&ANS->x,&A->x);
+    Fp_set(&ANS->y,&A->y);
+    Fp_set(&ANS->z,&A->z);
+    Fp_set(&ANS->zz,&A->zz);
+    Fp_set(&ANS->zzz,&A->zzz);
+    ANS->infinity=A->infinity;
+}
 void EFp_to_EFpZ(EFpZ *ANS,EFp *A){
     Fp_set(&ANS->x,&A->x);
     Fp_set(&ANS->y,&A->y);
     Fp_set_ui(&ANS->z,1);
+    ANS->infinity=A->infinity;
+}
+void EFpZT_to_EFpZ(EFpZ *ANS,EFpZT *A){
+    Fp_set(&ANS->x,&A->x);
+    Fp_set(&ANS->y,&A->y);
+    Fp_set(&ANS->z,&A->z);
+    ANS->infinity=A->infinity;
+}
+void EFpZ_to_EFpZT(EFpZT *ANS,EFpZ *A){
+    Fp_set(&ANS->x,&A->x);
+    Fp_set(&ANS->y,&A->y);
+    Fp_set(&ANS->z,&A->z);
     ANS->infinity=A->infinity;
 }
 void EFp_Jacobian(EFp *ANS,EFpZ *A){
@@ -94,8 +140,8 @@ void EFp_rational_point(EFp *P){
     Fp_init(&tmp1);
     Fp_init(&tmp2);
     Fp_init(&tmp_x);
-	gmp_randinit_default (state);
-	gmp_randseed_ui(state,(unsigned long)time(NULL));
+    gmp_randinit_default (state);
+    gmp_randseed_ui(state,(unsigned long)time(NULL));
 	
     while(1){
         Fp_set_random(&P->x,state);
@@ -110,8 +156,8 @@ void EFp_rational_point(EFp *P){
 }
 
 void EFp_ECD(EFp *ANS,EFp *P){
-	static EFp tmp1_EFp;
-	static Fp tmp1_Fp,tmp2_Fp,tmp3_Fp;
+    static EFp tmp1_EFp;
+    static Fp tmp1_Fp,tmp2_Fp,tmp3_Fp;
     if(Fp_cmp_zero(&P->y)==0){
         ANS->infinity=1;
         return;
@@ -138,9 +184,9 @@ void EFp_ECD(EFp *ANS,EFp *P){
 }
 
 void EFp_ECD_Jacobian(EFpZ *ANS,EFpZ *P){
-	static EFpZ Pt;
-	static Fp tmp1_Fp,tmp2_Fp,tmp3_Fp;
-	static Fp s,m,T;
+    static EFpZ Pt;
+    static Fp tmp1_Fp,tmp2_Fp,tmp3_Fp;
+    static Fp s,m,T;
     if(Fp_cmp_zero(&P->y)==0){
         ANS->infinity=1;
         return;
@@ -184,10 +230,10 @@ void EFp_ECD_Jacobian(EFpZ *ANS,EFpZ *P){
 }
 
 void EFp_ECD_lazy(EFp *ANS,EFp *P){
-	static Fp tmpF2,tmpF3;
-	static mp_limb_t bufL[FPLIMB2],tmpL2[FPLIMB2],tmpL3[FPLIMB2],tmpL5[FPLIMB2];
-	static mp_limb_t buf[FPLIMB],tmp1[FPLIMB],tmp4[FPLIMB];
-	static EFp P1t;
+    static Fp tmpF2,tmpF3;
+    static mp_limb_t bufL[FPLIMB2],tmpL2[FPLIMB2],tmpL3[FPLIMB2],tmpL5[FPLIMB2];
+    static mp_limb_t buf[FPLIMB],tmp1[FPLIMB],tmp4[FPLIMB];
+    static EFp P1t;
     if(Fp_cmp_zero(&P->y)==0){
         ANS->infinity=1;
         return;
@@ -218,13 +264,13 @@ void EFp_ECD_lazy(EFp *ANS,EFp *P){
 }
 
 void EFp_ECD_Jacobian_lazy(EFpZ *ANS,EFpZ *P){
-	static mp_limb_t s[FPLIMB],m[FPLIMB],T[FPLIMB];
+    static mp_limb_t s[FPLIMB],m[FPLIMB],T[FPLIMB];
 
-	static Fp bufF;
-	static mp_limb_t bufL[FPLIMB2],tmpL1[FPLIMB2];
-	static mp_limb_t buf[FPLIMB],tmp1[FPLIMB];
-	static mp_limb_t tmpy[FPLIMB];
-	static EFpZ Pt;
+    static Fp bufF;
+    static mp_limb_t bufL[FPLIMB2],tmpL1[FPLIMB2];
+    static mp_limb_t buf[FPLIMB],tmp1[FPLIMB];
+    static mp_limb_t tmpy[FPLIMB];
+    static EFpZ Pt;
     if(Fp_cmp_zero(&P->y)==0){
         ANS->infinity=1;
         return;
@@ -233,7 +279,7 @@ void EFp_ECD_Jacobian_lazy(EFpZ *ANS,EFpZ *P){
     EFpZ_set(&Pt,P);
     
     //s
-    Lazy_mul(bufL,Pt.y.x0,Pt.y.x0);
+    Lazy_sqr(bufL,Pt.y.x0);
     Lazy_mod(tmpy,bufL,FPLIMB2);
 
     Lazy_mul(bufL,tmpy,Pt.x.x0);
@@ -250,7 +296,7 @@ void EFp_ECD_Jacobian_lazy(EFpZ *ANS,EFpZ *P){
     Lazy_mod(m,bufL,FPLIMB2);
 
     //T
-    Lazy_mul(bufL,m,m);
+    Lazy_sqr(bufL,m);
     Lazy_mod(T,bufL,FPLIMB2);//heraseru
     Lazy_add(tmp1,FPLIMB,s,FPLIMB,s,FPLIMB);
     Lazy_sub(buf,FPLIMB,T,FPLIMB,tmp1,FPLIMB);
@@ -263,7 +309,7 @@ void EFp_ECD_Jacobian_lazy(EFpZ *ANS,EFpZ *P){
     Lazy_sub(tmp1,FPLIMB,s,FPLIMB,T,FPLIMB);
     Lazy_mul(bufL,tmp1,m);
 
-    Lazy_mul(tmpL1,tmpy,tmpy);
+    Lazy_sqr(tmpL1,tmpy);
     Lazy_mod(tmp1,tmpL1,FPLIMB2);
     Lazy_add(tmp1,FPLIMB,tmp1,FPLIMB,tmp1,FPLIMB);
     Lazy_add(tmp1,FPLIMB,tmp1,FPLIMB,tmp1,FPLIMB);
@@ -279,8 +325,8 @@ void EFp_ECD_Jacobian_lazy(EFpZ *ANS,EFpZ *P){
     mpn_mod(&ANS->z,bufL,FPLIMB2);
 }
 void EFp_ECA(EFp *ANS,EFp *P1,EFp *P2){
-	static EFp tmp1_EFp,tmp2_EFp;
-	static Fp tmp1_Fp,tmp2_Fp,tmp3_Fp;
+    static EFp tmp1_EFp,tmp2_EFp;
+    static Fp tmp1_Fp,tmp2_Fp,tmp3_Fp;
     if(P1->infinity==1){
         EFp_set(ANS,P2);
         return;
@@ -315,9 +361,9 @@ void EFp_ECA(EFp *ANS,EFp *P1,EFp *P2){
     Fp_sub(&ANS->y,&tmp2_Fp,&tmp1_EFp.y);
 }
 void EFp_ECA_Jacobian(EFpZ *ANS,EFpZ *P1,EFpZ *P2){
-	static EFpZ Pt1,Pt2;
-	static Fp tmp1_Fp,tmp2_Fp,tmp3_Fp;
-	static Fp U1,U2,S1,S2,H,r;
+    static EFpZ Pt1,Pt2;
+    static Fp tmp1_Fp,tmp2_Fp,tmp3_Fp;
+    static Fp U1,U2,S1,S2,H,r;
     if(P1->infinity==1){
         EFpZ_set(ANS,P2);
         return;
@@ -391,10 +437,10 @@ void EFp_ECA_Jacobian(EFpZ *ANS,EFpZ *P1,EFpZ *P2){
 }
 
 void EFp_ECA_lazy(EFp *ANS,EFp *P1,EFp *P2){
-	static Fp Fbuf,tmpF4,out;
-	static mp_limb_t bufL[FPLIMB2],tmpL3[FPLIMB2],tmpL5[FPLIMB2],tmpL6[FPLIMB2];
-	static mp_limb_t buf[FPLIMB],tmp1[FPLIMB],tmp2[FPLIMB];
-	static EFp P1t,P2t;
+    static Fp Fbuf,tmpF4,out;
+    static mp_limb_t bufL[FPLIMB2],tmpL3[FPLIMB2],tmpL5[FPLIMB2],tmpL6[FPLIMB2];
+    static mp_limb_t buf[FPLIMB],tmp1[FPLIMB],tmp2[FPLIMB];
+    static EFp P1t,P2t;
     if(P1->infinity==1){
         EFp_set(ANS,P2);
         return;
@@ -434,13 +480,13 @@ void EFp_ECA_lazy(EFp *ANS,EFp *P1,EFp *P2){
 }
 
 void EFp_ECA_Jacobian_lazy(EFpZ *ANS,EFpZ *P1,EFpZ *P2){
-	static EFpZ Pt1,Pt2;
-	static mp_limb_t U1[FPLIMB],U2[FPLIMB],S1[FPLIMB],S2[FPLIMB],H[FPLIMB],r[FPLIMB];
+    static EFpZ Pt1,Pt2;
+    static mp_limb_t U1[FPLIMB],U2[FPLIMB],S1[FPLIMB],S2[FPLIMB],H[FPLIMB],r[FPLIMB];
 
-	static mp_limb_t bufL[FPLIMB2],tmpL1[FPLIMB2];
-	static mp_limb_t buf[FPLIMB],tmp1[FPLIMB];
-	static mp_limb_t tmpZ1[FPLIMB],tmpZ2[FPLIMB],tmpH2[FPLIMB],tmpH3[FPLIMB],tmpU1H2[FPLIMB];
-Fp out;
+    static mp_limb_t bufL[FPLIMB2],tmpL1[FPLIMB2];
+    static mp_limb_t buf[FPLIMB],tmp1[FPLIMB];
+    static mp_limb_t tmpZ1[FPLIMB],tmpZ2[FPLIMB],tmpH2[FPLIMB],tmpH3[FPLIMB],tmpU1H2[FPLIMB];
+    Fp out;
     if(P1->infinity==1){
         EFpZ_set(ANS,P2);
         return;
@@ -461,12 +507,14 @@ Fp out;
     EFpZ_set(&Pt2,P2);
 
     //U1
+    //Lazy_sqr(bufL,Pt2.z.x0);
     Lazy_mul(bufL,Pt2.z.x0,Pt2.z.x0);
     Lazy_mod(tmpZ2,bufL,FPLIMB2);
     Lazy_mul(tmpL1,tmpZ2,Pt1.x.x0);
     Lazy_mod(U1,tmpL1,FPLIMB2);
 
     //U2
+    //Lazy_sqr(bufL,Pt1.z.x0);
     Lazy_mul(bufL,Pt1.z.x0,Pt1.z.x0);
     Lazy_mod(tmpZ1,bufL,FPLIMB2);
     Lazy_mul(tmpL1,tmpZ1,Pt2.x.x0);
@@ -477,7 +525,6 @@ Fp out;
     Lazy_mod(tmp1,bufL,FPLIMB2);
     Lazy_mul(tmpL1,tmp1,Pt1.y.x0);
     Lazy_mod(S1,tmpL1,FPLIMB2);
-
 
     //S2
     Lazy_mul(bufL,tmpZ1,Pt1.z.x0);
@@ -494,8 +541,10 @@ Fp out;
     Lazy_mod(r,buf,FPLIMB);
 
     //ANS->x
+    //Lazy_sqr(bufL,r);
     Lazy_mul(bufL,r,r);
 
+    //Lazy_sqr(tmpL1,H);
     Lazy_mul(tmpL1,H,H);
     Lazy_mod(tmpH2,tmpL1,FPLIMB2);
     Lazy_mul(tmpL1,tmpH2,H);
@@ -519,6 +568,93 @@ Fp out;
     Lazy_mod(tmp1,tmpL1,FPLIMB2);
     Lazy_mul(bufL,tmp1,H);
     mpn_mod(&ANS->z,bufL,FPLIMB2);
+}
+void EFp_ECA_Jacobian_table(EFpZ *ANS,EFpZ *P1,EFpZT *P2){
+    static EFpZ Pt1;
+    static EFpZT Pt2;
+    static mp_limb_t U1[FPLIMB],U2[FPLIMB],S1[FPLIMB],S2[FPLIMB],H[FPLIMB],r[FPLIMB];
+
+    static mp_limb_t bufL[FPLIMB2],tmpL1[FPLIMB2];
+    static mp_limb_t buf[FPLIMB],tmp1[FPLIMB];
+    static mp_limb_t tmpZ1[FPLIMB],tmpZ2[FPLIMB],tmpH2[FPLIMB],tmpH3[FPLIMB],tmpU1H2[FPLIMB];
+    Fp out;
+    if(P1->infinity==1){
+        EFpZT_to_EFpZ(ANS,P2);
+        return;
+    }else if(P2->infinity==1){
+        EFpZ_set(ANS,P1);
+        return;
+    }else if(Fp_cmp(&P1->x,&P2->x)==0){
+        if(Fp_cmp(&P1->y,&P2->y)!=0){
+            ANS->infinity=1;
+            return;
+        }else{
+            EFp_ECD_Jacobian_lazy(ANS,P1);
+            return;
+        }
+    }
+    
+    EFpZ_set(&Pt1,P1);
+    EFpZT_set(&Pt2,P2);
+
+    //U1
+    Lazy_mul(tmpL1,Pt2.zz.x0,Pt1.x.x0);
+    Lazy_mod(U1,tmpL1,FPLIMB2);
+
+    //U2
+    //Lazy_sqr(bufL,Pt1.z.x0);
+    Lazy_mul(bufL,Pt1.z.x0,Pt1.z.x0);
+    Lazy_mod(tmpZ1,bufL,FPLIMB2);
+    Lazy_mul(tmpL1,tmpZ1,Pt2.x.x0);
+    Lazy_mod(U2,tmpL1,FPLIMB2);
+
+    //S1
+    Lazy_mul(tmpL1,Pt2.zzz.x0,Pt1.y.x0);
+    Lazy_mod(S1,tmpL1,FPLIMB2);
+
+    //S2
+    Lazy_mul(bufL,tmpZ1,Pt1.z.x0);
+    Lazy_mod(tmp1,bufL,FPLIMB2);
+    Lazy_mul(tmpL1,tmp1,Pt2.y.x0);
+    Lazy_mod(S2,tmpL1,FPLIMB2);
+    
+    //H
+    Lazy_sub(buf,FPLIMB,U2,FPLIMB,U1,FPLIMB);
+    Lazy_mod(H,buf,FPLIMB);
+
+    //r
+    Lazy_sub(buf,FPLIMB,S2,FPLIMB,S1,FPLIMB);
+    Lazy_mod(r,buf,FPLIMB);
+
+    //ANS->x
+    //Lazy_sqr(bufL,r);
+    Lazy_mul(bufL,r,r);
+
+    //Lazy_sqr(tmpL1,H);
+    Lazy_mul(tmpL1,H,H);
+    Lazy_mod(tmpH2,tmpL1,FPLIMB2);
+    Lazy_mul(tmpL1,tmpH2,H);
+    Lazy_mod(tmpH3,tmpL1,FPLIMB2);
+    Lazy_sub(bufL,FPLIMB2,bufL,FPLIMB2,tmpL1,FPLIMB2);
+
+    Lazy_mul(tmpL1,tmpH2,U1);
+    Lazy_mod(tmpU1H2,tmpL1,FPLIMB2);
+    Lazy_add(tmpL1,FPLIMB2,tmpL1,FPLIMB2,tmpL1,FPLIMB2);
+    Lazy_sub_mod(&ANS->x,bufL,tmpL1);
+
+    //ANS->y
+    Lazy_sub(tmp1,FPLIMB,tmpU1H2,FPLIMB,ANS->x.x0,FPLIMB);
+    Lazy_mul(bufL,tmp1,r);
+
+    Lazy_mul(tmpL1,tmpH3,S1);
+    Lazy_sub_mod(&ANS->y,bufL,tmpL1);
+    
+    //ANS->z
+    Lazy_mul(tmpL1,Pt1.z.x0,Pt2.z.x0);
+    Lazy_mod(tmp1,tmpL1,FPLIMB2);
+    Lazy_mul(bufL,tmp1,H);
+    mpn_mod(&ANS->z,bufL,FPLIMB2);
+
 }
 void EFp_SCM(EFp *ANS,EFp *P,mpz_t scalar){
     if(mpz_cmp_ui(scalar,0)==0){

@@ -5,10 +5,10 @@
 #include <ELiPS/test.h>
 
 //final exp
-void BN12_Final_exp_plain(Fp12 *ANS,Fp12 *A);
-void BN12_Fp12_pow_X(Fp12 *ANS,Fp12 *A);
-void BN12_Fp12_pow_X_lazy(Fp12 *ANS,Fp12 *A);
-void BN12_Final_exp_optimal(Fp12 *ANS,Fp12 *A);
-void BN12_Final_exp_optimal_lazy(Fp12 *ANS,Fp12 *A);
+extern void BN12_Final_exp_plain(Fp12 *ANS,Fp12 *A);
+extern void BN12_Fp12_pow_X(Fp12 *ANS,Fp12 *A);
+extern void BN12_Fp12_pow_X_lazy(Fp12 *ANS,Fp12 *A);
+extern void BN12_Final_exp_optimal(Fp12 *ANS,Fp12 *A);
+extern void BN12_Final_exp_optimal_lazy(Fp12 *ANS,Fp12 *A);
 
 #endif

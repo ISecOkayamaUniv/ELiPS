@@ -4,6 +4,6 @@
 #include <ELiPS/Define.h>
 
 
-void Joint_sparse_form(int **binary,mpz_t S[2],int *loop_length);
+extern void Joint_sparse_form(int **binary,mpz_t S[2],int *loop_length);
 
 #endif
