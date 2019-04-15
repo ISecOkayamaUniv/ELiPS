@@ -553,6 +553,114 @@ void BLS12_Fp12_G3_EXP_4split(Fp12 *ANS,Fp12 *A,mpz_t scalar){
     gettimeofday(&tv_end,NULL);
     G3EXP_4SPLIT=timedifference_msec(tv_start,tv_end);
 }
+
+void BLS12_Fp12_G3_EXP_4split_GS(Fp12 *ANS,Fp12 *A,mpz_t scalar){
+    gettimeofday(&tv_start,NULL);
+    
+    //s=s0+s1[x^2]+s2[x^4]+s3[x^6]
+    int i,length_s[4],loop_length;
+    Fp12 Buf;
+    Fp12_init(&Buf);
+    Fp12 next_f,f,f_2x,f_4x,f_6x;
+    Fp12_init(&next_f);
+    Fp12_init(&f);
+    Fp12_init(&f_2x);
+    Fp12_init(&f_4x);
+    Fp12_init(&f_6x);
+    mpz_t A_s,B_s,s[4],x_4,x_2;
+    mpz_init(A_s);
+    mpz_init(B_s);
+    mpz_init(x_2);
+    mpz_init(x_4);
+    for(i=0; i<4; i++){
+        mpz_init(s[i]);
+    }
+    //table
+    Fp12 table[16];
+    for(i=0; i<16; i++){
+        Fp12_init(&table[i]);
+    }
+    
+    //set f
+    Fp12_set(&f,A);                            //f
+    Fp12_frobenius_map_p1(&f_2x,&f);                    //f_2x
+    Fp12_frobenius_map_p2(&f_4x,&f);                    //f_4x
+    Fp12_frobenius_map_p3(&f_6x,&f);                    //f_6x
+    
+    //set table
+    Fp_set_ui(&table[0].x0.x0.x0,1);            //0000
+    Fp12_set(&table[1],&f);                        //0001
+    Fp12_set(&table[2],&f_2x);                    //0010
+    Fp12_mul(&table[3],&f_2x,&f);                    //0011
+    Fp12_set(&table[4],&f_4x);                    //0100
+    Fp12_mul(&table[5],&f_4x,&f);                    //0101
+    Fp12_mul(&table[6],&f_4x,&f_2x);                //0110
+    Fp12_mul(&table[7],&table[6],&f);                //0111
+    Fp12_set(&table[8],&f_6x);                    //1000
+    Fp12_mul(&table[9],&f_6x,&f);                    //1001
+    Fp12_mul(&table[10],&f_6x,&f_2x);                //1010
+    Fp12_mul(&table[11],&f_6x,&table[3]);            //1011
+    Fp12_mul(&table[12],&f_6x,&f_4x);                //1100
+    Fp12_mul(&table[13],&table[12],&f);                //1101
+    Fp12_mul(&table[14],&table[12],&f_2x);            //1110
+    Fp12_mul(&table[15],&table[14],&f);                //1111
+    
+    //set
+    //s0,s1,s2,s3
+    mpz_set(x_2,X_z);
+    mpz_mul(x_4,x_2,x_2);
+    mpz_tdiv_qr(B_s,A_s,scalar,x_4);
+    mpz_tdiv_qr(s[1],s[0],A_s,x_2);
+    mpz_tdiv_qr(s[3],s[2],B_s,x_2);
+    
+    //binary
+    loop_length=0;
+    for(i=0; i<4; i++){
+        length_s[i]=(int)mpz_sizeinbase(s[i],2);
+        if(loop_length<length_s[i]){
+            loop_length=length_s[i];
+        }
+    }
+    
+    //set binary
+    char binary_s[4][loop_length+1];
+    char str[5],*e;
+    int binary[loop_length+1];
+    for(i=0; i<4; i++){
+        if(length_s[i]==loop_length){
+            mpz_get_str(binary_s[i],2,s[i]);
+        }else{
+            char binary_buf[length_s[i]];
+            mpz_get_str(binary_buf,2,s[i]);
+            memset(binary_s[i],'0',sizeof(binary_s[i]));
+            memmove(binary_s[i]+loop_length-length_s[i],binary_buf,sizeof(binary_buf));
+        }
+    }
+    for(i=0; i<loop_length; i++){
+        sprintf(str,"%c%c%c%c",binary_s[3][i],binary_s[2][i],binary_s[1][i],binary_s[0][i]);
+        binary[i]=strtol(str,&e,2);
+    }
+    
+    Fp12_set(&next_f,&table[binary[0]]);
+    
+    //SCM
+    for(i=1; i<loop_length; i++){
+        Fp12_sqr_GS(&next_f,&next_f);
+        Fp12_mul(&next_f,&next_f,&table[binary[i]]);
+    }
+    
+    Fp12_set(ANS,&next_f);
+    
+    Fp12_init(&f_6x);
+    mpz_clear(x_2);
+    mpz_clear(x_4);
+    for(i=0; i<4; i++){
+        mpz_clear(s[i]);
+    }
+    
+    gettimeofday(&tv_end,NULL);
+    G3EXP_4SPLIT=timedifference_msec(tv_start,tv_end);
+}
 void BLS12_Fp12_G3_EXP_4split_lazy(Fp12 *ANS,Fp12 *A,mpz_t scalar){
     gettimeofday(&tv_start,NULL);
     
@@ -660,9 +768,8 @@ void BLS12_Fp12_G3_EXP_4split_lazy(Fp12 *ANS,Fp12 *A,mpz_t scalar){
     gettimeofday(&tv_end,NULL);
     G3EXP_4SPLIT=timedifference_msec(tv_start,tv_end);
 }
-/*
-void BLS12_Fp12_G3_EXP_4split_lazy3(Fp12 *ANS,Fp12 *A,mpz_t scalar){
-    //gettimeofday(&tv_start,NULL);
+void BLS12_Fp12_G3_EXP_4split_GS_lazy(Fp12 *ANS,Fp12 *A,mpz_t scalar){
+    gettimeofday(&tv_start,NULL);
     
     //s=s0+s1[x^2]+s2[x^4]+s3[x^6]
     int i,length_s[4],loop_length;
@@ -698,19 +805,19 @@ void BLS12_Fp12_G3_EXP_4split_lazy3(Fp12 *ANS,Fp12 *A,mpz_t scalar){
     Fp_set_ui(&table[0].x0.x0.x0,1);            //0000
     Fp12_set(&table[1],&f);                        //0001
     Fp12_set(&table[2],&f_2x);                    //0010
-    Fp12_mul_lazy3(&table[3],&f_2x,&f);                    //0011
+    Fp12_mul_lazy(&table[3],&f_2x,&f);                    //0011
     Fp12_set(&table[4],&f_4x);                    //0100
-    Fp12_mul_lazy3(&table[5],&f_4x,&f);                    //0101
-    Fp12_mul_lazy3(&table[6],&f_4x,&f_2x);                //0110
-    Fp12_mul_lazy3(&table[7],&table[6],&f);                //0111
+    Fp12_mul_lazy(&table[5],&f_4x,&f);                    //0101
+    Fp12_mul_lazy(&table[6],&f_4x,&f_2x);                //0110
+    Fp12_mul_lazy(&table[7],&table[6],&f);                //0111
     Fp12_set(&table[8],&f_6x);                    //1000
-    Fp12_mul_lazy3(&table[9],&f_6x,&f);                    //1001
-    Fp12_mul_lazy3(&table[10],&f_6x,&f_2x);                //1010
-    Fp12_mul_lazy3(&table[11],&f_6x,&table[3]);            //1011
-    Fp12_mul_lazy3(&table[12],&f_6x,&f_4x);                //1100
-    Fp12_mul_lazy3(&table[13],&table[12],&f);                //1101
-    Fp12_mul_lazy3(&table[14],&table[12],&f_2x);            //1110
-    Fp12_mul_lazy3(&table[15],&table[14],&f);                //1111
+    Fp12_mul_lazy(&table[9],&f_6x,&f);                    //1001
+    Fp12_mul_lazy(&table[10],&f_6x,&f_2x);                //1010
+    Fp12_mul_lazy(&table[11],&f_6x,&table[3]);            //1011
+    Fp12_mul_lazy(&table[12],&f_6x,&f_4x);                //1100
+    Fp12_mul_lazy(&table[13],&table[12],&f);                //1101
+    Fp12_mul_lazy(&table[14],&table[12],&f_2x);            //1110
+    Fp12_mul_lazy(&table[15],&table[14],&f);                //1111
     
     //set
     //s0,s1,s2,s3
@@ -752,8 +859,8 @@ void BLS12_Fp12_G3_EXP_4split_lazy3(Fp12 *ANS,Fp12 *A,mpz_t scalar){
     
     //SCM
     for(i=1; i<loop_length; i++){
-        Fp12_sqr_cyclotomic_lazy3(&next_f,&next_f);
-        Fp12_mul_lazy3(&next_f,&next_f,&table[binary[i]]);
+        Fp12_sqr_GS_lazy(&next_f,&next_f);
+        Fp12_mul_lazy(&next_f,&next_f,&table[binary[i]]);
     }
     
     Fp12_set(ANS,&next_f);
@@ -765,7 +872,6 @@ void BLS12_Fp12_G3_EXP_4split_lazy3(Fp12 *ANS,Fp12 *A,mpz_t scalar){
         mpz_clear(s[i]);
     }
     
-    //gettimeofday(&tv_end,NULL);
-    //G3EXP_4SPLIT=timedifference_msec(tv_start,tv_end);
+    gettimeofday(&tv_end,NULL);
+    G3EXP_4SPLIT=timedifference_msec(tv_start,tv_end);
 }
-*/

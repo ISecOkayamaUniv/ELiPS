@@ -52,7 +52,7 @@ void Fp6_set_random(Fp6 *ANS,gmp_randstate_t state){
 }
 
 void Fp6_mul(Fp6 *ANS,Fp6 *A,Fp6 *B){
-	static Fp2 tmp1_Fp2,tmp2_Fp2,tmp3_Fp2,tmp4_Fp2,tmp5_Fp2,tmp6_Fp2,tmp7_Fp2;
+    static Fp2 tmp1_Fp2,tmp2_Fp2,tmp3_Fp2,tmp4_Fp2,tmp5_Fp2,tmp6_Fp2,tmp7_Fp2;
     //set
     Fp2_mul(&tmp1_Fp2,&A->x0,&B->x0);//x0*y0
     Fp2_mul(&tmp2_Fp2,&A->x1,&B->x1);//x1*y1
@@ -84,8 +84,48 @@ void Fp6_mul(Fp6 *ANS,Fp6 *A,Fp6 *B){
     Fp2_sub(&tmp7_Fp2,&tmp7_Fp2,&tmp3_Fp2);
     Fp2_add(&ANS->x2,&tmp2_Fp2,&tmp7_Fp2);
 }
+/*
+//karat
+void Fp6_mul(Fp6 *ANS,Fp6 *A,Fp6 *B){
+    static Fp2 v0,v1,v2,a0a1,a0a2,a1a2,b0b1,b0b2,b1b2,buf;
+    static Fp2 tmp1_Fp2,tmp2_Fp2,tmp3_Fp2,tmp4_Fp2,tmp5_Fp2,tmp6_Fp2,tmp7_Fp2;
+    //set
+    Fp2_mul(&v0,&A->x0,&B->x0);//x0*y0
+    Fp2_mul(&v1,&A->x1,&B->x1);//x1*y1
+    Fp2_mul(&v2,&A->x2,&B->x2);//x2*y2
+    
+    Fp2_add(&a0a1,&A->x0,&A->x1);//x0+x1
+    Fp2_add(&b0b1,&B->x0,&B->x1);//y0+y1
+    Fp2_mul(&tmp1_Fp2,&a0a1,&b0b1);//(x0+x1)(y0+y1)
+    
+    Fp2_add(&a1a2,&A->x1,&A->x2);//x1+x2
+    Fp2_add(&b1b2,&B->x1,&B->x2);//y1+y2
+    Fp2_mul(&tmp2_Fp2,a1a2,b1b2);//(x1+x2)(y1+y2)
+    
+    Fp2_add(&a0a2,&B->x0,&B->x2);//y2+y0
+    Fp2_add(&b0b2,&A->x0,&A->x2);//x2+x0
+    Fp2_mul(&tmp3_Fp2,&a0a2,&b0b2);//(x2+x0)(y2+y0)
+    
+    //x0
+    Fp2_sub(&buf,&tmp2_Fp2,&v1);
+    Fp2_sub(&buf,&buf,&v2);//(x1+x2)(y1+y2)-x1y1-x2y2
+    Fp2_mul_basis(&buf,&buf);
+    Fp2_add(&ANS->x0,&v0,&buf);
+    
+    //mada
+    //x1
+    Fp2_sub(&buf,&tmp1_Fp2,&tmp1_Fp2);
+    Fp2_sub(&buf,&tmp5_Fp2,&tmp2_Fp2);
+    Fp2_mul_basis(&tmp4_Fp2,&tmp3_Fp2);
+    Fp2_add(&ANS->x1,&tmp4_Fp2,&tmp5_Fp2);
+    //x2
+    Fp2_sub(&tmp7_Fp2,&tmp7_Fp2,&tmp1_Fp2);
+    Fp2_sub(&tmp7_Fp2,&tmp7_Fp2,&tmp3_Fp2);
+    Fp2_add(&ANS->x2,&tmp2_Fp2,&tmp7_Fp2);
+}
+*/
 void Fp6_mul_lazy(Fp6 *ANS,Fp6 *A,Fp6 *B){
-	static Fp2 tmp1_Fp2,tmp2_Fp2,tmp3_Fp2,tmp4_Fp2,tmp5_Fp2,tmp6_Fp2,tmp7_Fp2;
+    static Fp2 tmp1_Fp2,tmp2_Fp2,tmp3_Fp2,tmp4_Fp2,tmp5_Fp2,tmp6_Fp2,tmp7_Fp2;
     //set
     Fp2_mul_lazy(&tmp1_Fp2,&A->x0,&B->x0);//tmp1
     Fp2_mul_lazy(&tmp2_Fp2,&A->x1,&B->x1);//tmp2
@@ -117,6 +157,7 @@ void Fp6_mul_lazy(Fp6 *ANS,Fp6 *A,Fp6 *B){
     Fp2_sub(&tmp7_Fp2,&tmp7_Fp2,&tmp3_Fp2);
     Fp2_add(&ANS->x2,&tmp2_Fp2,&tmp7_Fp2);
 }
+		
 void Fp6_mul_ui(Fp6 *ANS,Fp6 *A,unsigned long int UI){
     Fp2_mul_ui(&ANS->x0,&A->x0,UI);
     Fp2_mul_ui(&ANS->x1,&A->x1,UI);

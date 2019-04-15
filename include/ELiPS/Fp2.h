@@ -112,12 +112,30 @@ extern void Fp2_mul_ui(Fp2 *ANS,Fp2 *A,unsigned long int UI);
 extern void Fp2_mul_mpn(Fp2 *ANS,Fp2 *A,mp_limb_t *B);
 
 /**
- * @brief Multiplication a Fp2 type struct and alpha on prime field
+ * @brief Multiplication a Fp2 type struct and alpha on prime field A*beta^2
  *
  * @param[out]ANS --a pointer of answer.
  * @param[in]A --a pointer in Fp2.
  */
 extern void Fp2_mul_basis(Fp2 *ANS,Fp2 *A);
+
+/**
+ * @brief Multiplication a Fp2 type struct and alpha on prime field A+B*beta^2
+ *
+ * @param[out]ANS --a pointer of answer.
+ * @param[in]A --a pointer in Fp2.
+ * @param[in]B --a pointer in Fp2.
+ */
+extern void Fp2_add_basis(Fp2 *ANS,Fp2 *A,Fp2 *B);
+
+/**
+ * @brief Multiplication a Fp2 type struct and alpha on prime field A-B*beta^2
+ *
+ * @param[out]ANS --a pointer of answer.
+ * @param[in]A --a pointer in Fp2.
+ * @param[in]B --a pointer in Fp2.
+ */
+extern void Fp2_sub_basis(Fp2 *ANS,Fp2 *A,Fp2 *B);
 
 /**
  * @brief Multiplication a Fp2 type struct and alpha on prime field (Lazy Reduction)

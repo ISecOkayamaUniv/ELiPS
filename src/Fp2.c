@@ -84,12 +84,10 @@ void Fp2_mul_ui(Fp2 *ANS,Fp2 *A,unsigned long int UI){
     Fp_mul_ui(&ANS->x0,&A->x0,UI);
     Fp_mul_ui(&ANS->x1,&A->x1,UI);
 }
-
 void Fp2_mul_mpn(Fp2 *ANS,Fp2 *A,mp_limb_t *B){
     Fp_mul_mpn(&ANS->x0,&A->x0,B);
     Fp_mul_mpn(&ANS->x1,&A->x1,B);
 }
-
 void Fp2_mul_basis(Fp2 *ANS,Fp2 *A){
     static Fp tmp1_Fp;
     Fp_set(&tmp1_Fp,&A->x0);
@@ -104,6 +102,18 @@ void Fp2_mul_basis_lazy(Fp2 *ANS,Fp2 *A){
     Lazy_sub(ANS->x0.x0,FPLIMB,tmp1,FPLIMB,A->x1.x0,FPLIMB);
     Lazy_add(ANS->x1.x0,FPLIMB,tmp1,FPLIMB,A->x1.x0,FPLIMB);
 }
+void Fp2_add_basis(Fp2 *ANS,Fp2 *A,Fp2 *B){
+    static Fp2 tmp1_Fp2;
+    Fp2_mul_basis(&tmp1_Fp2,B);
+    
+    Fp2_add(ANS,A,&tmp1_Fp2);
+}
+void Fp2_sub_basis(Fp2 *ANS,Fp2 *A,Fp2 *B){
+    static Fp2 tmp1_Fp2;
+    Fp2_mul_basis(&tmp1_Fp2,B);
+    
+    Fp2_sub(ANS,A,&tmp1_Fp2);
+}
 void Fp2_inv_basis(Fp2 *ANS,Fp2 *A){
     static Fp tmp1_Fp,tmp2_Fp;
     Fp_set(&tmp1_Fp,&A->x0);
@@ -115,6 +125,8 @@ void Fp2_inv_basis(Fp2 *ANS,Fp2 *A){
     Fp_mul_mpn(&ANS->x1,&ANS->x1,Alpha_1_inv.x0.x0);
 }
 
+
+//Karat
 void Fp2_sqr(Fp2 *ANS,Fp2 *A){
     static Fp tmp1_Fp,tmp2_Fp;
     Fp_add(&tmp1_Fp,&A->x0,&A->x1);
@@ -125,6 +137,26 @@ void Fp2_sqr(Fp2 *ANS,Fp2 *A){
     //x0
     Fp_mul(&ANS->x0,&tmp1_Fp,&tmp2_Fp);
 }
+
+/*
+//complex
+void Fp2_sqr(Fp2 *ANS,Fp2 *A){
+    static Fp tmp1,tmp2,tmp3;
+    
+    //Cost = 2M + 4Ap + 3m in Fp
+    Fp_mul(&tmp1,&A->x0,&A->x1);//t=a0a1
+    Fp_add(&tmp2,&A->x0,&A->x1);//(a0+a1)
+    Fp_set_neg(&tmp3,&A->x1);//a1*i
+    Fp_add(&tmp3,&tmp3,&A->x0);//(a0+a1*i)
+    Fp_mul(&ANS->x0,&tmp2,&tmp3);// (a0+a1)(a0+a1*i)
+    Fp_sub(&ANS->x0, &ANS->x0,&tmp1);
+    Fp_set_neg(&tmp2,&tmp1);//
+    
+    Fp_sub(&ANS->x0,&ANS->x0,&tmp2);//
+    //Fp_mul_ui(&ANS->x1,&tmp1,c1);//
+    Fp_add(&ANS->x1,&tmp1,&tmp1);
+}
+*/
 void Fp2_sqr_lazy(Fp2 *ANS,Fp2 *A){
     static mp_limb_t bufL[FPLIMB2],tmpL3[FPLIMB2];
     static mp_limb_t tmp1[FPLIMB],tmp2[FPLIMB];

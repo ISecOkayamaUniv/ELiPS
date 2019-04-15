@@ -73,6 +73,7 @@ int BLS12_generate_prime(){
     
     mpz_set(prime_z,result);
     mpn_set_mpz(prime,result);
+    mpn_mul_n(prime2,prime,prime,FPLIMB);
 
     mpz_clear(result);//init->clear
     mpz_clear(buf1);

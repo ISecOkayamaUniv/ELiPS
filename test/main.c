@@ -18,7 +18,7 @@ int main(void){
     //test_twist();
     //test_mod(10000000,100000);
     
-    //test_Field_Lazy(10000,10000,10000);
+    //test_Field_Lazy(100000,100000,10000);
     //test_EFp_Lazy();
     //test_EFp2_Lazy();
     //test_EFp12_Lazy();
@@ -58,8 +58,10 @@ int main(void){
     //Fast_test_BLS12_G2_SCM(100);
     //Fast_test_BLS12_G3_EXP(100);
     //Fast_test_BLS12_pairing(100);
-
-    test_All();
+    
+    //test_compressed(10);
+    test_BLS12_opt_ate_pairing_compress(1);
+    //test_All();
     return 0;
 }
 

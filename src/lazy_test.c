@@ -820,7 +820,7 @@ for(i=0;i<n;i++){
 
 int test_BLS12_G3_exp_Lazy(int exp){
     int i,n=0;
-    float exp_time=0,exp_lazy_time=0,exp_lazy_time2=0,exp_lazy_time3=0;
+    float exp_time=0,exp_lazy_time=0,exp_gs_time=0,exp_gs_lazy_time=0;
     struct timeval tv_A,tv_B;
     printf("====================================================================================\n");
     printf("BLS12_G3_exp test\n");
@@ -850,14 +850,23 @@ for(i=0;i<exp;i++){
     BLS12_Fp12_G3_EXP_4split(&test1,&A_Fp12,scalar);
     gettimeofday(&tv_B,NULL);
     exp_time+=timedifference_msec(tv_A,tv_B);
+    
+    gettimeofday(&tv_A,NULL);
+    BLS12_Fp12_G3_EXP_4split_GS(&test3,&A_Fp12,scalar);
+    gettimeofday(&tv_B,NULL);
+    exp_gs_time+=timedifference_msec(tv_A,tv_B);
 
     gettimeofday(&tv_A,NULL);
     BLS12_Fp12_G3_EXP_4split_lazy(&test2,&A_Fp12,scalar);
     gettimeofday(&tv_B,NULL);
     exp_lazy_time+=timedifference_msec(tv_A,tv_B);
 
+    gettimeofday(&tv_A,NULL);
+    BLS12_Fp12_G3_EXP_4split_GS_lazy(&test4,&A_Fp12,scalar);
+    gettimeofday(&tv_B,NULL);
+    exp_gs_lazy_time+=timedifference_msec(tv_A,tv_B);
 
-    if(Fp12_cmp(&test1,&test2)!=0){
+    if(Fp12_cmp(&test1,&test2)!=0 || Fp12_cmp(&test1,&test3)!=0 || Fp12_cmp(&test1,&test4)!=0){
         printf("failed!\n\n");
 	Fp12_printf(&test1,"");
 	Fp12_printf(&test2,"\n");
@@ -865,8 +874,10 @@ for(i=0;i<exp;i++){
 	return 1;
     }
 }
-    printf("BLS12 G3 exp.       : %.4f[ms]\n",exp_time/exp);
-    printf("BLS12 G3 exp lazy.  : %.4f[ms]\n",exp_lazy_time/exp);
+    printf("BLS12 G3 exp.          : %.4f[ms]\n",exp_time/exp);
+    printf("BLS12 G3 exp GS.       : %.4f[ms]\n",exp_gs_time/exp);
+    printf("BLS12 G3 exp lazy.     : %.4f[ms]\n",exp_lazy_time/exp);
+    printf("BLS12 G3 exp GS lazy.  : %.4f[ms]\n",exp_gs_lazy_time/exp);
 
 
 	return 0;

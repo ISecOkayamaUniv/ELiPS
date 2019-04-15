@@ -104,7 +104,67 @@ void Lazy_sub(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size,mp
 	}
     }
 }
-
+/*
+void Lazy_sub(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size,mp_limb_t *B,mp_size_t B_size){
+    static mp_limb_t buf[FPLIMB],bufL[FPLIMB2];
+    //Only:A_size>=B_size
+    if(mpn_zero_p(B,B_size)==1){
+	//mpn_zero(ANS,ANS_size);
+	mpn_copyd(ANS,A,A_size);
+    }else if(mpn_zero_p(A,A_size)==1){
+    	if(B_size==FPLIMB2){
+	    mpn_copyd(bufL,B,FPLIMB2);
+    	    while(mpn_cmp(bufL,prime2,FPLIMB2)>0) mpn_sub_n(bufL,bufL,prime2,FPLIMB2);
+	    mpn_zero(ANS,ANS_size);
+    	    mpn_sub_n(ANS,prime2,bufL,FPLIMB2);
+    	}else{
+	    mpn_copyd(buf,B,B_size);
+    	    while(mpn_cmp(buf,prime,FPLIMB)>0) mpn_sub_n(buf,buf,prime,FPLIMB);
+	    mpn_zero(ANS,ANS_size);
+    	    mpn_sub_n(ANS,prime,buf,FPLIMB);
+	}
+    }else{
+	//A_size==FPLIMB2 && B_size==FPLIMB2
+	if(A_size==FPLIMB2 && B_size==FPLIMB2){
+	    if(mpn_cmp(A,B,FPLIMB2)<0){
+    		mpn_sub_n(bufL,B,A,FPLIMB2);
+    		while(mpn_cmp(bufL,prime2,FPLIMB2)>0) mpn_sub_n(bufL,bufL,prime2,FPLIMB2);
+		mpn_zero(ANS,ANS_size);
+    		mpn_sub_n(ANS,prime2,bufL,FPLIMB2);
+            }else{
+		mpn_sub_n(ANS,A,B,ANS_size);
+	    }
+	//A_size==FPLIMB2 && B_size==FPLIMB
+	}else if(A_size==FPLIMB2 && B_size==FPLIMB){
+	    //A=FPLIMB2
+	    if(mpn_chk_limb(A,FPLIMB,FPLIMB2)==0){
+	        mpn_sub(ANS,A,A_size,B,B_size);
+	    //A=FPLIMB
+            }else{
+		if(mpn_cmp(A,B,FPLIMB)<0){
+		    mpn_sub_n(buf,B,A,FPLIMB);
+    		    while(mpn_cmp(buf,prime,FPLIMB)>0) mpn_sub_n(buf,buf,prime,FPLIMB);
+		    mpn_zero(ANS,ANS_size);
+    		    mpn_sub_n(ANS,prime,buf,FPLIMB);
+                }else{
+		    mpn_zero(ANS,ANS_size);
+		    mpn_sub_n(ANS,A,B,FPLIMB);
+	        }
+	    }
+	//A_size==FPLIMB && B_size==FPLIMB
+	}else{
+	    if(mpn_cmp(A,B,FPLIMB)<0){
+    		mpn_sub_n(buf,B,A,FPLIMB);
+    		while(mpn_cmp(buf,prime,FPLIMB)>0) mpn_sub_n(buf,buf,prime,FPLIMB);
+		mpn_zero(ANS,ANS_size);
+    		mpn_sub_n(ANS,prime,buf,FPLIMB);
+            }else{
+		mpn_sub_n(ANS,A,B,ANS_size);
+	    }
+	}
+    }
+}
+*/
 void Lazy_sub_mod(Fp *ANS,mp_limb_t *A,mp_limb_t *B){
     //Only:A_size=B_size=FPLIMB2
     static mp_limb_t buf[FPLIMB2];

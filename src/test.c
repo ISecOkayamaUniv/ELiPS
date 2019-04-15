@@ -13,29 +13,29 @@ float timedifference_usec(struct timeval tv_start, struct timeval tv_end){
 //test
 void test_Field(){
     printf("====================================================================================\n");
-    Fp6 A_Fp6,test1,test2;
-    Fp6_init(&A_Fp6);
-    Fp6_init(&test1);
-    Fp6_init(&test2);
+    Fp12 A_Fp12,test1,test2;
+    Fp12_init(&A_Fp12);
+    Fp12_init(&test1);
+    Fp12_init(&test2);
     mpz_t exp;
     mpz_init(exp);
     
     gmp_randinit_default (state);
 	gmp_randseed_ui(state,(unsigned long)time(NULL));
-    Fp6_set_random(&A_Fp6,state);
-    Fp6_printf(&A_Fp6,"");
+    Fp12_set_random(&A_Fp12,state);
+    Fp12_printf(&A_Fp12,"");
     printf("\n\n");
     
     printf("mul/sqr\n");
-    Fp6_mul(&test1,&A_Fp6,&A_Fp6);
-    Fp6_printf(&test1,"");
+    Fp12_mul(&test1,&A_Fp12,&A_Fp12);
+    Fp12_printf(&test1,"");
     printf("\n");
     
-    Fp6_sqr(&test2,&A_Fp6);
-    Fp6_printf(&test2,"");
+    Fp12_sqr(&test2,&A_Fp12);
+    Fp12_printf(&test2,"");
     printf("\n");
     
-    if(Fp6_cmp(&test1,&test2)==0){
+    if(Fp12_cmp(&test1,&test2)==0){
         printf("success\n\n");
     }else{
         printf("failed\n\n");
@@ -44,21 +44,115 @@ void test_Field(){
     printf("pow/inv\n");
     mpz_pow_ui(exp,prime_z,12);
     mpz_sub_ui(exp,exp,2);
-    Fp6_pow(&test1,&A_Fp6,exp);
-    Fp6_printf(&test1,"");
+    Fp12_pow(&test1,&A_Fp12,exp);
+    Fp12_printf(&test1,"");
     printf("\n");
     
-    Fp6_inv(&test2,&A_Fp6);
-    Fp6_printf(&test2,"");
+    Fp12_inv(&test2,&A_Fp12);
+    Fp12_printf(&test2,"");
     printf("\n");
     
-    if(Fp6_cmp(&test1,&test2)==0){
+    if(Fp12_cmp(&test1,&test2)==0){
         printf("success\n\n");
     }else{
         printf("failed\n\n");
     }
 }
 
+void test_compressed(int n){
+    printf("====================================================================================\n");
+    int i;
+    struct timeval tv_A,tv_B;
+    float cyc_time=0,com_time=0,rec_time=0,gs_time=0;
+    Fp12 f,test1,test2,test3;
+    EFp12 P,Q;
+    Fp12 tmp,t0,t1;
+    
+    gmp_randinit_default (state);
+    gmp_randseed_ui(state,(unsigned long)time(NULL));
+    
+    
+    for(i=0;i<n;i++){
+    BLS12_EFp12_generate_G1(&P);
+    EFp12_generate_G2(&Q);
+    BLS12_Miller_algo_for_opt_ate(&f,&P,&Q);
+    
+    //EASY PART
+    Fp12_frobenius_map_p6(&t0,&f);//f^(p^6)
+    Fp12_inv(&t1,&f);//f^-1
+    Fp12_mul(&tmp,&t0,&t1);//f^(p^6)*f^-1
+    
+    Fp12_frobenius_map_p2(&t0,&tmp);//f^(p^2)
+    Fp12_mul(&tmp,&t0,&tmp);//f^(p^2)*f
+    
+    
+    gettimeofday(&tv_A,NULL);
+    Fp12_sqr_cyclotomic(&test1,&tmp);
+    gettimeofday(&tv_B,NULL);
+    cyc_time+=timedifference_msec(tv_A,tv_B);
+    
+    gettimeofday(&tv_A,NULL);
+    Fp12_sqr_compressed(&test2,&tmp);
+    gettimeofday(&tv_B,NULL);
+    com_time+=timedifference_msec(tv_A,tv_B);
+    
+    gettimeofday(&tv_A,NULL);
+    Fp12_sqr_recover_g1(&test2,&test2);
+    Fp12_sqr_recover_g0(&test2,&test2);
+    gettimeofday(&tv_B,NULL);
+    rec_time+=timedifference_msec(tv_A,tv_B);
+    
+    gettimeofday(&tv_A,NULL);
+    Fp12_sqr_GS(&test3,&tmp);
+    gettimeofday(&tv_B,NULL);
+    gs_time+=timedifference_msec(tv_A,tv_B);
+
+    }
+    
+    printf("Sqr cyclotomic.     : %.4f[ms]\n",cyc_time/n);
+    printf("Sqr compressed.     : %.4f[ms]\n",com_time/n);
+    printf("Sqr co_recover.     : %.4f[ms]\n",rec_time/n);
+    printf("Sqr Karabina.       : %.4f[ms]\n",(com_time+rec_time)/n);
+    printf("Sqr GS.             : %.4f[ms]\n",gs_time/n);
+    
+    if(Fp12_cmp(&test1,&test2)==0){
+        printf("success\n\n");
+    }else{
+        printf("failed\n\n");
+        /*
+        Fp2_printf(&test1.x1.x0,"test1(g0)=");
+        printf("\n");
+        Fp2_printf(&test2.x1.x0,"test2(g0)=");
+        printf("\n\n");
+    
+        Fp2_printf(&test1.x1.x1,"test1(g1)=");
+        printf("\n");
+        Fp2_printf(&test2.x1.x1,"test2(g1)=");
+        printf("\n\n");
+        
+        Fp2_printf(&test1.x1.x0,"test1(g2)=");
+        printf("\n");
+        Fp2_printf(&test2.x1.x0,"test2(g2)=");
+        printf("\n\n");
+    
+        Fp2_printf(&test1.x0.x2,"test1(g3)=");
+        printf("\n");
+        Fp2_printf(&test2.x0.x2,"test2(g3)=");
+        printf("\n\n");
+    
+        Fp2_printf(&test1.x0.x1,"test1(g4)=");
+        printf("\n");
+        Fp2_printf(&test2.x0.x1,"test2(g4)=");
+        printf("\n\n");
+    
+        Fp2_printf(&test1.x1.x2,"test1(g5)=");
+        printf("\n");
+        Fp2_printf(&test2.x1.x2,"test2(g5)=");
+        printf("\n");
+        */
+    }
+    
+}
 void test_Frobenius_map(){
     printf("====================================================================================\n");
     Fp12 A_Fp12,test1,test2;
@@ -251,6 +345,70 @@ for(i=0;i<mod;i++){
     printf("Fp mod.            : %.6f[ms]\n",mod_time/mod);
     printf("Fp mod montgomery. : %.6f[ms]\n",mod_mont_time/mod);
     
+}
+
+int test_BLS12_opt_ate_pairing_compress(int pairing){
+    int i,n=0;
+    float opt_time=0,opt_compress_time=0,opt_compress_lazy_time=0,opt_lazy_time=0;
+    struct timeval tv_A,tv_B;
+    printf("====================================================================================\n");
+    printf("BLS12_Opt-ate pairing\n\n");
+
+    EFp12 P,Q;
+    EFp12_init(&P);
+    EFp12_init(&Q);
+
+    Fp12 Z,test1,test2,test3,test4;
+    Fp12_init(&Z);
+    Fp12_init(&test1);
+    Fp12_init(&test2);
+    Fp12_init(&test3);
+    Fp12_init(&test4);
+
+
+    gmp_randinit_default (state);
+    gmp_randseed_ui(state,(unsigned long)time(NULL));
+
+for(i=0;i<pairing;i++){
+
+    BLS12_EFp12_generate_G1(&P);
+    EFp12_generate_G2(&Q);
+
+    gettimeofday(&tv_A,NULL);
+    BLS12_Opt_ate_pairing(&test1,&P,&Q);
+    gettimeofday(&tv_B,NULL);
+    opt_time+=timedifference_msec(tv_A,tv_B);
+
+    gettimeofday(&tv_A,NULL);
+    BLS12_Opt_ate_pairing_compress(&test2,&P,&Q);
+    gettimeofday(&tv_B,NULL);
+    opt_compress_time+=timedifference_msec(tv_A,tv_B);
+
+    gettimeofday(&tv_A,NULL);
+    BLS12_Opt_ate_pairing_compress_lazy(&test3,&P,&Q);
+    gettimeofday(&tv_B,NULL);
+    opt_compress_lazy_time+=timedifference_msec(tv_A,tv_B);
+    
+    gettimeofday(&tv_A,NULL);
+    BLS12_Opt_ate_pairing_lazy(&test4,&P,&Q);
+    gettimeofday(&tv_B,NULL);
+    opt_lazy_time+=timedifference_msec(tv_A,tv_B);
+    
+    if(Fp12_cmp(&test1,&test2)!=0 || Fp12_cmp(&test1,&test3)!=0 || Fp12_cmp(&test1,&test4)!=0){
+        printf("failed!\n\n");
+	Fp12_printf(&test1,"");
+	Fp12_printf(&test2,"\n");
+	printf("\n\n");
+	return 1;
+    }
+}
+
+    printf("BLS12 opt ate.                : %.4f[ms]\n",opt_time/pairing);
+    printf("BLS12 opt ate compress.       : %.4f[ms]\n",opt_compress_time/pairing);
+    printf("BLS12 opt ate compress lazy.  : %.4f[ms]\n",opt_compress_lazy_time/pairing);
+    printf("BLS12 opt ate lazy.           : %.4f[ms]\n",opt_lazy_time/pairing);
+
+	return 0;
 }
 void test_All(){
 	int test_point,test_G1,test_G2,test_G3,test_pairing;

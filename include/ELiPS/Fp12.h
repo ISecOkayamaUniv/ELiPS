@@ -148,6 +148,15 @@ extern void Fp12_sqr_cyclotomic(Fp12 *ANS,Fp12 *A);
  */
 extern void Fp12_sqr_cyclotomic_lazy(Fp12 *ANS,Fp12 *A);
 
+extern void Fp12_sqr_Karabina(Fp12 *ANS,Fp12 *A);
+extern void Fp12_sqr_compressed(Fp12 *ANS,Fp12 *A);
+extern void Fp12_sqr_compressed_lazy(Fp12 *ANS,Fp12 *A);
+extern void Fp12_sqr_recover_g1(Fp12 *ANS,Fp12 *A);
+extern void Fp12_sqr_recover_g0(Fp12 *ANS,Fp12 *A);
+extern void Fp12_sqr_GS(Fp12 *ANS,Fp12 *A);
+extern void Fp4_sqr(Fp2 *t0,Fp2 *t1,Fp2 *g0,Fp2 *g1);
+extern void Fp12_sqr_GS_lazy(Fp12 *ANS,Fp12 *A);
+extern void Fp4_sqr_lazy(Fp2 *t0,Fp2 *t1,Fp2 *g0,Fp2 *g1);
 /**
  * @brief Addition a Fp12 type struct and a Fp12 type struct on prime field
  *

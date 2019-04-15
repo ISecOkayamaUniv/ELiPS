@@ -133,6 +133,7 @@ enum f_state{
 gmp_randstate_t state;
 mpz_t X_z,prime_z,order_z,trace_z;
 mp_limb_t X,prime[FPLIMB],order[FPLIMB],trace[FPLIMB];
+mp_limb_t prime2[FPLIMB2];
 Fp2 Alpha_1,Alpha_1_inv;
 mp_limb_t epsilon1[FPLIMB],epsilon2[FPLIMB];
 mp_limb_t Two_inv[FPLIMB];
