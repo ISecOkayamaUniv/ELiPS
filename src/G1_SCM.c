@@ -421,7 +421,7 @@ void BLS12_EFp12_G1_SCM_2split(EFp12 *ANS,EFp12 *P,mpz_t scalar){
     EFp_ECA(&table[3],&tmp_P,&tmp_P_4x);    //11
     
     //s0,s1
-    mpz_neg(buf,X_z);
+    mpz_set(buf,X_z);//neg->set
     mpz_pow_ui(buf,buf,2);
     mpz_tdiv_qr(s[1],s[0],scalar,buf);
     
@@ -433,8 +433,8 @@ void BLS12_EFp12_G1_SCM_2split(EFp12 *ANS,EFp12 *P,mpz_t scalar){
         if(loop_length<length_s[i]){
             loop_length=length_s[i];
         }
+
     }
-    printf("\n");
     //set binary
     char binary_s[2][loop_length+1];
     char str[5],*e;
@@ -849,6 +849,7 @@ void BLS12_EFp12_G1_SCM_2split_JSF_Jacobian_table(EFp12 *ANS,EFp12 *P,mpz_t scal
         if(loop_length<length_s[i]){
             loop_length=length_s[i];
         }
+		//printf("length_s=%d\n",length_s[i]);
     }
     //JSF
     int JSF_length;

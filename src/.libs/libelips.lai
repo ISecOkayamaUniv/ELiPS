@@ -5,16 +5,16 @@
 # It is necessary for linking the library.
 
 # The name that we can dlopen(3).
-dlname='libelips.so.0'
+dlname='libelips.0.dylib'
 
 # Names of this library.
-library_names='libelips.so.0.0.0 libelips.so.0 libelips.so'
+library_names='libelips.0.dylib libelips.dylib'
 
 # The name of the static archive.
 old_library='libelips.a'
 
 # Linker flags that cannot go in dependency_libs.
-inherited_linker_flags=''
+inherited_linker_flags=' '
 
 # Libraries that this one depends upon.
 dependency_libs=' -lgmp'

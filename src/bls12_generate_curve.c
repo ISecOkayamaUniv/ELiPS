@@ -11,12 +11,27 @@ void BLS12_generate_X(){
     BLS12_X_binary[9]=-1;
     BLS12_X_binary[6]=-1;
     
+    /*
+    //X_binary
+    BLS12_X_binary[76]=1;
+    BLS12_X_binary[59]=-1;
+    BLS12_X_binary[11]=-1;
+    BLS12_X_binary[5]=-1;
+    */
     //X2_binary
     BLS12_X2_binary[76]=1;
     BLS12_X2_binary[10]=1;
     BLS12_X2_binary[8]=-1;
     BLS12_X2_binary[5]=-1;
-     
+    
+    /*
+    //X2_binary
+    BLS12_X2_binary[75]=1;
+    BLS12_X2_binary[58]=-1;
+    BLS12_X2_binary[10]=-1;
+    BLS12_X2_binary[4]=-1;
+    */
+    
     //BLS12.X
     mpz_set_ui(X_z,0);
     for(i=BLS12_X_length; i>=0; i--){

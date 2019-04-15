@@ -3,7 +3,8 @@ lib_LTLIBRARIES = libelips.la
 
 AM_CPPFLAGS = -I../include
 
-libelips_la_SOURCES = bn12_generate_curve.c\
+libelips_la_SOURCES = Define.c\
+bn12_generate_curve.c\
 bn12_generate_parameter.c\
 bn12_init.c\
 bls12_generate_curve.c\
@@ -31,9 +32,7 @@ G1_SCM.c\
 G2_SCM.c\
 G3_exp.c\
 test.c\
-fast_test.c\
-lazy_test.c\
-Jacobian_test.c\
+time.c\
 bn12_test.c\
 bls12_test.c\
 ../include/ELiPS/Define.h\
@@ -66,9 +65,6 @@ bls12_test.c\
 ../include/ELiPS/G3_exp.h\
 ../include/ELiPS/time.h\
 ../include/ELiPS/test.h\
-../include/ELiPS/fast_test.h\
-../include/ELiPS/lazy_test.h\
-../include/ELiPS/Jacobian_test.h\
 ../include/ELiPS/bn12_test.h\
 ../include/ELiPS/bls12_test.h\
 ../include/ELiPS/bn12.h\

@@ -32,12 +32,12 @@ void Fp_set_random(Fp *ANS,gmp_randstate_t state){
     mpz_t tmp;
     mpz_init(tmp);
     
-    mpz_urandomm(tmp,state,prime_z);
-    mpn_set_mpz(ANS->x0,tmp);
-    /*
+    //mpz_urandomm(tmp,state,prime_z);
+    //mpn_set_mpz(ANS->x0,tmp);
+    
     mpn_random(buf,FPLIMB);
     mpn_mod(ANS,buf,FPLIMB);
-    */
+    
     mpz_clear(tmp);
 }
 
@@ -402,8 +402,8 @@ int  Fp_legendre(Fp *A){
     mpz_tdiv_q_ui(tmp2,tmp1,2);
     Fp_pow(&tmp1_Fp,A,tmp2);
 	
-    if(mpn_cmp_char(tmp1_Fp.x0,"1")==0)		i=1;
-    else if(mpn_cmp_char(tmp1_Fp.x0,"0")==0)	i=0;
+    if(mpn_cmp_ui(tmp1_Fp.x0,FPLIMB,1)==0)		i=1;
+    else if(mpn_cmp_ui(tmp1_Fp.x0,FPLIMB,0)==0)	i=0;
     else					i=-1;
     
     mpz_clear(tmp1);

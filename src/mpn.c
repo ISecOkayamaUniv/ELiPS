@@ -10,7 +10,7 @@ void mpn_set_char(mp_limb_t *ans,mp_size_t mp_size,char *str){
 	mp_size_t size;
 
 	sizeL = strlen(str);
-printf("sizeL=%ld\n",sizeL);getchar();
+
 	str_buf = (char *)malloc(sizeL*sizeof(char));
 	
 	for( i = 0; i < sizeL; i++ )
@@ -19,7 +19,6 @@ printf("sizeL=%ld\n",sizeL);getchar();
 	}
 	
 	size = mpn_set_str(ans,(unsigned const char *) str_buf,sizeL,10);
-printf("size=%ld\n",size);getchar();
 	for( i = size; i < mp_size; i++ )
 	{
 		ans[i] = 0;

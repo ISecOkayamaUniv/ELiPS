@@ -968,6 +968,7 @@ void BLS12_EFp12_G2_SCM_4split_Jacobian_table(EFp12 *ANS,EFp12 *Q,mpz_t scalar){
         if(loop_length<length_s[i]){
             loop_length=length_s[i];
         }
+		//printf("length_s=%d\n",length_s[i]);
     }
     //printf("\n");
     //set binary

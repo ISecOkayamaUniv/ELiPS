@@ -140,12 +140,12 @@ void BLS12_Fp12_pow_X_compress_lazy(Fp12 *ANS,Fp12 *A){
 	Fp12_set(&tmp11,&tmp);
 	}
     }
-	Fp12_sqr_recover_g1(&tmp77,&tmp);
-	Fp12_sqr_recover_g0(&tmp77,&tmp77);
+	Fp12_sqr_recover_g1_lazy(&tmp77,&tmp);
+	Fp12_sqr_recover_g0_lazy(&tmp77,&tmp77);
     
     Fp12_mul_lazy(&tmp,&tmp77,&tmp11);
-    Fp12_inv_lazy(&tmp9,&tmp9);
-    Fp12_inv_lazy(&tmp6,&tmp6);
+    Fp12_frobenius_map_p6(&tmp9,&tmp9);
+    Fp12_frobenius_map_p6(&tmp6,&tmp6);
     Fp12_mul_lazy(&tmp,&tmp,&tmp9);
     Fp12_mul_lazy(&tmp,&tmp,&tmp6);
     Fp12_set(ANS,&tmp);
@@ -261,12 +261,12 @@ void BLS12_Fp12_pow_X2_compress_lazy(Fp12 *ANS,Fp12 *A){
 	Fp12_set(&tmp10,&tmp);
 	}
     }
-	Fp12_sqr_recover_g1(&tmp76,&tmp);
-	Fp12_sqr_recover_g0(&tmp76,&tmp76);
+	Fp12_sqr_recover_g1_lazy(&tmp76,&tmp);
+	Fp12_sqr_recover_g0_lazy(&tmp76,&tmp76);
     
     Fp12_mul_lazy(&tmp,&tmp76,&tmp10);
-    Fp12_inv_lazy(&tmp8,&tmp8);
-    Fp12_inv_lazy(&tmp5,&tmp5);
+    Fp12_frobenius_map_p6(&tmp8,&tmp8);
+    Fp12_frobenius_map_p6(&tmp5,&tmp5);
     Fp12_mul_lazy(&tmp,&tmp,&tmp8);
     Fp12_mul_lazy(&tmp,&tmp,&tmp5);
     Fp12_set(ANS,&tmp);
@@ -454,7 +454,6 @@ void BLS12_Final_exp_optimal_lazy(Fp12 *ANS,Fp12 *A){
     mpz_clear(positive_X2);
     
 }
-
 void BLS12_Final_exp_optimal_compress_lazy(Fp12 *ANS,Fp12 *A){
     Fp12 tmp,t0,t1,t2,t3,t4,t5, test;
     Fp12_init(&tmp);
