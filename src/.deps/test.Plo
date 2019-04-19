@@ -110,6 +110,7 @@ test.lo: test.c ../include/ELiPS/test.h ../include/ELiPS/time.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h \
   ../include/ELiPS/bls12_test.h ../include/ELiPS/bls12_pairing.h \
   ../include/ELiPS/bls12_miller.h ../include/ELiPS/sparse.h \
   ../include/ELiPS/EFp2.h ../include/ELiPS/EFp.h ../include/ELiPS/Fp12.h \
@@ -348,6 +349,8 @@ test.lo: test.c ../include/ELiPS/test.h ../include/ELiPS/time.h \
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_strings.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h:
+
+/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h:
 
 ../include/ELiPS/bls12_test.h:
 

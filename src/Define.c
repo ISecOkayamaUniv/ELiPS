@@ -6,6 +6,10 @@ int BN12_X6_2_binary[BN12_X6_2_length+1];
 int BLS12_X_binary[BLS12_X_length+1];
 int BLS12_X2_binary[BLS12_X2_length+1];
 
+
+int add,mul;
+
+
 mp_limb_t buf[FPLIMB],tmp_mul[FPLIMB2],tmp1[FPLIMB],tmp2[FPLIMB];
 
 /*============================================================================*/

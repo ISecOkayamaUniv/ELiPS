@@ -13,10 +13,10 @@ extern void Fp2_init(Fp2 *A);
 /**
  * @brief Print a Fp2 type struct
  *
- * @param[in]A --a pointer to be printed.
  * @param[in]str --a pointer to be printed.
+ * @param[in]A --a pointer to be printed.
  */
-extern void Fp2_printf(Fp2 *A,char *str);
+extern void Fp2_printf(char *str,Fp2 *A);
 
 /**
  * @brief Set a Fp2 type struct to a Fp2 type struct

@@ -6,13 +6,13 @@ void Fp6_init(Fp6 *A){
     Fp2_init(&A->x2);
 }
 
-void Fp6_printf(Fp6 *A,char *str){
+void Fp6_printf(char *str,Fp6 *A){
     gmp_printf("%s(",str);
-    Fp2_printf(&A->x0,"");
+    Fp2_printf("",&A->x0);
     gmp_printf(",");
-    Fp2_printf(&A->x1,"");
+    Fp2_printf("",&A->x1);
     gmp_printf(",");
-    Fp2_printf(&A->x2,"");
+    Fp2_printf("",&A->x2);
     gmp_printf(")");
 }
 

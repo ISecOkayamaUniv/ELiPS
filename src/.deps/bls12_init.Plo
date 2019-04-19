@@ -111,6 +111,7 @@ bls12_init.lo: bls12_init.c ../include/ELiPS/bls12_init.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h \
   ../include/ELiPS/bls12_generate_parameter.h ../include/ELiPS/Fp2.h \
   ../include/ELiPS/Fp.h ../include/ELiPS/EFp12.h ../include/ELiPS/EFp6.h \
   ../include/ELiPS/EFp2.h ../include/ELiPS/EFp.h ../include/ELiPS/Fp12.h \
@@ -343,6 +344,8 @@ bls12_init.lo: bls12_init.c ../include/ELiPS/bls12_init.h \
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_strings.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h:
+
+/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h:
 
 ../include/ELiPS/bls12_generate_parameter.h:
 

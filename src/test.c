@@ -1,7 +1,7 @@
 #include <ELiPS/test.h>
 /*----------------------------------------------------------------------------*/
 //test
-int test_Field(int fp2,int fp6,int fp12,int sqr){
+int test_Field(int fp,int fp2,int fp6,int fp12,int sqr){
     int i,n=0;
     float mul_time=0,mul_lazy_time=0;
     float sqr_time=0,sqr_lazy_time=0;
@@ -13,15 +13,21 @@ int test_Field(int fp2,int fp6,int fp12,int sqr){
     
     printf("====================================================================================\n");
     printf("Field test\n");
-    Fp2 A_Fp2,B_Fp2,test1,test2;
+    Fp A_Fp,B_Fp,test1_Fp,test2_Fp;
+    Fp2 A_Fp2,B_Fp2,test1_Fp2,test2_Fp2;
     Fp6 A_Fp6,B_Fp6,test1_Fp6,test2_Fp6,test3_Fp6;
     Fp12 A_Fp12,B_Fp12,test1_Fp12,test2_Fp12,test3_Fp12,test4_Fp12;
     Fp12 test0_Fp12,test1l_Fp12,test2l_Fp12,test3l_Fp12;
 
+    Fp_init(&A_Fp);
+    Fp_init(&B_Fp);
+    Fp_init(&test1_Fp);
+    Fp_init(&test2_Fp);
+    
     Fp2_init(&A_Fp2);
     Fp2_init(&B_Fp2);
-    Fp2_init(&test1);
-    Fp2_init(&test2);
+    Fp2_init(&test1_Fp2);
+    Fp2_init(&test2_Fp2);
 
     
     Fp6_init(&A_Fp6);
@@ -46,6 +52,34 @@ int test_Field(int fp2,int fp6,int fp12,int sqr){
 
 
 printf("------------------------------------------------------------------------------------\n");
+    printf("Fp_mul test\n");
+mul_time=0,mul_lazy_time=0;
+for(i=0;i<fp;i++){
+    Fp2_set_random(&A_Fp2,state);
+    Fp2_set_random(&B_Fp2,state);
+
+    gettimeofday(&tv_A,NULL);
+    Fp_mul(&test1_Fp,&A_Fp,&B_Fp);
+    gettimeofday(&tv_B,NULL);
+    mul_time+=timedifference_msec(tv_A,tv_B);
+
+    gettimeofday(&tv_A,NULL);
+    Lazy_mul(test2_Fp.x0,A_Fp.x0,B_Fp.x0);
+    gettimeofday(&tv_B,NULL);
+    mul_lazy_time+=timedifference_msec(tv_A,tv_B);
+
+    if(Fp_cmp(&test1_Fp,&test2_Fp)!=0){
+        printf("failed!\n\n");
+    	Fp_printf("",&test1_Fp);
+	    Fp_printf("\n",&test2_Fp);
+	    printf("\n\n");
+	    return 1;
+    }
+}
+    printf("Fp mul.      : %.6f[ms]\n",mul_time/fp);
+    printf("Fp mul lazy. : %.6f[ms]\n",mul_lazy_time/fp);
+    
+printf("------------------------------------------------------------------------------------\n");
     printf("Fp2_mul test\n");
 mul_time=0,mul_lazy_time=0;
 for(i=0;i<fp2;i++){
@@ -53,22 +87,22 @@ for(i=0;i<fp2;i++){
     Fp2_set_random(&B_Fp2,state);
 
     gettimeofday(&tv_A,NULL);
-    Fp2_mul(&test1,&A_Fp2,&B_Fp2);
+    Fp2_mul(&test1_Fp2,&A_Fp2,&B_Fp2);
     gettimeofday(&tv_B,NULL);
     mul_time+=timedifference_msec(tv_A,tv_B);
 
     gettimeofday(&tv_A,NULL);
-    Fp2_mul_lazy(&test2,&A_Fp2,&B_Fp2);
+    Fp2_mul_lazy(&test2_Fp2,&A_Fp2,&B_Fp2);
     gettimeofday(&tv_B,NULL);
     mul_lazy_time+=timedifference_msec(tv_A,tv_B);
 
 
-    if(Fp2_cmp(&test1,&test2)!=0){
+    if(Fp2_cmp(&test1_Fp2,&test2_Fp2)!=0){
         printf("failed!\n\n");
-	Fp2_printf(&test1,"");
-	Fp2_printf(&test2,"\n");
-	printf("\n\n");
-	return 1;
+	    Fp2_printf("",&test1_Fp2);
+	    Fp2_printf("\n",&test2_Fp2);
+	    printf("\n\n");
+	    return 1;
     }
 }
     printf("Fp2 mul.      : %.4f[ms]\n",mul_time/fp2);
@@ -82,22 +116,22 @@ for(i=0;i<fp2;i++){
     Fp2_set_random(&A_Fp2,state);
 
     gettimeofday(&tv_A,NULL);
-    Fp2_sqr(&test1,&A_Fp2);
+    Fp2_sqr(&test1_Fp2,&A_Fp2);
     gettimeofday(&tv_B,NULL);
     sqr_time+=timedifference_msec(tv_A,tv_B);
 
     gettimeofday(&tv_A,NULL);
-    Fp2_sqr_lazy(&test2,&A_Fp2);
+    Fp2_sqr_lazy(&test2_Fp2,&A_Fp2);
     gettimeofday(&tv_B,NULL);
     sqr_lazy_time+=timedifference_msec(tv_A,tv_B);
 
 
-    if(Fp2_cmp(&test1,&test2)!=0){
+    if(Fp2_cmp(&test1_Fp2,&test2_Fp2)!=0){
         printf("failed!\n\n");
-	Fp2_printf(&test1,"");
-	Fp2_printf(&test2,"\n");
-	printf("\n\n");
-	return 1;
+	    Fp2_printf("",&test1_Fp2);
+	    Fp2_printf("\n",&test2_Fp2);
+	    printf("\n\n");
+	    return 1;
     }
 }
     printf("Fp2 sqr.      : %.4f[ms]\n",sqr_time/fp2);
@@ -122,14 +156,12 @@ for(i=0;i<fp6;i++){
     gettimeofday(&tv_B,NULL);
     mul_lazy_time+=timedifference_msec(tv_A,tv_B);
 
-
-
     if(Fp6_cmp(&test1_Fp6,&test2_Fp6)!=0){
         printf("failed!\n\n");
-	Fp6_printf(&test1_Fp6,"");
-	Fp6_printf(&test2_Fp6,"\n");
-	printf("\n\n");
-	return 1;
+	    Fp6_printf("",&test1_Fp6);
+	    Fp6_printf("\n",&test2_Fp6);
+	    printf("\n\n");
+	    return 1;
     }
 }
     
@@ -155,10 +187,10 @@ for(i=0;i<fp6;i++){
 
     if(Fp6_cmp(&test1_Fp6,&test2_Fp6)!=0){
         printf("failed!\n\n");
-	Fp6_printf(&test1_Fp6,"");
-	Fp6_printf(&test2_Fp6,"\n");
-	printf("\n\n");
-	return 1;
+	    Fp6_printf("",&test1_Fp6);
+	    Fp6_printf("\n",&test2_Fp6);
+	    printf("\n\n");
+	    return 1;
     }
 }
     printf("Fp6 sqr.      : %.4f[ms]\n",sqr_time/fp6);
@@ -183,10 +215,10 @@ for(i=0;i<fp12;i++){
 
     if(Fp12_cmp(&test3_Fp12,&test4_Fp12)!=0){
         printf("failed!\n\n");
-	Fp12_printf(&test3_Fp12,"");
-	Fp12_printf(&test4_Fp12,"\n");
-	printf("\n\n");
-	return 1;
+	    Fp12_printf("",&test3_Fp12);
+	    Fp12_printf("\n",&test4_Fp12);
+	    printf("\n\n");
+	    return 1;
     }
 }
     
@@ -212,10 +244,10 @@ for(i=0;i<fp12;i++){
 
     if(Fp12_cmp(&test1_Fp12,&test2_Fp12)!=0){
         printf("failed!\n\n");
-	Fp12_printf(&test1_Fp12,"");
-	Fp12_printf(&test2_Fp12,"\n");
-	printf("\n\n");
-	return 1;
+	    Fp12_printf("",&test1_Fp12);
+	    Fp12_printf("\n",&test2_Fp12);
+	    printf("\n\n");
+	    return 1;
     }
 }
     printf("Fp12 sqr.      : %.4f[ms]\n",sqr_time/fp12);
@@ -240,10 +272,10 @@ for(i=0;i<fp12;i++){
 
     if(Fp12_cmp(&test1_Fp12,&test2_Fp12)!=0){
         printf("failed!\n\n");
-	Fp12_printf(&test1_Fp12,"");
-	Fp12_printf(&test2_Fp12,"\n");
-	printf("\n\n");
-	return 1;
+	    Fp12_printf("",&test1_Fp12);
+	    Fp12_printf("\n",&test2_Fp12);
+	    printf("\n\n");
+	    return 1;
     }
 }
     printf("Fp12 sqr_cyclotomic.      : %.4f[ms]\n",sqr_time/fp12);
@@ -317,7 +349,6 @@ for(i=0;i<sqr;i++){
 
 return 0;
 }
-
 int test_EFp(int ecd,int eca,int scm){
     int i,n=0;
     float ecd_time=0,ecd_lazy_time=0,ecd_Jacobian_time=0,ecd_Jacobian_lazy_time=0;
@@ -377,11 +408,11 @@ for(i=0;i<ecd;i++){
 
     if(EFp_cmp(&test0,&test1)!=0 || EFp_cmp(&test1,&test2)!=0 || EFp_cmp(&test1,&test3)!=0){
         printf("failed!\n\n");
-	    EFp_printf(&test1,"");
-	    EFp_printf(&test2,"\n");
-	    EFp_printf(&test3,"\n");
-        EFpZ_printf(&testZ2,"\ntestZ2=");printf("\n");
-        EFpZ_printf(&testZ3,"\ntestZ3=");printf("\n");
+	    EFp_printf("",&test1);
+	    EFp_printf("\n",&test2);
+	    EFp_printf("\n",&test3);
+	    EFpZ_printf("\ntestZ2=",&testZ2);
+	    EFpZ_printf("\ntestZ3=",&testZ3);
 	    printf("\n\n");
 	    return 1;
     }
@@ -427,11 +458,11 @@ for(i=0;i<eca;i++){
 
     if(EFp_cmp(&test0,&test1)!=0 || EFp_cmp(&test1,&test2)!=0 || EFp_cmp(&test1,&test3)!=0){
         printf("failed!\n\n");
-	    EFp_printf(&test1,"");
-	    EFp_printf(&test2,"\n");
-	    EFp_printf(&test3,"\n");
-        EFpZ_printf(&testZ2,"\ntestZ2=");printf("\n");
-        EFpZ_printf(&testZ3,"\ntestZ3=");printf("\n");
+	    EFp_printf("",&test1);
+	    EFp_printf("\n",&test2);
+	    EFp_printf("\n",&test3);
+	    EFpZ_printf("\ntestZ2=",&testZ2);
+	    EFpZ_printf("\ntestZ3=",&testZ3);
 	    printf("\n\n");
 	    return 1;
     }
@@ -471,9 +502,9 @@ for(i=0;i<scm;i++){
 
     if(EFp_cmp(&test0,&test1)!=0 || EFp_cmp(&test1,&test2)!=0 || EFp_cmp(&test1,&test3)!=0){
         printf("failed!\n\n");
-	    EFp_printf(&test1,"");
-	    EFp_printf(&test2,"\n");
-	    EFp_printf(&test3,"\n");
+	    EFp_printf("",&test1);
+	    EFp_printf("\n",&test2);
+	    EFp_printf("\n",&test3);
 	    printf("\n\n");
 	    return 1;
     }
@@ -545,11 +576,11 @@ for(i=0;i<ecd;i++){
 
     if(EFp2_cmp(&test0,&test1)!=0 || EFp2_cmp(&test1,&test2)!=0 || EFp2_cmp(&test1,&test3)!=0){
         printf("failed!\n\n");
-	    EFp2_printf(&test1,"");
-	    EFp2_printf(&test2,"\n");
-	    EFp2_printf(&test3,"\n");
-        EFpZ2_printf(&testZ2,"\ntestZ2=");printf("\n");
-        EFpZ2_printf(&testZ3,"\ntestZ3=");printf("\n");
+	    EFp2_printf("",&test1);
+	    EFp2_printf("\n",&test2);
+	    EFp2_printf("\n",&test3);
+	    EFpZ2_printf("\ntestZ2=",&testZ2);
+	    EFpZ2_printf("\ntestZ3=",&testZ3);
 	    printf("\n\n");
 	    return 1;
     }
@@ -595,11 +626,11 @@ for(i=0;i<eca;i++){
 
     if(EFp2_cmp(&test0,&test1)!=0 || EFp2_cmp(&test1,&test2)!=0 || EFp2_cmp(&test1,&test3)!=0){
         printf("failed!\n\n");
-	    EFp2_printf(&test1,"");
-	    EFp2_printf(&test2,"\n");
-	    EFp2_printf(&test3,"\n");
-        EFpZ2_printf(&testZ2,"\ntestZ2=");printf("\n");
-        EFpZ2_printf(&testZ3,"\ntestZ3=");printf("\n");
+	    EFp2_printf("",&test1);
+	    EFp2_printf("\n",&test2);
+	    EFp2_printf("\n",&test3);
+	    EFpZ2_printf("\ntestZ2=",&testZ2);
+	    EFpZ2_printf("\ntestZ3=",&testZ3);
 	    printf("\n\n");
 	    return 1;
     }
@@ -639,9 +670,9 @@ for(i=0;i<scm;i++){
 
     if(EFp2_cmp(&test0,&test1)!=0 || EFp2_cmp(&test1,&test2)!=0 || EFp2_cmp(&test1,&test3)!=0){
         printf("failed!\n\n");
-	    EFp2_printf(&test1,"");
-	    EFp2_printf(&test2,"\n");
-	    EFp2_printf(&test3,"\n");
+	    EFp2_printf("",&test1);
+	    EFp2_printf("\n",&test2);
+	    EFp2_printf("\n",&test3);
 	    printf("\n\n");
 	    return 1;
     }
@@ -692,8 +723,8 @@ for(i=0;i<ecd;i++){
 
     if(EFp12_cmp(&test1,&test2)!=0){
         printf("failed!\n\n");
-	EFp12_printf(&test1,"");
-	EFp12_printf(&test2,"\n");
+	    EFp12_printf("",&test1);
+	    EFp12_printf("\n",&test2);
 	printf("\n\n");
 	return 1;
     }
@@ -722,8 +753,8 @@ for(i=0;i<eca;i++){
 
     if(EFp12_cmp(&test1,&test2)!=0){
         printf("failed!\n\n");
-	EFp12_printf(&test1,"");
-	EFp12_printf(&test2,"\n");
+	    EFp12_printf("",&test1);
+	    EFp12_printf("\n",&test2);
 	printf("\n\n");
 	return 1;
     }
@@ -751,8 +782,8 @@ for(i=0;i<scm;i++){
 
     if(EFp12_cmp(&test1,&test2)!=0){
         printf("failed!\n\n");
-	EFp12_printf(&test1,"");
-	EFp12_printf(&test2,"\n");
+	    EFp12_printf("",&test1);
+	    EFp12_printf("\n",&test2);
 	printf("\n\n");
 	return 1;
     }
@@ -774,17 +805,17 @@ void test_Frobenius_map(){
     gmp_randinit_default (state);
 	gmp_randseed_ui(state,(unsigned long)time(NULL));
     Fp12_set_random(&A_Fp12,state);
-    Fp12_printf(&A_Fp12,"");
+    Fp12_printf("",&A_Fp12);
     printf("\n\n");
     
     printf("frobenius\n");
     Fp12_frobenius_map_p10(&test1,&A_Fp12);
-    Fp12_printf(&test1,"");
+    Fp12_printf("",&test1);
     printf("\n\n");
     
     mpz_pow_ui(exp,prime_z,10);
     Fp12_pow(&test2,&A_Fp12,exp);
-    Fp12_printf(&test2,"");
+    Fp12_printf("",&test2);
     printf("\n");
     
     if(Fp12_cmp(&test1,&test2)==0){
@@ -810,12 +841,12 @@ void test_skew_frobenius_map(){
     
     Fp12_frobenius_map_p10(&test1.x,&Q.x);
     Fp12_frobenius_map_p10(&test1.y,&Q.y);
-    EFp12_printf(&test1,"");
+    EFp12_printf("",&test1);
     printf("\n\n");
     
     EFp2_skew_frobenius_map_p10(&twisted_Q,&twisted_Q);
     EFp2_to_EFp12(&test2,&twisted_Q);
-    EFp12_printf(&test2,"");
+    EFp12_printf("",&test2);
     printf("\n\n");
     
     if(Fp12_cmp(&test1.x,&test2.x)==0 && Fp12_cmp(&test1.y,&test2.y)==0){
@@ -837,17 +868,17 @@ void test_twist(){
     
     
     EFp12_generate_G2(&Q);
-    EFp12_printf(&Q,"Q\n");
+    EFp12_printf("Q\n",&Q);
     printf("\n\n");
     
     EFp12_to_EFp2(&twist_Q,&Q);
     EFp2_ECD(&twist_Q,&twist_Q);
     EFp2_to_EFp12(&test1,&twist_Q);
-    EFp12_printf(&test1,"");
+    EFp12_printf("",&test1);
     printf("\n\n");
     
     EFp12_ECD(&test2,&Q);
-    EFp12_printf(&test2,"");
+    EFp12_printf("",&test2);
     printf("\n\n");
     
     if(Fp12_cmp(&test1.x,&test2.x)==0 && Fp12_cmp(&test1.y,&test2.y)==0){
@@ -857,211 +888,61 @@ void test_twist(){
     }
     
 }
-int test_mod(int mulmod,int mod){
-    int i,n=0;
-    float add_time=0,dbl_time=0,mul_time=0,sqr_time=0,mod_time=0,mod_mont_time=0;
-    struct timeval tv_A,tv_B;
-    printf("====================================================================================\n");
-    printf("Field Mod test\n");
-    mp_limb_t A[FPLIMB],B[FPLIMB],C[FPLIMB],C1[FPLIMB2];
-    mp_limb_t At[FPLIMB2],Bt[FPLIMB2],Ct[FPLIMB2],test_mul[FPLIMB2];
-    Fp test1,test2;
-
-    gmp_randinit_default (state);
-    gmp_randseed_ui(state,(unsigned long)time(NULL));
-
-for(i=0;i<mulmod;i++){
-    mpn_random(A,FPLIMB);
-    mpn_random(B,FPLIMB);
-
-    Lazy_mod(A,A,FPLIMB);
-    Lazy_mod(B,B,FPLIMB);
-
-    mpn_mul_n(At,A,A,FPLIMB);
-    mpn_mul_n(Bt,B,B,FPLIMB);
-
-    gettimeofday(&tv_A,NULL);
-    mpn_add_n(test_mul,At,At,FPLIMB2);
-    gettimeofday(&tv_B,NULL);
-    add_time+=timedifference_msec(tv_A,tv_B);
-
-    gettimeofday(&tv_A,NULL);
-    mpn_lshift(test_mul,At,FPLIMB2,1);
-    gettimeofday(&tv_B,NULL);
-    dbl_time+=timedifference_msec(tv_A,tv_B);
-
-    gettimeofday(&tv_A,NULL);
-    mpn_mul_n(test_mul,A,A,FPLIMB);
-    gettimeofday(&tv_B,NULL);
-    mul_time+=timedifference_msec(tv_A,tv_B);
-
-    gettimeofday(&tv_A,NULL);
-    mpn_sqr(test_mul,A,FPLIMB);
-    gettimeofday(&tv_B,NULL);
-    sqr_time+=timedifference_msec(tv_A,tv_B);
-
-    gettimeofday(&tv_A,NULL);
-    mpn_mod(&test1,test_mul,FPLIMB2);
-    gettimeofday(&tv_B,NULL);
-    mod_time+=timedifference_msec(tv_A,tv_B);
-
-}
-    printf("Fp add.            : %.6f[ms]\n",add_time/mulmod);
-    printf("Fp dbl.            : %.6f[ms]\n",dbl_time/mulmod);
-    printf("Fp mod.            : %.6f[ms]\n",mod_time/mulmod);
-    printf("Fp sqr.            : %.6f[ms]\n",sqr_time/mulmod);
-    printf("Fp mul.            : %.6f[ms]\n",mul_time/mulmod);
-    printf("Fp add + mul * 2.  : %.6f[ms]\n",(add_time+(mul_time*2))/mulmod);
-mod_time=0;
-for(i=0;i<mod;i++){
-    mpn_random(A,FPLIMB);
-    mpn_random(B,FPLIMB);
-
-    Lazy_mod(A,A,FPLIMB);
-    Lazy_mod(B,B,FPLIMB);
-
-    mpn_mul_n(C1,A,B,FPLIMB);
-
-    Fp_mul_montgomery(At,FPLIMB2,A,FPLIMB);
-    Fp_MR(A,At,FPLIMB2);
-
-    Fp_mul_montgomery(Bt,FPLIMB2,B,FPLIMB);
-    Fp_MR(B,Bt,FPLIMB2);
-
-    mpn_mul_n(Ct,A,B,FPLIMB);
-    Fp_MR(C,Ct,FPLIMB2);
-
-    gettimeofday(&tv_A,NULL);
-    mpn_mod(&test1,C1,FPLIMB2);
-    gettimeofday(&tv_B,NULL);
-    mod_time+=timedifference_msec(tv_A,tv_B);
-
-    gettimeofday(&tv_A,NULL);
-    Fp_MR(C,Ct,FPLIMB2);
-    gettimeofday(&tv_B,NULL);
-    mod_mont_time+=timedifference_msec(tv_A,tv_B);
-
-    Fp_MR(test2.x0,C,FPLIMB);
-
-    if(Fp_cmp(&test1,&test2)!=0){
-        printf("failed!\n\n");
-	Fp_printf(&test1,"");
-	Fp_printf(&test2,"\n");
-	printf("\n\n");
-	return 1;
-    }
-}
-    printf("Fp mod.            : %.6f[ms]\n",mod_time/mod);
-    printf("Fp mod montgomery. : %.6f[ms]\n",mod_mont_time/mod);
-
-    return 0;
-    
-}
-
 void test_All(){
-	int test_point,test_G1,test_G2,test_G3,test_pairing;
-	int Lazy_Field,Lazy_EFp,Lazy_EFp2,Lazy_EFp12,Lazy_G1,Lazy_G2,Lazy_G3,Lazy_pairing;
-	int Jacobian_EFp,Jacobian_EFp2,Jacobian_G1;
+	int point,Field,EFp,EFp2,EFp12,G1,G2,G3,pairing;
 	
 printf("====================================================================================\n");
-    printf("Normal test\n");
+    printf("Test time\n");
 	
-	test_point = BLS12_test_rational_point();
-	test_G1 = BLS12_test_G1_SCM(1);
-	test_G2 = BLS12_test_G2_SCM(1);
-	test_G3 = BLS12_test_G3_EXP(1);
-	test_pairing = BLS12_test_opt_ate_pairing();
-
-printf("====================================================================================\n");
-    printf("Lazy test\n");
+	point = BLS12_test_rational_point();
+	Field = test_Field(100,100,100,10,10);
+	EFp = test_EFp(100,100,10);
+	EFp2 = test_EFp2(10,10,10);
+	EFp12 = test_EFp12(10,10,10);
+	G1 = BLS12_test_G1_SCM(10);
+	G2 = BLS12_test_G2_SCM(10);
+	G3 = BLS12_test_G3_EXP(10);
+	pairing = BLS12_test_opt_ate_pairing(10);
 	
-	Lazy_EFp = test_EFp_Lazy(100,100,10);
-	Lazy_EFp2 = test_EFp2_Lazy(10,10,10);
-	Lazy_EFp12 = test_EFp12_Lazy(10,10,1);
-
-printf("====================================================================================\n");
-    printf("Jacobian test\n");
-
-	
-	Jacobian_EFp = test_EFp_Jacobian(100,100,10);
-	Jacobian_EFp2 = test_EFp2_Jacobian(100,100,10);
-
-
 printf("====================================================================================\n");
     printf("Test Result\n\n");
 
-printf("------------------------------------------------------------------------------------\n");
-    printf("Normal test\n");
-
-	printf("Test Rational Point  :");
-	if(test_point==0) printf("Success\n");
+	printf("Test Point      :");
+	if(point==0) printf("Success\n");
+	else printf("Failed\n");
+	
+	printf("Test Field      :");
+	if(Field==0) printf("Success\n");
 	else printf("Failed\n");
 
-	printf("Test G1 test         :");
-	if(test_G1==0) printf("Success\n");
+	printf("Test EFp        :");
+	if(EFp==0) printf("Success\n");
 	else printf("Failed\n");
 
-	printf("Test G2 test         :");
-	if(test_G2==0) printf("Success\n");
+	printf("Test EFp2       :");
+	if(EFp2==0) printf("Success\n");
 	else printf("Failed\n");
 
-	printf("Test G3 test         :");
-	if(test_G3==0) printf("Success\n");
+	printf("Test EFp12      :");
+	if(EFp12==0) printf("Success\n");
 	else printf("Failed\n");
 
-	printf("Test pairing test    :");
-	if(test_pairing==0) printf("Success\n");
+	printf("Test G1         :");
+	if(G1==0) printf("Success\n");
 	else printf("Failed\n");
 
-printf("------------------------------------------------------------------------------------\n");
-    printf("Lazy Reduction test\n");
-
-	printf("Test Field Lazy      :");
-	if(Lazy_Field==0) printf("Success\n");
+	printf("Test G2         :");
+	if(G2==0) printf("Success\n");
 	else printf("Failed\n");
 
-	printf("Test EFp Lazy        :");
-	if(Lazy_EFp==0) printf("Success\n");
+	printf("Test G3         :");
+	if(G3==0) printf("Success\n");
 	else printf("Failed\n");
 
-	printf("Test EFp2 Lazy       :");
-	if(Lazy_EFp2==0) printf("Success\n");
+	printf("Test pairing    :");
+	if(pairing==0) printf("Success\n");
 	else printf("Failed\n");
 
-	printf("Test EFp12 Lazy      :");
-	if(Lazy_EFp12==0) printf("Success\n");
-	else printf("Failed\n");
-
-	printf("Test G1 Lazy         :");
-	if(Lazy_G1==0) printf("Success\n");
-	else printf("Failed\n");
-
-	printf("Test G2 Lazy         :");
-	if(Lazy_G2==0) printf("Success\n");
-	else printf("Failed\n");
-
-	printf("Test G3 Lazy         :");
-	if(Lazy_G3==0) printf("Success\n");
-	else printf("Failed\n");
-
-	printf("Test pairing Lazy    :");
-	if(Lazy_pairing==0) printf("Success\n");
-	else printf("Failed\n");
-
-printf("------------------------------------------------------------------------------------\n");
-    printf("Jacobian test\n");
-
-	printf("Test EFp Jacobian    :");
-	if(Jacobian_EFp==0) printf("Success\n");
-	else printf("Failed\n");
-
-	printf("Test EFp2 Jacobian   :");
-	if(Jacobian_EFp2==0) printf("Success\n");
-	else printf("Failed\n");
-
-	printf("Test G1 Jacobian     :");
-	if(Jacobian_G1==0) printf("Success\n");
-	else printf("Failed\n");
 }
 int Fast_test_BLS12(int g1, int g2,int g3,int pairing){
     int i;

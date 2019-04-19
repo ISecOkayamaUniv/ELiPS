@@ -13,10 +13,10 @@ extern void EFp6_init(EFp6 *P);
 /**
  * @brief Print a EFp6 type struct
  *
- * @param[in]P --a pointer to be printed.
  * @param[in]str --a pointer to be printed.
+ * @param[in]P --a pointer to be printed.
  */
-extern void EFp6_printf(EFp6 *P,char *str);
+extern void EFp6_printf(char *str,EFp6 *P);
 
 /**
  * @brief Set a EFp6 type struct to a EFp6 type struct

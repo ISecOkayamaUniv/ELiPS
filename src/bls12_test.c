@@ -6,17 +6,17 @@ int BLS12_test_rational_point(){
     EFp12_init(&test_G2);
     
     BLS12_EFp12_generate_G1(&test_G1);
-    EFp12_printf(&test_G1,"G1\n");
+    EFp12_printf("G1\n",&test_G1);
     printf("\n");
     EFp12_SCM(&test_G1,&test_G1,order_z);
-    EFp12_printf(&test_G1,"G1 test\n");
+    EFp12_printf("G1 test\n",&test_G1);
     printf("\n");
     
     EFp12_generate_G2(&test_G2);
-    EFp12_printf(&test_G2,"G2\n");
+    EFp12_printf("G2\n",&test_G2);
     printf("\n");
     EFp12_SCM(&test_G2,&test_G2,order_z);
-    EFp12_printf(&test_G2,"G2 test\n");
+    EFp12_printf("G2 test\n",&test_G2);
     printf("\n");
 
     if(test_G1.infinity!=1 || test_G2.infinity!=1) return 1;
@@ -51,10 +51,10 @@ void BLS12_test_plain_ate_pairing(){
     mpz_mod(s12,s12,order_z);
     
     BLS12_EFp12_generate_G1(&P);
-    EFp12_printf(&P,"P\n");
+    EFp12_printf("P\n",&P);
     printf("\n\n");
     EFp12_generate_G2(&Q);
-    EFp12_printf(&Q,"Q\n");
+    EFp12_printf("Q\n",&Q);
     printf("\n\n");
     EFp12_SCM(&s1P,&P,s1);
     EFp12_SCM(&s2P,&P,s2);
@@ -70,7 +70,7 @@ void BLS12_test_plain_ate_pairing(){
     printf("Final Exp. (easy)  : %.2f[ms]\n",FINALEXP_OPT_EASY);
     printf("Final Exp. (hard)  : %.2f[ms]\n",FINALEXP_OPT_HARD);
     printf("Final Exp. (total) : %.2f[ms]\n",MILLER_PLAINATE+FINALEXP_OPT_EASY+FINALEXP_OPT_HARD);
-    Fp12_printf(&test1,"");
+    Fp12_printf("",&test1);
     printf("\n\n");
     
     printf("------------------------------------------------------------------------------------\n");
@@ -81,7 +81,7 @@ void BLS12_test_plain_ate_pairing(){
     printf("Final Exp. (easy)  : %.2f[ms]\n",FINALEXP_OPT_EASY);
     printf("Final Exp. (hard)  : %.2f[ms]\n",FINALEXP_OPT_HARD);
     printf("Final Exp. (total) : %.2f[ms]\n",MILLER_PLAINATE+FINALEXP_OPT_EASY+FINALEXP_OPT_HARD);
-    Fp12_printf(&test2,"");
+    Fp12_printf("",&test2);
     printf("\n\n");
     
     printf("------------------------------------------------------------------------------------\n");
@@ -92,7 +92,7 @@ void BLS12_test_plain_ate_pairing(){
     printf("Final Exp. (easy)  : %.2f[ms]\n",FINALEXP_OPT_EASY);
     printf("Final Exp. (hard)  : %.2f[ms]\n",FINALEXP_OPT_HARD);
     printf("Final Exp. (total) : %.2f[ms]\n",MILLER_PLAINATE+FINALEXP_OPT_EASY+FINALEXP_OPT_HARD);
-    Fp12_printf(&test3,"");
+    Fp12_printf("",&test3);
     printf("\n\n");
     
     printf("bilinear test\n");
@@ -177,25 +177,25 @@ for(i=0;i<pairing;i++){
     opt_time+=timedifference_msec(tv_A,tv_B);
     
     gettimeofday(&tv_A,NULL);
-    BLS12_Opt_ate_pairing_lazy(&test4,&P,&Q);
+    BLS12_Opt_ate_pairing_lazy(&test2,&P,&Q);
     gettimeofday(&tv_B,NULL);
     opt_lazy_time+=timedifference_msec(tv_A,tv_B);
 
     gettimeofday(&tv_A,NULL);
-    BLS12_Opt_ate_pairing_compress(&test2,&P,&Q);
+    BLS12_Opt_ate_pairing_compress(&test3,&P,&Q);
     gettimeofday(&tv_B,NULL);
     opt_compress_time+=timedifference_msec(tv_A,tv_B);
 
     gettimeofday(&tv_A,NULL);
-    BLS12_Opt_ate_pairing_compress_lazy(&test3,&P,&Q);
+    BLS12_Opt_ate_pairing_compress_lazy(&test4,&P,&Q);
     gettimeofday(&tv_B,NULL);
     opt_compress_lazy_time+=timedifference_msec(tv_A,tv_B);
     
     
     if(Fp12_cmp(&test1,&test2)!=0 || Fp12_cmp(&test1,&test3)!=0 || Fp12_cmp(&test1,&test4)!=0){
         printf("failed!\n\n");
-	    Fp12_printf(&test1,"");
-    	Fp12_printf(&test2,"\n");
+	    Fp12_printf("",&test1);
+    	Fp12_printf("\n",&test2);
     	printf("\n\n");
     	return 1;
     }
@@ -241,10 +241,10 @@ void BLS12_test_x_ate_pairing(){
     mpz_mod(s12,s12,order_z);
     
     BLS12_EFp12_generate_G1(&P);
-    EFp12_printf(&P,"P\n");
+    EFp12_printf("P\n",&P);
     printf("\n\n");
     EFp12_generate_G2(&Q);
-    EFp12_printf(&Q,"Q\n");
+    EFp12_printf("Q\n",&Q);
     printf("\n\n");
     EFp12_SCM(&s1P,&P,s1);
     EFp12_SCM(&s2P,&P,s2);
@@ -260,7 +260,7 @@ void BLS12_test_x_ate_pairing(){
     printf("Final Exp. (easy)  : %.2f[ms]\n",FINALEXP_OPT_EASY);
     printf("Final Exp. (hard)  : %.2f[ms]\n",FINALEXP_OPT_HARD);
     printf("Final Exp. (total) : %.2f[ms]\n",MILLER_XATE+FINALEXP_OPT_EASY+FINALEXP_OPT_HARD);
-    Fp12_printf(&test1,"");
+    Fp12_printf("",&test1);
     printf("\n\n");
     
     printf("------------------------------------------------------------------------------------\n");
@@ -271,7 +271,7 @@ void BLS12_test_x_ate_pairing(){
     printf("Final Exp. (easy)  : %.2f[ms]\n",FINALEXP_OPT_EASY);
     printf("Final Exp. (hard)  : %.2f[ms]\n",FINALEXP_OPT_HARD);
     printf("Final Exp. (total) : %.2f[ms]\n",MILLER_XATE+FINALEXP_OPT_EASY+FINALEXP_OPT_HARD);
-    Fp12_printf(&test2,"");
+    Fp12_printf("",&test2);
     printf("\n\n");
     
     printf("------------------------------------------------------------------------------------\n");
@@ -282,7 +282,7 @@ void BLS12_test_x_ate_pairing(){
     printf("Final Exp. (easy)  : %.2f[ms]\n",FINALEXP_OPT_EASY);
     printf("Final Exp. (hard)  : %.2f[ms]\n",FINALEXP_OPT_HARD);
     printf("Final Exp. (total) : %.2f[ms]\n",MILLER_XATE+FINALEXP_OPT_EASY+FINALEXP_OPT_HARD);
-    Fp12_printf(&test3,"");
+    Fp12_printf("",&test3);
     printf("\n\n");
     
     printf("bilinear test\n");
@@ -357,12 +357,12 @@ for(i=0;i<scm;i++){
 
     if(EFp12_cmp(&test1,&test2)!=0 || EFp12_cmp(&test1,&test3)!=0 || EFp12_cmp(&test1,&test4)!=0 || EFp12_cmp(&test1,&test5)!=0 || EFp12_cmp(&test1,&test6)!=0){
         printf("failed!\n\n");
-	EFp12_printf(&test1,"test1=");
-	EFp12_printf(&test2,"\ntest2=");
-	EFp12_printf(&test3,"\ntest3=");
-	EFp12_printf(&test4,"\ntest4=");
-	EFp12_printf(&test5,"\ntest5=");
-	EFp12_printf(&test6,"\ntest6=");
+	EFp12_printf("test1=",&test1);
+	EFp12_printf("\ntest2=",&test2);
+	EFp12_printf("\ntest3=",&test3);
+	EFp12_printf("\ntest4=",&test4);
+	EFp12_printf("\ntest5=",&test5);
+	EFp12_printf("\ntest6=",&test6);
 	printf("\n\n");
 	return 1;
     }
@@ -443,13 +443,13 @@ for(i=0;i<scm;i++){
 
     if(EFp12_cmp(&test1,&test2)!=0 || EFp12_cmp(&test1,&test3)!=0 || EFp12_cmp(&test1,&test4)!=0 || EFp12_cmp(&test1,&test5)!=0 || EFp12_cmp(&test1,&test6)!=0 || EFp12_cmp(&test1,&test7)!=0){
         printf("failed!\n\n");
-	EFp12_printf(&test1,"test1=");
-	EFp12_printf(&test2,"\ntest2=");
-	EFp12_printf(&test3,"\ntest3=");
-	EFp12_printf(&test4,"\ntest4=");
-	EFp12_printf(&test5,"\ntest5=");
-	EFp12_printf(&test6,"\ntest6=");
-	EFp12_printf(&test7,"\ntest7=");
+	EFp12_printf("test1=",&test1);
+	EFp12_printf("\ntest2=",&test2);
+	EFp12_printf("\ntest3=",&test3);
+	EFp12_printf("\ntest4=",&test4);
+	EFp12_printf("\ntest5=",&test5);
+	EFp12_printf("\ntest6=",&test6);
+	EFp12_printf("\ntest7=",&test7);
 	printf("\n\n");
 	return 1;
     }
@@ -539,13 +539,13 @@ for(i=0;i<exp;i++){
 
     if(Fp12_cmp(&test1,&test2)!=0 || Fp12_cmp(&test1,&test3)!=0 || Fp12_cmp(&test1,&test4)!=0 || Fp12_cmp(&test1,&test5)!=0 || Fp12_cmp(&test1,&test6)!=0 || Fp12_cmp(&test1,&test7)!=0){
         printf("failed!\n\n");
-	Fp12_printf(&test1,"test1=");
-	Fp12_printf(&test2,"\ntest2=");
-	Fp12_printf(&test3,"\ntest3=");
-	Fp12_printf(&test4,"\ntest4=");
-	Fp12_printf(&test5,"\ntest5=");
-	Fp12_printf(&test6,"\ntest6=");
-	Fp12_printf(&test7,"\ntest7=");
+	Fp12_printf("test1=",&test1);
+	Fp12_printf("\ntest2=",&test2);
+	Fp12_printf("\ntest3=",&test3);
+	Fp12_printf("\ntest4=",&test4);
+	Fp12_printf("\ntest5=",&test5);
+	Fp12_printf("\ntest6=",&test6);
+	Fp12_printf("\ntest7=",&test7);
 	printf("\n\n");
 	return 1;
     }
@@ -554,7 +554,6 @@ for(i=0;i<exp;i++){
     printf("BLS12 G3 exp 2split.                    : %.4f[ms]\n",exp_2split_time/exp);
     printf("BLS12 G3 exp 2split JSF.                : %.4f[ms]\n",exp_2split_JSF_time/exp);
     printf("BLS12 G3 exp 4split.                    : %.4f[ms]\n",exp_4split_time/exp);
-    printf("BLS12 G3 exp 4split.                    : %.4f[ms]\n",exp_time/exp);
     printf("BLS12 G3 exp 4split lazy.               : %.4f[ms]\n",exp_lazy_time/exp);
     printf("BLS12 G3 exp GS.                        : %.4f[ms]\n",exp_gs_time/exp);
     printf("BLS12 G3 exp GS lazy.                   : %.4f[ms]\n",exp_gs_lazy_time/exp);

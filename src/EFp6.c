@@ -6,13 +6,13 @@ void EFp6_init(EFp6 *P){
     P->infinity=0;
 }
 
-void EFp6_printf(EFp6 *P,char *str){
+void EFp6_printf(char *str,EFp6 *P){
     printf("%s",str);
     if(P->infinity==0){
         printf("(");
-        Fp6_printf(&P->x,"");
+        Fp6_printf("",&P->x);
         printf(",");
-        Fp6_printf(&P->y,"");
+        Fp6_printf("",&P->y);
         printf(")");
     }else{
         printf("0");

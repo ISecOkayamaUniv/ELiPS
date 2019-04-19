@@ -14,10 +14,10 @@ extern void Fp12_init(Fp12 *A);
 /**
  * @brief Print a Fp12 type struct
  *
- * @param[in]A --a pointer to be printed.
  * @param[in]str --a pointer to be printed.
+ * @param[in]A --a pointer to be printed.
  */
-extern void Fp12_printf(Fp12 *A,char *str);
+extern void Fp12_printf(char *str,Fp12 *A);
 
 /**
  * @brief Set a Fp12 type struct to a Fp12 type struct

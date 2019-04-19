@@ -4,7 +4,7 @@ void Fp_init(Fp *A){
     mpn_zero(A->x0,FPLIMB);
 }
 
-void Fp_printf(Fp *A,char *str){
+void Fp_printf(char *str,Fp *A){
     gmp_printf("%s%Nu",str,A->x0,FPLIMB);
 }
 
@@ -40,7 +40,6 @@ void Fp_set_random(Fp *ANS,gmp_randstate_t state){
     
     mpz_clear(tmp);
 }
-
 void Fp_MR(mp_limb_t *ANS,mp_limb_t *T,mp_size_t T_size){
     static mp_limb_t s[FPLIMB];
     static mp_limb_t buf[FPLIMB],bufL[FPLIMB2];

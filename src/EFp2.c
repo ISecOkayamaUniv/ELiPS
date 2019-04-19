@@ -20,27 +20,27 @@ void EFpZT2_init(EFpZT2 *P){
     Fp2_init(&P->zzz);
     P->infinity=0;
 }
-void EFp2_printf(EFp2 *P,char *str){
+void EFp2_printf(char *str,EFp2 *P){
     printf("%s",str);
     if(P->infinity==0){
         printf("(");
-        Fp2_printf(&P->x,"");
+        Fp2_printf("",&P->x);
         printf(",");
-        Fp2_printf(&P->y,"");
+        Fp2_printf("",&P->y);
         printf(")");
     }else{
         printf("0");
     }
 }
-void EFpZ2_printf(EFpZ2 *P,char *str){
+void EFpZ2_printf(char *str,EFpZ2 *P){
     printf("%s",str);
     if(P->infinity==0){
         printf("(");
-        Fp2_printf(&P->x,"");
+        Fp2_printf("",&P->x);
         printf(",");
-        Fp2_printf(&P->y,"");
+        Fp2_printf("",&P->y);
         printf(",");
-        Fp2_printf(&P->z,"");
+        Fp2_printf("",&P->z);
         printf(")");
     }else{
         printf("0");

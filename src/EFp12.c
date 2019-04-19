@@ -5,19 +5,18 @@ void EFp12_init(EFp12 *P){
     Fp12_init(&P->y);
     P->infinity=0;
 }
-void EFp12_printf(EFp12 *P,char *str){
+void EFp12_printf(char *str,EFp12 *P){
     printf("%s",str);
     if(P->infinity==0){
         printf("(");
-        Fp12_printf(&P->x,"");
+        Fp12_printf("",&P->x);
         printf(",");
-        Fp12_printf(&P->y,"");
+        Fp12_printf("",&P->y);
         printf(")");
     }else{
         printf("0");
     }
 }
-
 void EFp12_set(EFp12 *ANS,EFp12 *A){
     Fp12_set(&ANS->x,&A->x);
     Fp12_set(&ANS->y,&A->y);

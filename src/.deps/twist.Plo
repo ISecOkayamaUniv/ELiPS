@@ -111,7 +111,8 @@ twist.lo: twist.c ../include/ELiPS/twist.h ../include/ELiPS/EFp12.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/sys/_types/_errno_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_strings.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h
+  /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h
 
 ../include/ELiPS/twist.h:
 
@@ -354,3 +355,5 @@ twist.lo: twist.c ../include/ELiPS/twist.h ../include/ELiPS/EFp12.h \
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_strings.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h:
+
+/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h:

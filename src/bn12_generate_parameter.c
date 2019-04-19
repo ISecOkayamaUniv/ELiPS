@@ -26,7 +26,7 @@ void BN12_get_Two_inv(){
 }
 
 void BN12_set_basis(){
-    Fp2_set_ui(&Alpha_1,1);
+    Fp2_set_ui_ui(&Alpha_1,1);
     Fp2_inv(&Alpha_1_inv,&Alpha_1);
 }
 

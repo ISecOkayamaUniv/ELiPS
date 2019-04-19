@@ -13,10 +13,10 @@ extern void Fp_init(Fp *A);
 /**
  * @brief Print a Fp type struct
  *
- * @param[in]A --a pointer to be printed.
  * @param[in]str --a pointer to be printed.
+ * @param[in]A --a pointer to be printed.
  */
-extern void Fp_printf(Fp *A,char *str);
+extern void Fp_printf(char *str,Fp *A);
 
 /**
  * @brief Set a Fp type struct to a Fp type struct

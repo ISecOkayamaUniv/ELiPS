@@ -5,11 +5,11 @@ void Fp2_init(Fp2 *A){
     Fp_init(&A->x1);
 }
 
-void Fp2_printf(Fp2 *A,char *str){
+void Fp2_printf(char *str,Fp2 *A){
     gmp_printf("%s(",str);
-    Fp_printf(&A->x0,"");
+    Fp_printf("",&A->x0);
     gmp_printf(",");
-    Fp_printf(&A->x1,"");
+    Fp_printf("",&A->x1);
     gmp_printf(")");
 }
 

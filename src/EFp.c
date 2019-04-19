@@ -19,45 +19,45 @@ void EFpZT_init(EFpZT *P){
     Fp_init(&P->zzz);
     P->infinity=0;
 }
-void EFp_printf(EFp *P,char *str){
+void EFp_printf(char *str,EFp *P){
     printf("%s",str);
     if(P->infinity==0){
         printf("(");
-        Fp_printf(&P->x,"");
+        Fp_printf("",&P->x);
         printf(",");
-        Fp_printf(&P->y,"");
+        Fp_printf("",&P->y);
         printf(")");
     }else{
         printf("0");
     }
 }
-void EFpZ_printf(EFpZ *P,char *str){
+void EFpZ_printf(char *str,EFpZ *P){
     printf("%s",str);
     if(P->infinity==0){
         printf("(");
-        Fp_printf(&P->x,"");
+        Fp_printf("",&P->x);
         printf(",");
-        Fp_printf(&P->y,"");
+        Fp_printf("",&P->y);
         printf(",");
-        Fp_printf(&P->z,"");
+        Fp_printf("",&P->z);
         printf(")");
     }else{
         printf("Infinity");
     }
 }
-void EFpZT_printf(EFpZT *P,char *str){
+void EFpZT_printf(char *str,EFpZT *P){
     printf("%s",str);
     if(P->infinity==0){
         printf("(");
-        Fp_printf(&P->x,"");
+        Fp_printf("",&P->x);
         printf(",");
-        Fp_printf(&P->y,"");
+        Fp_printf("",&P->y);
         printf(",");
-        Fp_printf(&P->z,"");
+        Fp_printf("",&P->z);
         printf(",");
-        Fp_printf(&P->zz,"");
+        Fp_printf("",&P->zz);
         printf(",");
-        Fp_printf(&P->zzz,"");
+        Fp_printf("",&P->zzz);
         printf(")");
     }else{
         printf("Infinity");

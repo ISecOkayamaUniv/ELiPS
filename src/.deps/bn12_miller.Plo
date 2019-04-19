@@ -113,6 +113,7 @@ bn12_miller.lo: bn12_miller.c ../include/ELiPS/bn12_miller.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h \
   ../include/ELiPS/twist.h ../include/ELiPS/EFp12.h \
   ../include/ELiPS/EFp6.h
 
@@ -355,6 +356,8 @@ bn12_miller.lo: bn12_miller.c ../include/ELiPS/bn12_miller.h \
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_strings.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h:
+
+/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h:
 
 ../include/ELiPS/twist.h:
 

@@ -114,6 +114,7 @@ bn12_test.lo: bn12_test.c ../include/ELiPS/bn12_test.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h \
   ../include/ELiPS/twist.h ../include/ELiPS/EFp12.h \
   ../include/ELiPS/EFp6.h ../include/ELiPS/bn12_final_exp.h \
   ../include/ELiPS/test.h ../include/ELiPS/time.h \
@@ -367,6 +368,8 @@ bn12_test.lo: bn12_test.c ../include/ELiPS/bn12_test.h \
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_strings.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h:
+
+/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h:
 
 ../include/ELiPS/twist.h:
 

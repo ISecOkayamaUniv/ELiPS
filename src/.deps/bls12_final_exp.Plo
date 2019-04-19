@@ -111,6 +111,7 @@ bls12_final_exp.lo: bls12_final_exp.c ../include/ELiPS/bls12_final_exp.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h \
   ../include/ELiPS/time.h
 
 ../include/ELiPS/bls12_final_exp.h:
@@ -346,5 +347,7 @@ bls12_final_exp.lo: bls12_final_exp.c ../include/ELiPS/bls12_final_exp.h \
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_strings.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h:
+
+/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h:
 
 ../include/ELiPS/time.h:

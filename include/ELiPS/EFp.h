@@ -27,26 +27,26 @@ extern void EFpZT_init(EFpZT *P);
 /**
  * @brief Print a EFp type struct
  *
- * @param[in]P --a pointer to be printed.
  * @param[in]str --a pointer to be printed.
+ * @param[in]P --a pointer to be printed.
  */
-extern void EFp_printf(EFp *P,char *str);
+extern void EFp_printf(char *str,EFp *P);
 
 /**
  * @brief Print a EFpZ type struct
  *
- * @param[in]P --a pointer to be printed.
  * @param[in]str --a pointer to be printed.
+ * @param[in]P --a pointer to be printed.
  */
-extern void EFpZ_printf(EFpZ *P,char *str);
+extern void EFpZ_printf(char *str,EFpZ *P);
 
 /**
  * @brief Print a EFpZ type struct
  *
- * @param[in]P --a pointer to be printed.
  * @param[in]str --a pointer to be printed.
+ * @param[in]P --a pointer to be printed.
  */
-extern void EFpZT_printf(EFpZT *P,char *str);
+extern void EFpZT_printf(char *str,EFpZT *P);
 
 /**
  * @brief Set a EFp type struct to a EFp type struct

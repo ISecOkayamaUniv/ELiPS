@@ -8,6 +8,8 @@
 #include <sys/time.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stdarg.h>
 
 #define FPLIMB_BITS 512
 #define FPLIMB 8
@@ -35,6 +37,7 @@ extern int BN12_X6_2_binary[BN12_X6_2_length+1];
 extern int BLS12_X_binary[BLS12_X_length+1];
 extern int BLS12_X2_binary[BLS12_X2_length+1];
 
+extern int add,mul;
 /*============================================================================*/
 /* Field                                                                      */
 /*============================================================================*/
