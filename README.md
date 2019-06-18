@@ -20,8 +20,8 @@ If found any bug related to installation, please infrom in `yuto_takahashi@s.oka
     `sudo apt-get install autoconf`
 4. Install `libtool` as follows 
     `sudo apt-get install libtool-bin`
-5. git clone `https://github.com/ISecOkayamaUniv/elips_bls12_x64.git`
-6. From terminal enter to `<elips_bls12_x64>` directory.
+5. git clone `https://github.com/ISecOkayamaUniv/ELiPS.git`
+6. From terminal enter to `<ELiPS>` directory.
 7. Run the following commands 
     `autoreconf -i`
 
