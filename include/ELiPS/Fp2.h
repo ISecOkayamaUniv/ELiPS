@@ -68,6 +68,15 @@ extern void Fp2_set_neg(Fp2 *ANS,Fp2 *A);
 extern void Fp2_lshift(Fp2 *ANS,Fp2 *A,unsigned long int UI);
 
 /**
+ * @brief Left Shift 2bit Fp2 type struct on prime field
+ *
+ * @param[out]ANS --a pointer of answer.
+ * @param[in]A --a pointer to be shiftted.
+ * @param[in]UI --an unsigned long int to shift.
+ */
+extern void Fp2_lshift2(Fp2 *ANS,Fp2 *A);
+
+/**
  * @brief Set a random number to a Fp2 type struct
  *
  * @param[out]ANS --a pointer to be setted.

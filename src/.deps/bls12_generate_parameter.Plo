@@ -112,6 +112,7 @@ bls12_generate_parameter.lo: bls12_generate_parameter.c \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/assert.h \
   ../include/ELiPS/Fp2.h ../include/ELiPS/bn12_generate_curve.h
 
 ../include/ELiPS/bn12_generate_parameter.h:
@@ -343,6 +344,8 @@ bls12_generate_parameter.lo: bls12_generate_parameter.c \
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h:
 
 /Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/assert.h:
 
 ../include/ELiPS/Fp2.h:
 

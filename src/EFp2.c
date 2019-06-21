@@ -6,13 +6,13 @@ void EFp2_init(EFp2 *P){
     P->infinity=0;
 }
 
-void EFpZ2_init(EFpZ2 *P){
+void EFpJ2_init(EFpJ2 *P){
     Fp2_init(&P->x);
     Fp2_init(&P->y);
     Fp2_init(&P->z);
     P->infinity=0;
 }
-void EFpZT2_init(EFpZT2 *P){
+void EFpJT2_init(EFpJT2 *P){
     Fp2_init(&P->x);
     Fp2_init(&P->y);
     Fp2_init(&P->z);
@@ -32,7 +32,7 @@ void EFp2_printf(char *str,EFp2 *P){
         printf("0");
     }
 }
-void EFpZ2_printf(char *str,EFpZ2 *P){
+void EFpJ2_printf(char *str,EFpJ2 *P){
     printf("%s",str);
     if(P->infinity==0){
         printf("(");
@@ -51,13 +51,13 @@ void EFp2_set(EFp2 *ANS,EFp2 *A){
     Fp2_set(&ANS->y,&A->y);
     ANS->infinity=A->infinity;
 }
-void EFpZ2_set(EFpZ2 *ANS,EFpZ2 *A){
+void EFpJ2_set(EFpJ2 *ANS,EFpJ2 *A){
     Fp2_set(&ANS->x,&A->x);
     Fp2_set(&ANS->y,&A->y);
     Fp2_set(&ANS->z,&A->z);
     ANS->infinity=A->infinity;
 }
-void EFpZT2_set(EFpZT2 *ANS,EFpZT2 *A){
+void EFpJT2_set(EFpJT2 *ANS,EFpJT2 *A){
     Fp2_set(&ANS->x,&A->x);
     Fp2_set(&ANS->y,&A->y);
     Fp2_set(&ANS->z,&A->z);
@@ -65,25 +65,25 @@ void EFpZT2_set(EFpZT2 *ANS,EFpZT2 *A){
     Fp2_set(&ANS->zzz,&A->zzz);
     ANS->infinity=A->infinity;
 }
-void EFpZT2_to_EFpZ2(EFpZ2 *ANS,EFpZT2 *A){
+void EFpJT2_to_EFpJ2(EFpJ2 *ANS,EFpJT2 *A){
     Fp2_set(&ANS->x,&A->x);
     Fp2_set(&ANS->y,&A->y);
     Fp2_set(&ANS->z,&A->z);
     ANS->infinity=A->infinity;
 }
-void EFpZ2_to_EFpZT2(EFpZT2 *ANS,EFpZ2 *A){
+void EFpJ2_to_EFpJT2(EFpJT2 *ANS,EFpJ2 *A){
     Fp2_set(&ANS->x,&A->x);
     Fp2_set(&ANS->y,&A->y);
     Fp2_set(&ANS->z,&A->z);
     ANS->infinity=A->infinity;
 }
-void EFp2_to_EFpZ2(EFpZ2 *ANS,EFp2 *A){
+void EFp2_to_EFpJ2(EFpJ2 *ANS,EFp2 *A){
     Fp2_set(&ANS->x,&A->x);
     Fp2_set(&ANS->y,&A->y);
     Fp2_set_ui(&ANS->z,1);
     ANS->infinity=A->infinity;
 }
-void EFp2_Jacobian(EFp2 *ANS,EFpZ2 *A){
+void EFp2_Jacobian(EFp2 *ANS,EFpJ2 *A){
     static Fp2 Zi,Zt;
     Fp2_inv(&Zi,&A->z);
     Fp2_mul(&Zt,&Zi,&Zi);
@@ -92,7 +92,15 @@ void EFp2_Jacobian(EFp2 *ANS,EFpZ2 *A){
     Fp2_mul(&ANS->y,&A->y,&Zt);
     ANS->infinity=A->infinity;
 }
-
+void EFp2_mix(EFpJ2 *ANS,EFpJ2 *A,Fp2 *Zi){
+    static Fp2 Zt;
+    Fp2_mul(&Zt,Zi,Zi);
+    Fp2_mul(&ANS->x,&A->x,&Zt);
+    Fp2_mul(&Zt,&Zt,Zi);
+    Fp2_mul(&ANS->y,&A->y,&Zt);
+    Fp2_set_ui(&ANS->z,1);
+    ANS->infinity=A->infinity;
+}
 void EFp2_set_ui(EFp2 *ANS,unsigned long int UI){
     Fp2_set_ui(&ANS->x,UI);
     Fp2_set_ui(&ANS->y,UI);
@@ -169,8 +177,8 @@ void EFp2_ECD(EFp2 *ANS,EFp2 *P){
     Fp2_sub(&ANS->y,&tmp2_Fp2,&tmp1_EFp2.y);
 }
 
-void EFp2_ECD_Jacobian(EFpZ2 *ANS,EFpZ2 *P){
-    static EFpZ2 Pt;
+void EFp2_ECD_Jacobian(EFpJ2 *ANS,EFpJ2 *P){
+    static EFpJ2 Pt;
     static Fp2 tmp1_Fp2,tmp2_Fp2,tmp3_Fp2;
     static Fp2 tmpy_Fp2;
     static Fp2 s,m,T;
@@ -179,7 +187,7 @@ void EFp2_ECD_Jacobian(EFpZ2 *ANS,EFpZ2 *P){
         return;
     }
     
-    EFpZ2_set(&Pt,P);
+    EFpJ2_set(&Pt,P);
     
     //s
     Fp2_sqr(&tmpy_Fp2,&Pt.y);
@@ -241,8 +249,8 @@ void EFp2_ECD_lazy(EFp2 *ANS,EFp2 *P){
     Fp2_sub(&ANS->y,&tmp2_Fp2,&tmp1_EFp2.y);
 }
 
-void EFp2_ECD_Jacobian_lazy(EFpZ2 *ANS,EFpZ2 *P){
-    static EFpZ2 Pt;
+void EFp2_ECD_Jacobian_lazy(EFpJ2 *ANS,EFpJ2 *P){
+    static EFpJ2 Pt;
     static Fp2 tmp1_Fp2,tmp2_Fp2,tmp3_Fp2;
     static Fp2 tmpy_Fp2;
     static Fp2 s,m,T;
@@ -251,7 +259,7 @@ void EFp2_ECD_Jacobian_lazy(EFpZ2 *ANS,EFpZ2 *P){
         return;
     }
     
-    EFpZ2_set(&Pt,P);
+    EFpJ2_set(&Pt,P);
     
     //s
     Fp2_sqr_lazy(&tmpy_Fp2,&Pt.y);
@@ -317,16 +325,16 @@ void EFp2_ECA(EFp2 *ANS,EFp2 *P1,EFp2 *P2){
     Fp2_mul(&tmp2_Fp2,&tmp3_Fp2,&tmp1_Fp2);
     Fp2_sub(&ANS->y,&tmp2_Fp2,&tmp1_EFp2.y);
 }
-void EFp2_ECA_Jacobian(EFpZ2 *ANS,EFpZ2 *P1,EFpZ2 *P2){
-    static EFpZ2 Pt1,Pt2;
+void EFp2_ECA_Jacobian(EFpJ2 *ANS,EFpJ2 *P1,EFpJ2 *P2){
+    static EFpJ2 Pt1,Pt2;
     static Fp2 tmp1_Fp2,tmp2_Fp2,tmp3_Fp2;
     static Fp2 tmpZ1_Fp2,tmpZ2_Fp2,tmpH2_Fp2,tmpH3_Fp2,tmpU1H2_Fp2;
     static Fp2 U1,U2,S1,S2,H,r;
     if(P1->infinity==1){
-        EFpZ2_set(ANS,P2);
+        EFpJ2_set(ANS,P2);
         return;
     }else if(P2->infinity==1){
-        EFpZ2_set(ANS,P1);
+        EFpJ2_set(ANS,P1);
         return;
     }else if(Fp2_cmp(&P1->x,&P2->x)==0&&Fp2_cmp(&P1->z,&P2->z)==0){
         if(Fp2_cmp(&P1->y,&P2->y)!=0&&Fp2_cmp(&P1->z,&P2->z)==0){
@@ -338,8 +346,8 @@ void EFp2_ECA_Jacobian(EFpZ2 *ANS,EFpZ2 *P1,EFpZ2 *P2){
         }
     }
     
-    EFpZ2_set(&Pt1,P1);
-    EFpZ2_set(&Pt2,P2);
+    EFpJ2_set(&Pt1,P1);
+    EFpJ2_set(&Pt2,P2);
     
     //U1
     Fp2_sqr(&tmpZ2_Fp2,&Pt2.z);
@@ -387,16 +395,16 @@ void EFp2_ECA_Jacobian(EFpZ2 *ANS,EFpZ2 *P1,EFpZ2 *P2){
     Fp2_mul(&ANS->z,&tmp1_Fp2,&H);
 }
 
-void EFp2_ECA_Jacobian_scm(EFpZ2 *ANS,EFpZ2 *P1,EFpZ2 *P2){
-    static EFpZ2 Pt1,Pt2;
+void EFp2_ECA_Jacobian_scm(EFpJ2 *ANS,EFpJ2 *P1,EFpJ2 *P2){
+    static EFpJ2 Pt1,Pt2;
     static Fp2 tmp1_Fp2,tmp2_Fp2,tmp3_Fp2;
     static Fp2 tmpZ1_Fp2,tmpZ2_Fp2,tmpH2_Fp2,tmpH3_Fp2,tmpU1H2_Fp2;
     static Fp2 U1,U2,S1,S2,H,r;
     if(P1->infinity==1){
-        EFpZ2_set(ANS,P2);
+        EFpJ2_set(ANS,P2);
         return;
     }else if(P2->infinity==1){
-        EFpZ2_set(ANS,P1);
+        EFpJ2_set(ANS,P1);
         return;
     }else if(Fp2_cmp(&P1->x,&P2->x)==0&&Fp2_cmp(&P1->z,&P2->z)==0){
         if(Fp2_cmp(&P1->y,&P2->y)!=0&&Fp2_cmp(&P1->z,&P2->z)==0){
@@ -408,8 +416,8 @@ void EFp2_ECA_Jacobian_scm(EFpZ2 *ANS,EFpZ2 *P1,EFpZ2 *P2){
         }
     }
     
-    EFpZ2_set(&Pt1,P1);
-    EFpZ2_set(&Pt2,P2);
+    EFpJ2_set(&Pt1,P1);
+    EFpJ2_set(&Pt2,P2);
     
     //U1
     Fp2_set(&U1,&Pt1.x);
@@ -486,16 +494,16 @@ void EFp2_ECA_lazy(EFp2 *ANS,EFp2 *P1,EFp2 *P2){
     Fp2_mul_lazy(&tmp2_Fp2,&tmp3_Fp2,&tmp1_Fp2);
     Fp2_sub(&ANS->y,&tmp2_Fp2,&tmp1_EFp2.y);
 }
-void EFp2_ECA_Jacobian_lazy(EFpZ2 *ANS,EFpZ2 *P1,EFpZ2 *P2){
-    static EFpZ2 Pt1,Pt2;
+void EFp2_ECA_Jacobian_lazy(EFpJ2 *ANS,EFpJ2 *P1,EFpJ2 *P2){
+    static EFpJ2 Pt1,Pt2;
     static Fp2 tmp1_Fp2,tmp2_Fp2,tmp3_Fp2;
     static Fp2 tmpZ1_Fp2,tmpZ2_Fp2,tmpH2_Fp2,tmpH3_Fp2,tmpU1H2_Fp2;
     static Fp2 U1,U2,S1,S2,H,r;
     if(P1->infinity==1){
-        EFpZ2_set(ANS,P2);
+        EFpJ2_set(ANS,P2);
         return;
     }else if(P2->infinity==1){
-        EFpZ2_set(ANS,P1);
+        EFpJ2_set(ANS,P1);
         return;
     }else if(Fp2_cmp(&P1->x,&P2->x)==0&&Fp2_cmp(&P1->z,&P2->z)==0){
         if(Fp2_cmp(&P1->y,&P2->y)!=0&&Fp2_cmp(&P1->z,&P2->z)==0){
@@ -507,8 +515,8 @@ void EFp2_ECA_Jacobian_lazy(EFpZ2 *ANS,EFpZ2 *P1,EFpZ2 *P2){
         }
     }
     
-    EFpZ2_set(&Pt1,P1);
-    EFpZ2_set(&Pt2,P2);
+    EFpJ2_set(&Pt1,P1);
+    EFpJ2_set(&Pt2,P2);
     
     //U1
     Fp2_sqr_lazy(&tmpZ2_Fp2,&Pt2.z);
@@ -555,17 +563,19 @@ void EFp2_ECA_Jacobian_lazy(EFpZ2 *ANS,EFpZ2 *P1,EFpZ2 *P2){
     Fp2_mul_lazy(&tmp1_Fp2,&Pt1.z,&Pt2.z);
     Fp2_mul_lazy(&ANS->z,&tmp1_Fp2,&H);
 }
-void EFp2_ECA_Jacobian_table(EFpZ2 *ANS,EFpZ2 *P1,EFpZT2 *P2){
-    static EFpZ2 Pt1;
-    static EFpZT2 Pt2;
-    static Fp2 tmp1_Fp2,tmp2_Fp2,tmp3_Fp2;
-    static Fp2 tmpZ1_Fp2,tmpZ2_Fp2,tmpH2_Fp2,tmpH3_Fp2,tmpU1H2_Fp2;
+
+void EFp2_ECA_Mixture_lazy(EFpJ2 *ANS,EFpJ2 *P1,EFpJ2 *P2){
+    static EFpJ2 Pt1,Pt2;
+    static Fp2 Z1Z1,HH,I,J,V;
     static Fp2 U1,U2,S1,S2,H,r;
-    if(P1->infinity==1){
-        EFpZT2_to_EFpZ2(ANS,P2);
+    
+    static Fp2 tmp1,tmp2;
+
+     if(P1->infinity==1){
+        EFpJ2_set(ANS,P2);
         return;
     }else if(P2->infinity==1){
-        EFpZ2_set(ANS,P1);
+        EFpJ2_set(ANS,P1);
         return;
     }else if(Fp2_cmp(&P1->x,&P2->x)==0&&Fp2_cmp(&P1->z,&P2->z)==0){
         if(Fp2_cmp(&P1->y,&P2->y)!=0&&Fp2_cmp(&P1->z,&P2->z)==0){
@@ -577,8 +587,78 @@ void EFp2_ECA_Jacobian_table(EFpZ2 *ANS,EFpZ2 *P1,EFpZT2 *P2){
         }
     }
     
-    EFpZ2_set(&Pt1,P1);
-    EFpZT2_set(&Pt2,P2);
+    EFpJ2_set(&Pt1,P1);
+    EFpJ2_set(&Pt2,P2);
+    
+    
+    //Z1Z1
+    Fp2_mul_lazy(&Z1Z1,&Pt1.z,&Pt1.z);
+    
+    //U2
+    Fp2_mul_lazy(&U2,&Pt2.x,&Z1Z1);
+    
+    //S2
+    Fp2_mul_lazy(&tmp1,&Pt1.z,&Z1Z1);
+    Fp2_mul_lazy(&S2,&Pt2.y,&tmp1);
+    
+    //H
+    Fp2_sub(&H,&U2,&Pt1.x);
+    
+    //HH
+    Fp2_mul_lazy(&HH,&H,&H);
+    
+    //I
+    Fp2_set(&I,&HH);
+    
+    //J
+    Fp2_mul_lazy(&J,&H,&HH);
+    
+    //r
+    Fp2_sub(&r,&S2,&Pt1.y);
+    
+    //V
+    Fp2_mul_lazy(&V,&Pt1.x,&HH);
+    
+    //X3
+    Fp2_mul_lazy(&tmp2,&r,&r);
+    Fp2_add(&tmp1,&V,&V);
+    Fp2_sub(&tmp2,&tmp2,&J);
+    Fp2_sub(&ANS->x,&tmp2,&tmp1);
+    
+    //Y3
+    Fp2_sub(&tmp1,&V,&ANS->x);
+    Fp2_mul_lazy(&tmp2,&r,&tmp1);
+    Fp2_mul_lazy(&tmp1,&Pt1.y,&J);
+    Fp2_sub(&ANS->y,&tmp2,&tmp1);
+    
+    //ANS->z
+    Fp2_mul_lazy(&ANS->z,&Pt1.z,&H);
+
+}
+void EFp2_ECA_Jacobian_table(EFpJ2 *ANS,EFpJ2 *P1,EFpJT2 *P2){
+    static EFpJ2 Pt1;
+    static EFpJT2 Pt2;
+    static Fp2 tmp1_Fp2,tmp2_Fp2,tmp3_Fp2;
+    static Fp2 tmpZ1_Fp2,tmpZ2_Fp2,tmpH2_Fp2,tmpH3_Fp2,tmpU1H2_Fp2;
+    static Fp2 U1,U2,S1,S2,H,r;
+    if(P1->infinity==1){
+        EFpJT2_to_EFpJ2(ANS,P2);
+        return;
+    }else if(P2->infinity==1){
+        EFpJ2_set(ANS,P1);
+        return;
+    }else if(Fp2_cmp(&P1->x,&P2->x)==0&&Fp2_cmp(&P1->z,&P2->z)==0){
+        if(Fp2_cmp(&P1->y,&P2->y)!=0&&Fp2_cmp(&P1->z,&P2->z)==0){
+            ANS->infinity=1;
+            return;
+        }else{
+            EFp2_ECD_Jacobian_lazy(ANS,P1);
+            return;
+        }
+    }
+    
+    EFpJ2_set(&Pt1,P1);
+    EFpJT2_set(&Pt2,P2);
     
     //U1
     Fp2_mul_lazy(&U1,&Pt2.zz,&Pt1.x);
@@ -623,16 +703,16 @@ void EFp2_ECA_Jacobian_table(EFpZ2 *ANS,EFpZ2 *P1,EFpZT2 *P2){
     Fp2_mul_lazy(&tmp1_Fp2,&Pt1.z,&Pt2.z);
     Fp2_mul_lazy(&ANS->z,&tmp1_Fp2,&H);
 }
-void EFp2_ECA_Jacobian_scm_lazy(EFpZ2 *ANS,EFpZ2 *P1,EFpZ2 *P2){
-    static EFpZ2 Pt1,Pt2;
+void EFp2_ECA_Jacobian_scm_lazy(EFpJ2 *ANS,EFpJ2 *P1,EFpJ2 *P2){
+    static EFpJ2 Pt1,Pt2;
     static Fp2 tmp1_Fp2,tmp2_Fp2,tmp3_Fp2;
     static Fp2 tmpZ1_Fp2,tmpZ2_Fp2,tmpH2_Fp2,tmpH3_Fp2,tmpU1H2_Fp2;
     static Fp2 U1,U2,S1,S2,H,r;
     if(P1->infinity==1){
-        EFpZ2_set(ANS,P2);
+        EFpJ2_set(ANS,P2);
         return;
     }else if(P2->infinity==1){
-        EFpZ2_set(ANS,P1);
+        EFpJ2_set(ANS,P1);
         return;
     }else if(Fp2_cmp(&P1->x,&P2->x)==0&&Fp2_cmp(&P1->z,&P2->z)==0){
         if(Fp2_cmp(&P1->y,&P2->y)!=0&&Fp2_cmp(&P1->z,&P2->z)==0){
@@ -644,8 +724,8 @@ void EFp2_ECA_Jacobian_scm_lazy(EFpZ2 *ANS,EFpZ2 *P1,EFpZ2 *P2){
         }
     }
     
-    EFpZ2_set(&Pt1,P1);
-    EFpZ2_set(&Pt2,P2);
+    EFpJ2_set(&Pt1,P1);
+    EFpJ2_set(&Pt2,P2);
     
     //U1
     Fp2_set(&U1,&Pt1.x);
@@ -725,15 +805,15 @@ void EFp2_SCM_Jacobian(EFp2 *ANS,EFp2 *P,mpz_t scalar){
         return;
     }
     
-    EFpZ2 Tmp_P,Next_P;
-    EFp2_to_EFpZ2(&Tmp_P,P);
+    EFpJ2 Tmp_P,Next_P;
+    EFp2_to_EFpJ2(&Tmp_P,P);
 
     int i,length;
     length=(int)mpz_sizeinbase(scalar,2);
     char binary[length+1];
     mpz_get_str(binary,2,scalar);
     
-    EFpZ2_set(&Next_P,&Tmp_P);
+    EFpJ2_set(&Next_P,&Tmp_P);
     for(i=1;i<length; i++){
         EFp2_ECD_Jacobian(&Next_P,&Next_P);
         if(binary[i]=='1'){
@@ -778,15 +858,15 @@ void EFp2_SCM_Jacobian_lazy(EFp2 *ANS,EFp2 *P,mpz_t scalar){
         return;
     }
     
-    EFpZ2 Tmp_P,Next_P;
-    EFp2_to_EFpZ2(&Tmp_P,P);
+    EFpJ2 Tmp_P,Next_P;
+    EFp2_to_EFpJ2(&Tmp_P,P);
 
     int i,length;
     length=(int)mpz_sizeinbase(scalar,2);
     char binary[length+1];
     mpz_get_str(binary,2,scalar);
     
-    EFpZ2_set(&Next_P,&Tmp_P);
+    EFpJ2_set(&Next_P,&Tmp_P);
     for(i=1;i<length; i++){
         EFp2_ECD_Jacobian_lazy(&Next_P,&Next_P);
         if(binary[i]=='1'){

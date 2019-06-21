@@ -60,6 +60,15 @@ extern void Fp_set_neg(Fp *ANS,Fp *A);
 extern void Fp_lshift(Fp *ANS,Fp *A,unsigned long int UI);
 
 /**
+ * @brief Left Shift 1bit Fp type struct on prime field
+ *
+ * @param[out]ANS --a pointer of answer.
+ * @param[in]A --a pointer to be shiftted.
+ * @param[in]UI --an unsigned long int to shift.
+ */
+extern void Fp_lshift2(Fp *ANS,Fp *A);
+
+/**
  * @brief Set a random number to a Fp type struct
  *
  * @param[out]ANS --a pointer to be setted.
@@ -75,6 +84,8 @@ extern void Fp_set_random(Fp *ANS,gmp_randstate_t state);
  */
 extern void Fp_MR(mp_limb_t *ANS,mp_limb_t *T,mp_size_t T_size);
 
+extern void Fp_rdc_monty_basic(Fp *c, mp_limb_t *a);
+extern void Fp_mod_pre(mp_limb_t *u);
 /**
  * @brief Addition a mpn type struct and a mpn type struct
  *

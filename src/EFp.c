@@ -5,13 +5,13 @@ void EFp_init(EFp *P){
     Fp_init(&P->y);
     P->infinity=0;
 }
-void EFpZ_init(EFpZ *P){
+void EFpJ_init(EFpJ *P){
     Fp_init(&P->x);
     Fp_init(&P->y);
     Fp_init(&P->z);
     P->infinity=0;
 }
-void EFpZT_init(EFpZT *P){
+void EFpJT_init(EFpJT *P){
     Fp_init(&P->x);
     Fp_init(&P->y);
     Fp_init(&P->z);
@@ -31,7 +31,7 @@ void EFp_printf(char *str,EFp *P){
         printf("0");
     }
 }
-void EFpZ_printf(char *str,EFpZ *P){
+void EFpJ_printf(char *str,EFpJ *P){
     printf("%s",str);
     if(P->infinity==0){
         printf("(");
@@ -45,7 +45,7 @@ void EFpZ_printf(char *str,EFpZ *P){
         printf("Infinity");
     }
 }
-void EFpZT_printf(char *str,EFpZT *P){
+void EFpJT_printf(char *str,EFpJT *P){
     printf("%s",str);
     if(P->infinity==0){
         printf("(");
@@ -68,13 +68,13 @@ void EFp_set(EFp *ANS,EFp *A){
     Fp_set(&ANS->y,&A->y);
     ANS->infinity=A->infinity;
 }
-void EFpZ_set(EFpZ *ANS,EFpZ *A){
+void EFpJ_set(EFpJ *ANS,EFpJ *A){
     Fp_set(&ANS->x,&A->x);
     Fp_set(&ANS->y,&A->y);
     Fp_set(&ANS->z,&A->z);
     ANS->infinity=A->infinity;
 }
-void EFpZT_set(EFpZT *ANS,EFpZT *A){
+void EFpJT_set(EFpJT *ANS,EFpJT *A){
     Fp_set(&ANS->x,&A->x);
     Fp_set(&ANS->y,&A->y);
     Fp_set(&ANS->z,&A->z);
@@ -82,31 +82,40 @@ void EFpZT_set(EFpZT *ANS,EFpZT *A){
     Fp_set(&ANS->zzz,&A->zzz);
     ANS->infinity=A->infinity;
 }
-void EFp_to_EFpZ(EFpZ *ANS,EFp *A){
+void EFp_to_EFpJ(EFpJ *ANS,EFp *A){
     Fp_set(&ANS->x,&A->x);
     Fp_set(&ANS->y,&A->y);
     Fp_set_ui(&ANS->z,1);
     ANS->infinity=A->infinity;
 }
-void EFpZT_to_EFpZ(EFpZ *ANS,EFpZT *A){
+void EFpJT_to_EFpJ(EFpJ *ANS,EFpJT *A){
     Fp_set(&ANS->x,&A->x);
     Fp_set(&ANS->y,&A->y);
     Fp_set(&ANS->z,&A->z);
     ANS->infinity=A->infinity;
 }
-void EFpZ_to_EFpZT(EFpZT *ANS,EFpZ *A){
+void EFpJ_to_EFpJT(EFpJT *ANS,EFpJ *A){
     Fp_set(&ANS->x,&A->x);
     Fp_set(&ANS->y,&A->y);
     Fp_set(&ANS->z,&A->z);
     ANS->infinity=A->infinity;
 }
-void EFp_Jacobian(EFp *ANS,EFpZ *A){
+void EFp_Jacobian(EFp *ANS,EFpJ *A){
     static Fp Zi,Zt;
     Fp_inv(&Zi,&A->z);
     Fp_mul(&Zt,&Zi,&Zi);
     Fp_mul(&ANS->x,&A->x,&Zt);
     Fp_mul(&Zt,&Zt,&Zi);
     Fp_mul(&ANS->y,&A->y,&Zt);
+    ANS->infinity=A->infinity;
+}
+void EFp_mix(EFpJ *ANS,EFpJ *A,Fp *Zi){
+    static Fp Zt;
+    Fp_mul(&Zt,Zi,Zi);
+    Fp_mul(&ANS->x,&A->x,&Zt);
+    Fp_mul(&Zt,&Zt,Zi);
+    Fp_mul(&ANS->y,&A->y,&Zt);
+    Fp_set_ui(&ANS->z,1);
     ANS->infinity=A->infinity;
 }
 void EFp_set_ui(EFp *ANS,unsigned long int UI){
@@ -183,8 +192,8 @@ void EFp_ECD(EFp *ANS,EFp *P){
     Fp_sub(&ANS->y,&tmp2_Fp,&tmp1_EFp.y);
 }
 
-void EFp_ECD_Jacobian(EFpZ *ANS,EFpZ *P){
-    static EFpZ Pt;
+void EFp_ECD_Jacobian(EFpJ *ANS,EFpJ *P){
+    static EFpJ Pt;
     static Fp tmp1_Fp,tmp2_Fp,tmp3_Fp;
     static Fp s,m,T;
     if(Fp_cmp_zero(&P->y)==0){
@@ -192,7 +201,7 @@ void EFp_ECD_Jacobian(EFpZ *ANS,EFpZ *P){
         return;
     }
     
-    EFpZ_set(&Pt,P);
+    EFpJ_set(&Pt,P);
     
     //s
     Fp_mul_ui(&tmp1_Fp,&Pt.x,4);
@@ -263,20 +272,20 @@ void EFp_ECD_lazy(EFp *ANS,EFp *P){
 
 }
 
-void EFp_ECD_Jacobian_lazy(EFpZ *ANS,EFpZ *P){
+void EFp_ECD_Jacobian_lazy(EFpJ *ANS,EFpJ *P){
     static mp_limb_t s[FPLIMB],m[FPLIMB],T[FPLIMB];
 
     static Fp bufF;
     static mp_limb_t bufL[FPLIMB2],tmpL1[FPLIMB2];
     static mp_limb_t buf[FPLIMB],tmp1[FPLIMB];
     static mp_limb_t tmpy[FPLIMB];
-    static EFpZ Pt;
+    static EFpJ Pt;
     if(Fp_cmp_zero(&P->y)==0){
         ANS->infinity=1;
         return;
     }
     
-    EFpZ_set(&Pt,P);
+    EFpJ_set(&Pt,P);
     
     //s
     Lazy_sqr(bufL,Pt.y.x0);
@@ -360,15 +369,15 @@ void EFp_ECA(EFp *ANS,EFp *P1,EFp *P2){
     Fp_mul(&tmp2_Fp,&tmp3_Fp,&tmp1_Fp);
     Fp_sub(&ANS->y,&tmp2_Fp,&tmp1_EFp.y);
 }
-void EFp_ECA_Jacobian(EFpZ *ANS,EFpZ *P1,EFpZ *P2){
-    static EFpZ Pt1,Pt2;
+void EFp_ECA_Jacobian(EFpJ *ANS,EFpJ *P1,EFpJ *P2){
+    static EFpJ Pt1,Pt2;
     static Fp tmp1_Fp,tmp2_Fp,tmp3_Fp;
     static Fp U1,U2,S1,S2,H,r;
     if(P1->infinity==1){
-        EFpZ_set(ANS,P2);
+        EFpJ_set(ANS,P2);
         return;
     }else if(P2->infinity==1){
-        EFpZ_set(ANS,P1);
+        EFpJ_set(ANS,P1);
         return;
     }else if(Fp_cmp(&P1->x,&P2->x)==0&&Fp_cmp(&P1->z,&P2->z)==0){
         if(Fp_cmp(&P1->y,&P2->y)!=0&&Fp_cmp(&P1->z,&P2->z)==0){
@@ -380,8 +389,8 @@ void EFp_ECA_Jacobian(EFpZ *ANS,EFpZ *P1,EFpZ *P2){
         }
     }
     
-    EFpZ_set(&Pt1,P1);
-    EFpZ_set(&Pt2,P2);
+    EFpJ_set(&Pt1,P1);
+    EFpJ_set(&Pt2,P2);
     
     //U1
     Fp_mul(&tmp1_Fp,&Pt1.x,&Pt2.z);
@@ -479,8 +488,8 @@ void EFp_ECA_lazy(EFp *ANS,EFp *P1,EFp *P2){
 
 }
 
-void EFp_ECA_Jacobian_lazy(EFpZ *ANS,EFpZ *P1,EFpZ *P2){
-    static EFpZ Pt1,Pt2;
+void EFp_ECA_Jacobian_lazy(EFpJ *ANS,EFpJ *P1,EFpJ *P2){
+    static EFpJ Pt1,Pt2;
     static mp_limb_t U1[FPLIMB],U2[FPLIMB],S1[FPLIMB],S2[FPLIMB],H[FPLIMB],r[FPLIMB];
 
     static mp_limb_t bufL[FPLIMB2],tmpL1[FPLIMB2];
@@ -488,10 +497,10 @@ void EFp_ECA_Jacobian_lazy(EFpZ *ANS,EFpZ *P1,EFpZ *P2){
     static mp_limb_t tmpZ1[FPLIMB],tmpZ2[FPLIMB],tmpH2[FPLIMB],tmpH3[FPLIMB],tmpU1H2[FPLIMB];
     Fp out;
     if(P1->infinity==1){
-        EFpZ_set(ANS,P2);
+        EFpJ_set(ANS,P2);
         return;
     }else if(P2->infinity==1){
-        EFpZ_set(ANS,P1);
+        EFpJ_set(ANS,P1);
         return;
     }else if(Fp_cmp(&P1->x,&P2->x)==0){
         if(Fp_cmp(&P1->y,&P2->y)!=0){
@@ -503,8 +512,8 @@ void EFp_ECA_Jacobian_lazy(EFpZ *ANS,EFpZ *P1,EFpZ *P2){
         }
     }
     
-    EFpZ_set(&Pt1,P1);
-    EFpZ_set(&Pt2,P2);
+    EFpJ_set(&Pt1,P1);
+    EFpJ_set(&Pt2,P2);
 
     //U1
     //Lazy_sqr(bufL,Pt2.z.x0);
@@ -525,12 +534,14 @@ void EFp_ECA_Jacobian_lazy(EFpZ *ANS,EFpZ *P1,EFpZ *P2){
     Lazy_mod(tmp1,bufL,FPLIMB2);
     Lazy_mul(tmpL1,tmp1,Pt1.y.x0);
     Lazy_mod(S1,tmpL1,FPLIMB2);
+    //gmp_printf("S1=%Nu\n",S1,FPLIMB);
 
     //S2
     Lazy_mul(bufL,tmpZ1,Pt1.z.x0);
     Lazy_mod(tmp1,bufL,FPLIMB2);
     Lazy_mul(tmpL1,tmp1,Pt2.y.x0);
     Lazy_mod(S2,tmpL1,FPLIMB2);
+    //gmp_printf("S2=%Nu\n",S2,FPLIMB);
     
     //H
     Lazy_sub(buf,FPLIMB,U2,FPLIMB,U1,FPLIMB);
@@ -539,6 +550,7 @@ void EFp_ECA_Jacobian_lazy(EFpZ *ANS,EFpZ *P1,EFpZ *P2){
     //r
     Lazy_sub(buf,FPLIMB,S2,FPLIMB,S1,FPLIMB);
     Lazy_mod(r,buf,FPLIMB);
+    //gmp_printf("r=%Nu\n",r,FPLIMB);
 
     //ANS->x
     //Lazy_sqr(bufL,r);
@@ -569,20 +581,19 @@ void EFp_ECA_Jacobian_lazy(EFpZ *ANS,EFpZ *P1,EFpZ *P2){
     Lazy_mul(bufL,tmp1,H);
     mpn_mod(&ANS->z,bufL,FPLIMB2);
 }
-void EFp_ECA_Jacobian_table(EFpZ *ANS,EFpZ *P1,EFpZT *P2){
-    static EFpZ Pt1;
-    static EFpZT Pt2;
+void EFp_ECA_Mixture_lazy(EFpJ *ANS,EFpJ *P1,EFpJ *P2){
+    static EFpJ Pt1,Pt2;
+    static mp_limb_t Z1Z1[FPLIMB],HH[FPLIMB],I[FPLIMB],J[FPLIMB],V[FPLIMB];
     static mp_limb_t U1[FPLIMB],U2[FPLIMB],S1[FPLIMB],S2[FPLIMB],H[FPLIMB],r[FPLIMB];
 
-    static mp_limb_t bufL[FPLIMB2],tmpL1[FPLIMB2];
-    static mp_limb_t buf[FPLIMB],tmp1[FPLIMB];
-    static mp_limb_t tmpZ1[FPLIMB],tmpZ2[FPLIMB],tmpH2[FPLIMB],tmpH3[FPLIMB],tmpU1H2[FPLIMB];
+    static mp_limb_t bufL[FPLIMB2],tmpL1[FPLIMB2],tmpL2[FPLIMB2];
+    static mp_limb_t buf[FPLIMB],tmp1[FPLIMB],tmp2[FPLIMB];
     Fp out;
     if(P1->infinity==1){
-        EFpZT_to_EFpZ(ANS,P2);
+        EFpJ_set(ANS,P2);
         return;
     }else if(P2->infinity==1){
-        EFpZ_set(ANS,P1);
+        EFpJ_set(ANS,P1);
         return;
     }else if(Fp_cmp(&P1->x,&P2->x)==0){
         if(Fp_cmp(&P1->y,&P2->y)!=0){
@@ -594,8 +605,124 @@ void EFp_ECA_Jacobian_table(EFpZ *ANS,EFpZ *P1,EFpZT *P2){
         }
     }
     
-    EFpZ_set(&Pt1,P1);
-    EFpZT_set(&Pt2,P2);
+    EFpJ_set(&Pt1,P1);
+    EFpJ_set(&Pt2,P2);
+    /*
+    Fp_printf("\nX1=",&Pt1.x);printf("\n");
+    Fp_printf("Y1=",&Pt1.y);printf("\n");
+    Fp_printf("Z1=",&Pt1.z);printf("\n");
+    Fp_printf("X2=",&Pt2.x);printf("\n");
+    Fp_printf("Y2=",&Pt2.y);printf("\n");
+    Fp_printf("Z2=",&Pt2.z);printf("\n");
+*/
+    //Z1Z1
+    Lazy_mul(bufL,Pt1.z.x0,Pt1.z.x0);
+    Lazy_mod(Z1Z1,bufL,FPLIMB2);
+    //gmp_printf("Z1Z1=%Nu\n",Z1Z1,FPLIMB);
+    
+    //U2
+    Lazy_mul(bufL,Pt2.x.x0,Z1Z1);
+    Lazy_mod(U2,bufL,FPLIMB2);
+    //gmp_printf("U2=%Nu\n",U2,FPLIMB);
+    
+    //S2
+    Lazy_mul(bufL,Z1Z1,Pt1.z.x0);
+    Lazy_mod(tmp1,bufL,FPLIMB2);
+    Lazy_mul(tmpL1,tmp1,Pt2.y.x0);
+    Lazy_mod(S2,tmpL1,FPLIMB2);
+    //gmp_printf("S2=%Nu\n",S2,FPLIMB);
+    
+    //H
+    Lazy_sub(buf,FPLIMB,U2,FPLIMB,Pt1.x.x0,FPLIMB);
+    Lazy_mod(H,buf,FPLIMB);
+    //gmp_printf("H=%Nu\n",H,FPLIMB);
+    
+    //HH
+    Lazy_mul(tmpL1,H,H);
+    Lazy_mod(HH,tmpL1,FPLIMB2);
+    //gmp_printf("HH=%Nu\n",HH,FPLIMB);
+    
+    //I
+    Lazy_add(I,FPLIMB,HH,FPLIMB,HH,FPLIMB);
+    Lazy_add(I,FPLIMB,I,FPLIMB,I,FPLIMB);
+    Lazy_mod(I,I,FPLIMB);
+    //gmp_printf("I=%Nu\n",I,FPLIMB);
+    
+    //J
+    //Lazy_mul(bufL,I,H);
+    Lazy_mul(bufL,HH,H);
+    Lazy_mod(J,bufL,FPLIMB2);
+    //gmp_printf("J=%Nu\n",J,FPLIMB);
+    
+    //r
+    //gmp_printf("Y1=%Nu\n",Pt1.y.x0,FPLIMB);
+    Lazy_sub(buf,FPLIMB,S2,FPLIMB,Pt1.y.x0,FPLIMB);
+    //Lazy_add(buf,FPLIMB,buf,FPLIMB,buf,FPLIMB);
+    Lazy_mod(r,buf,FPLIMB);
+    //gmp_printf("r=%Nu\n",r,FPLIMB);
+    
+    //V
+    //Lazy_mul(bufL,Pt1.x.x0,I);
+    Lazy_mul(bufL,Pt1.x.x0,HH);
+    Lazy_mod(V,bufL,FPLIMB2);
+    //gmp_printf("V=%Nu\n",V,FPLIMB);
+    
+    //X3
+    Lazy_mul(tmpL1,r,r);
+    Lazy_add(tmp1,FPLIMB,V,FPLIMB,V,FPLIMB);
+    Lazy_sub(bufL,FPLIMB2,tmpL1,FPLIMB2,J,FPLIMB);
+    Lazy_sub(bufL,FPLIMB2,bufL,FPLIMB2,tmp1,FPLIMB);
+    mpn_mod(&ANS->x,bufL,FPLIMB2);
+    
+    //Y3
+    Lazy_sub(tmp1,FPLIMB,V,FPLIMB,ANS->x.x0,FPLIMB);
+    Lazy_mul(tmpL1,tmp1,r);
+    Lazy_mul(tmpL2,Pt1.y.x0,J);
+    //Lazy_add(tmpL2,FPLIMB2,tmpL2,FPLIMB2,tmpL2,FPLIMB2);
+    Lazy_sub_mod(&ANS->y,tmpL1,tmpL2);
+    
+    //Z3
+    /*
+    Lazy_add(tmp1,FPLIMB,Pt1.z.x0,FPLIMB,H,FPLIMB);
+    Lazy_mul(tmpL1,tmp1,tmp1);
+    Lazy_mod(tmp2,tmpL1,FPLIMB2);
+    Lazy_sub(buf,FPLIMB,tmp2,FPLIMB,Z1Z1,FPLIMB);
+    Lazy_sub(buf,FPLIMB,buf,FPLIMB,HH,FPLIMB);
+    mpn_mod(&ANS->z,buf,FPLIMB);
+    */
+    
+    //ANS->z
+    Lazy_mul(bufL,Pt1.z.x0,H);
+    mpn_mod(&ANS->z,bufL,FPLIMB2);
+
+}
+void EFp_ECA_Jacobian_table(EFpJ *ANS,EFpJ *P1,EFpJT *P2){
+    static EFpJ Pt1;
+    static EFpJT Pt2;
+    static mp_limb_t U1[FPLIMB],U2[FPLIMB],S1[FPLIMB],S2[FPLIMB],H[FPLIMB],r[FPLIMB];
+
+    static mp_limb_t bufL[FPLIMB2],tmpL1[FPLIMB2];
+    static mp_limb_t buf[FPLIMB],tmp1[FPLIMB];
+    static mp_limb_t tmpZ1[FPLIMB],tmpZ2[FPLIMB],tmpH2[FPLIMB],tmpH3[FPLIMB],tmpU1H2[FPLIMB];
+    Fp out;
+    if(P1->infinity==1){
+        EFpJT_to_EFpJ(ANS,P2);
+        return;
+    }else if(P2->infinity==1){
+        EFpJ_set(ANS,P1);
+        return;
+    }else if(Fp_cmp(&P1->x,&P2->x)==0){
+        if(Fp_cmp(&P1->y,&P2->y)!=0){
+            ANS->infinity=1;
+            return;
+        }else{
+            EFp_ECD_Jacobian_lazy(ANS,P1);
+            return;
+        }
+    }
+    
+    EFpJ_set(&Pt1,P1);
+    EFpJT_set(&Pt2,P2);
 
     //U1
     Lazy_mul(tmpL1,Pt2.zz.x0,Pt1.x.x0);
@@ -694,15 +821,15 @@ void EFp_SCM_Jacobian(EFp *ANS,EFp *P,mpz_t scalar){
         return;
     }
     
-    EFpZ Tmp_P,Next_P;
-    EFp_to_EFpZ(&Tmp_P,P);
+    EFpJ Tmp_P,Next_P;
+    EFp_to_EFpJ(&Tmp_P,P);
 
     int i,length;
     length=(int)mpz_sizeinbase(scalar,2);
     char binary[length+1];
     mpz_get_str(binary,2,scalar);
     
-    EFpZ_set(&Next_P,&Tmp_P);
+    EFpJ_set(&Next_P,&Tmp_P);
     for(i=1;i<length; i++){
         EFp_ECD_Jacobian(&Next_P,&Next_P);
         if(binary[i]=='1'){
@@ -749,15 +876,15 @@ void EFp_SCM_Jacobian_lazy(EFp *ANS,EFp *P,mpz_t scalar){
         return;
     }
     
-    EFpZ Tmp_P,Next_P;
-    EFp_to_EFpZ(&Tmp_P,P);
+    EFpJ Tmp_P,Next_P;
+    EFp_to_EFpJ(&Tmp_P,P);
 
     int i,length;
     length=(int)mpz_sizeinbase(scalar,2);
     char binary[length+1];
     mpz_get_str(binary,2,scalar);
     
-    EFpZ_set(&Next_P,&Tmp_P);
+    EFpJ_set(&Next_P,&Tmp_P);
     for(i=1;i<length; i++){
         EFp_ECD_Jacobian_lazy(&Next_P,&Next_P);
         if(binary[i]=='1'){

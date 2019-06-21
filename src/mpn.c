@@ -36,6 +36,7 @@ void mpn_set_ui(mp_limb_t *ans,mp_size_t size,unsigned long int ui){
 		ans[i] = 0;
 	}
 }
+/*
 void mpn_set_mpz(mp_limb_t *ans,mpz_t a){
 	char *str;
 
@@ -44,7 +45,19 @@ void mpn_set_mpz(mp_limb_t *ans,mpz_t a){
 	//printf("str1=%s",str);
 	mpn_set_char(ans,FPLIMB,str);
 }
+*/
+void mpn_set_mpz(mp_limb_t *ans,mpz_t a){
+	char *str;
+	
+	str = (char *)malloc(mpz_sizeinbase (a,10) + 2);
 
+	//gmp_printf("a=%Zd\n",a);
+	str = mpz_get_str(str,10,a);
+	//printf("str1=%s",str);
+	mpn_set_char(ans,FPLIMB,str);
+	
+	free(str);
+}
 void mpn_mod(Fp *ans,mp_limb_t *a,mp_size_t size_a){
 	mp_limb_t dumy[size_a];
 	//mpn_init(dumy,size_a);

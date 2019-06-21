@@ -1,4 +1,5 @@
-JSF.lo: JSF.c ../include/ELiPS/JSF.h ../include/ELiPS/Define.h \
+JSF.lo: JSF.c ../include/ELiPS/JSF.h ../include/ELiPS/mpn.h \
+  ../include/ELiPS/Define.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/_stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/sys/cdefs.h \
@@ -109,9 +110,12 @@ JSF.lo: JSF.c ../include/ELiPS/JSF.h ../include/ELiPS/Define.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h
+  /Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/assert.h
 
 ../include/ELiPS/JSF.h:
+
+../include/ELiPS/mpn.h:
 
 ../include/ELiPS/Define.h:
 
@@ -336,3 +340,5 @@ JSF.lo: JSF.c ../include/ELiPS/JSF.h ../include/ELiPS/Define.h \
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h:
 
 /Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/assert.h:

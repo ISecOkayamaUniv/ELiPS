@@ -1,4 +1,4 @@
-#include <ELiPS/bn12_generate_curve.h>
+#include <ELiPS/bls12_generate_curve.h>
 
 void BLS12_generate_X(){
     int i;

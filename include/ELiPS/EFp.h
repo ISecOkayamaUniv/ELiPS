@@ -11,18 +11,18 @@
 extern void EFp_init(EFp *P);
 
 /**
- * @brief Initializes a EFpZ type struct
+ * @brief Initializes a EFpJ type struct
  *
  * @param[in]P --a pointer to be initialized.
  */
-extern void EFpZ_init(EFpZ *P);
+extern void EFpJ_init(EFpJ *P);
 
 /**
- * @brief Initializes a EFpZ type struct
+ * @brief Initializes a EFpJ type struct
  *
  * @param[in]P --a pointer to be initialized.
  */
-extern void EFpZT_init(EFpZT *P);
+extern void EFpJT_init(EFpJT *P);
 
 /**
  * @brief Print a EFp type struct
@@ -33,20 +33,20 @@ extern void EFpZT_init(EFpZT *P);
 extern void EFp_printf(char *str,EFp *P);
 
 /**
- * @brief Print a EFpZ type struct
+ * @brief Print a EFpJ type struct
  *
  * @param[in]str --a pointer to be printed.
  * @param[in]P --a pointer to be printed.
  */
-extern void EFpZ_printf(char *str,EFpZ *P);
+extern void EFpJ_printf(char *str,EFpJ *P);
 
 /**
- * @brief Print a EFpZ type struct
+ * @brief Print a EFpJ type struct
  *
  * @param[in]str --a pointer to be printed.
  * @param[in]P --a pointer to be printed.
  */
-extern void EFpZT_printf(char *str,EFpZT *P);
+extern void EFpJT_printf(char *str,EFpJT *P);
 
 /**
  * @brief Set a EFp type struct to a EFp type struct
@@ -57,43 +57,43 @@ extern void EFpZT_printf(char *str,EFpZT *P);
 extern void EFp_set(EFp *P,EFp *A);
 
 /**
- * @brief Set a EFpZ type struct to a EFpZ type struct
+ * @brief Set a EFpJ type struct to a EFpJ type struct
  *
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --a pointer to set.
  */
-extern void EFpZ_set(EFpZ *P,EFpZ *A);
+extern void EFpJ_set(EFpJ *P,EFpJ *A);
 
 /**
- * @brief Set a EFpZT type struct to a EFpZT type struct
+ * @brief Set a EFpJT type struct to a EFpJT type struct
  *
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --a pointer to set.
  */
-extern void EFpZT_set(EFpZT *P,EFpZT *A);
+extern void EFpJT_set(EFpJT *P,EFpJT *A);
 
 /**
- * @brief Set a EFpZT type struct to a EFpZ type struct
+ * @brief Set a EFpJT type struct to a EFpJ type struct
  *
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --a pointer to set.
  */
-extern void EFpZT_to_EFpZ(EFpZ *P,EFpZT *A);
+extern void EFpJT_to_EFpJ(EFpJ *P,EFpJT *A);
 
 /**
- * @brief Set a EFpZT type struct to a EFpZ type struct
+ * @brief Set a EFpJT type struct to a EFpJ type struct
  *
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --a pointer to set.
  */
-void EFpZ_to_EFpZT(EFpZT *ANS,EFpZ *A);
+void EFpJ_to_EFpJT(EFpJT *ANS,EFpJ *A);
 /**
  * @brief Set Affine to Jacobian
  *
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --a pointer to set.
  */
-extern void EFp_to_EFpZ(EFpZ *ANS,EFp *A);
+extern void EFp_to_EFpJ(EFpJ *ANS,EFp *A);
 
 /**
  * @brief Set Jacobian to Affine
@@ -101,8 +101,8 @@ extern void EFp_to_EFpZ(EFpZ *ANS,EFp *A);
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --a pointer to set.
  */
-extern void EFp_Jacobian(EFp *ANS,EFpZ *A);
-
+extern void EFp_Jacobian(EFp *ANS,EFpJ *A);
+extern void EFp_mix(EFpJ *ANS,EFpJ *A,Fp *Zi);
 /**
  * @brief Set an unsigned int to a EFp type struct
  *
@@ -153,12 +153,12 @@ extern void EFp_rational_point(EFp *P);
 extern void EFp_ECD(EFp *ANS,EFp *P);
 
 /**
- * @brief Doubling a EFpZ type struct (Jacobian)
+ * @brief Doubling a EFpJ type struct (Jacobian)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]P --a pointer in EFpZ.
+ * @param[in]P --a pointer in EFpJ.
  */
-extern void EFp_ECD_Jacobian(EFpZ *ANS,EFpZ *P);
+extern void EFp_ECD_Jacobian(EFpJ *ANS,EFpJ *P);
 
 /**
  * @brief Doubling a EFp type struct (Lazy Reduction)
@@ -169,12 +169,12 @@ extern void EFp_ECD_Jacobian(EFpZ *ANS,EFpZ *P);
 extern void EFp_ECD_lazy(EFp *ANS,EFp *P);
 
 /**
- * @brief Doubling a EFpZ type struct(Jacobian + Lazy Reduction)
+ * @brief Doubling a EFpJ type struct(Jacobian + Lazy Reduction)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]P --a pointer in EFpZ.
+ * @param[in]P --a pointer in EFpJ.
  */
-extern void EFp_ECD_Jacobian_lazy(EFpZ *ANS,EFpZ *P);
+extern void EFp_ECD_Jacobian_lazy(EFpJ *ANS,EFpJ *P);
 
 /**
  * @brief Addition a EFp type struct and a EFp type struct
@@ -189,10 +189,10 @@ extern void EFp_ECA(EFp *ANS,EFp *P1,EFp *P2);
  * @brief Addition a EFp type struct and a EFp type struct (Jacobian)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]P1 --a pointer in EFpZ.
- * @param[in]P2 --a pointer in EFpZ.
+ * @param[in]P1 --a pointer in EFpJ.
+ * @param[in]P2 --a pointer in EFpJ.
  */
-extern void EFp_ECA_Jacobian(EFpZ *ANS,EFpZ *P1,EFpZ *P2);
+extern void EFp_ECA_Jacobian(EFpJ *ANS,EFpJ *P1,EFpJ *P2);
 
 /**
  * @brief Addition a EFp type struct and a EFp type struct (Lazy Reduction)
@@ -207,19 +207,28 @@ extern void EFp_ECA_lazy(EFp *ANS,EFp *P1,EFp *P2);
  * @brief Addition a EFp type struct and a EFp type struct (Jacobian + Lazy Reduction)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]P1 --a pointer in EFpZ.
- * @param[in]P2 --a pointer in EFpZ.
+ * @param[in]P1 --a pointer in EFpJ.
+ * @param[in]P2 --a pointer in EFpJ.
  */
-extern void EFp_ECA_Jacobian_lazy(EFpZ *ANS,EFpZ *P1,EFpZ *P2);
+extern void EFp_ECA_Jacobian_lazy(EFpJ *ANS,EFpJ *P1,EFpJ *P2);
 
 /**
  * @brief Addition a EFp type struct and a EFp type struct (Jacobian + Lazy Reduction)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]P1 --a pointer in EFpZ.
- * @param[in]P2 --a pointer in EFpZ.
+ * @param[in]P1 --a pointer in EFpJ.
+ * @param[in]P2 --a pointer in EFpJ.
  */
-extern void EFp_ECA_Jacobian_table(EFpZ *ANS,EFpZ *P1,EFpZT *P2);
+extern void EFp_ECA_Mixture_lazy(EFpJ *ANS,EFpJ *P1,EFpJ *P2);
+
+/**
+ * @brief Addition a EFp type struct and a EFp type struct (Jacobian + Lazy Reduction)
+ *
+ * @param[out]ANS --a pointer of answer.
+ * @param[in]P1 --a pointer in EFpJ.
+ * @param[in]P2 --a pointer in EFpJ.
+ */
+extern void EFp_ECA_Jacobian_table(EFpJ *ANS,EFpJ *P1,EFpJT *P2);
 
 /**
  * @brief Scalar multiplication a EFp type struct
@@ -231,10 +240,10 @@ extern void EFp_ECA_Jacobian_table(EFpZ *ANS,EFpZ *P1,EFpZT *P2);
 extern void EFp_SCM(EFp *ANS,EFp *P,mpz_t scalar);
 
 /**
- * @brief Scalar multiplication a EFpZ type struct (Jacobian)
+ * @brief Scalar multiplication a EFpJ type struct (Jacobian)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]P --a pointer in EFpZ.
+ * @param[in]P --a pointer in EFpJ.
  * @param[in]scalar --a pointer in mpz.
  */
 extern void EFp_SCM_Jacobian(EFp *ANS,EFp *P,mpz_t scalar);
@@ -249,10 +258,10 @@ extern void EFp_SCM_Jacobian(EFp *ANS,EFp *P,mpz_t scalar);
 extern void EFp_SCM_lazy(EFp *ANS,EFp *P,mpz_t scalar);
 
 /**
- * @brief Scalar multiplication a EFpZ type struct (Jacobian + Lazy Reduction)
+ * @brief Scalar multiplication a EFpJ type struct (Jacobian + Lazy Reduction)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]P --a pointer in EFpZ.
+ * @param[in]P --a pointer in EFpJ.
  * @param[in]scalar --a pointer in mpz.
  */
 extern void EFp_SCM_Jacobian_lazy(EFp *ANS,EFp *P,mpz_t scalar);

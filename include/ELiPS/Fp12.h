@@ -152,6 +152,8 @@ extern void Fp12_sqr_Karabina(Fp12 *ANS,Fp12 *A);
 extern void Fp12_sqr_compressed(Fp12 *ANS,Fp12 *A);
 extern void Fp12_sqr_compressed_lazy(Fp12 *ANS,Fp12 *A);
 extern void Fp12_sqr_recover_g1(Fp12 *ANS,Fp12 *A);
+extern void Fp12_sqr_recover_g1_noninv(Fp12 *ANS,Fp12 *A);
+extern void Fp12_sqr_recover_g1_montrick(Fp12 *A,Fp12 *B,Fp12 *C,Fp12 *D);
 extern void Fp12_sqr_recover_g1_lazy(Fp12 *ANS,Fp12 *A);
 extern void Fp12_sqr_recover_g0(Fp12 *ANS,Fp12 *A);
 extern void Fp12_sqr_recover_g0_lazy(Fp12 *ANS,Fp12 *A);

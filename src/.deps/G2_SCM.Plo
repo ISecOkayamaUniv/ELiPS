@@ -114,6 +114,7 @@ G2_SCM.lo: G2_SCM.c ../include/ELiPS/G2_SCM.h ../include/ELiPS/twist.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/assert.h \
   ../include/ELiPS/JSF.h ../include/ELiPS/time.h
 
 ../include/ELiPS/G2_SCM.h:
@@ -361,6 +362,8 @@ G2_SCM.lo: G2_SCM.c ../include/ELiPS/G2_SCM.h ../include/ELiPS/twist.h \
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h:
 
 /Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/assert.h:
 
 ../include/ELiPS/JSF.h:
 

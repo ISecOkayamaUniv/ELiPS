@@ -109,7 +109,8 @@ time.lo: time.c ../include/ELiPS/time.h ../include/ELiPS/Define.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h
+  /Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/assert.h
 
 ../include/ELiPS/time.h:
 
@@ -336,3 +337,5 @@ time.lo: time.c ../include/ELiPS/time.h ../include/ELiPS/Define.h \
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h:
 
 /Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/assert.h:

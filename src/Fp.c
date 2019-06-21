@@ -23,22 +23,81 @@ void Fp_set_neg(Fp *ANS,Fp *A){
     mpn_sub_n(ANS->x0,prime,A->x0,FPLIMB);
     mpn_mod(ANS,ANS->x0,FPLIMB);
 }
+/*
 void Fp_lshift(Fp *ANS,Fp *A,unsigned long int UI){
     static mp_limb_t buf[FPLIMB];
     mpn_lshift(buf,A->x0,FPLIMB,UI);
     mpn_mod(ANS,buf,FPLIMB);
 }
+*/
+void Fp_lshift(Fp *ANS,Fp *A,unsigned long int UI){
+    mpn_lshift(ANS->x0,A->x0,FPLIMB,UI);
+    mpn_mod(ANS,ANS->x0,FPLIMB);
+}
+void Fp_lshift2(Fp *ANS,Fp *A){
+    static mp_limb_t buf[FPLIMB];    
+    mpn_lshift(buf,A->x0,FPLIMB,1);
+	if(mpn_cmp(buf,prime,FPLIMB)>=0)mpn_sub_n(ANS->x0,buf,prime,FPLIMB);
+}
 void Fp_set_random(Fp *ANS,gmp_randstate_t state){
     mpz_t tmp;
     mpz_init(tmp);
     
-    //mpz_urandomm(tmp,state,prime_z);
-    //mpn_set_mpz(ANS->x0,tmp);
+    mpz_urandomm(tmp,state,prime_z);
+    mpn_set_mpz(ANS->x0,tmp);
     
-    mpn_random(buf,FPLIMB);
-    mpn_mod(ANS,buf,FPLIMB);
+    //mpn_random(buf,FPLIMB);
+    //mpn_mod(ANS,buf,FPLIMB);
     
     mpz_clear(tmp);
+}
+void Fp_rdc_monty_basic(Fp *c, mp_limb_t *a) {
+	int i;
+	unsigned long int carry;
+	mp_limb_t r, u0;
+	
+	//gmp_printf("a=%Nu\n",a,FPLIMB);getchar();
+	//gmp_printf("a=%Nu\n",a,1);getchar();
+
+	Fp_mod_pre(&u0);
+
+	for (i = 0; i < FPLIMB; i++,a++) {
+		r = (mp_limb_t)(*a * u0);
+		*a = mpn_addmul_1(a,prime,FPLIMB,r);
+	}
+	//gmp_printf("a=%Nu\n",a,FPLIMB2);getchar();
+	
+	carry = mpn_add_n(c->x0, a, a-FPLIMB, FPLIMB);
+	if (carry || (mpn_cmp(c->x0, prime, FPLIMB) != -1)) {
+		carry = mpn_sub_n(c->x0,c->x0,prime,FPLIMB);
+	}
+}
+void Fp_mod_pre(mp_limb_t *u){
+	/*
+    mpz_t tmp;
+    mpz_init(tmp);
+    mpz_set_str(tmp,"18446744073709551616",10);
+    mpz_invert(tmp,prime_z,tmp);
+    gmp_printf("tmp=%Zd\n",tmp);
+    */
+	mp_limb_t x[1], b[1];
+	b[0]=prime[0]; //	b = m->dp[0];
+
+	if ((b[0] & 0x01) == 0) {
+		printf("error!\n");
+        return ;
+	}
+
+	x[0] = (((b[0] + 2) & 4) << 1) + b[0];	/* here x*a==1 mod 2**4 */
+	x[0] *= 2 - b[0] * x[0];				/* here x*a==1 mod 2**8 */
+	x[0] *= 2 - b[0] * x[0];				/* here x*a==1 mod 2**8 */
+	x[0] *= 2 - b[0] * x[0];				/* here x*a==1 mod 2**8 */
+	x[0] *= 2 - b[0] * x[0];				/* here x*a==1 mod 2**8 */
+	
+	/* u = -1/m0 (mod 2^DIGIT) */
+	mpn_neg(u,x,1);
+	
+	//gmp_printf("u=%Nu\n",u,1);
 }
 void Fp_MR(mp_limb_t *ANS,mp_limb_t *T,mp_size_t T_size){
     static mp_limb_t s[FPLIMB];
@@ -68,6 +127,7 @@ void Lazy_add(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size,mp
 }
 void Lazy_sub(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size,mp_limb_t *B,mp_size_t B_size){
     static mp_limb_t buf[FPLIMB],bufL[FPLIMB2];
+    //assert(A_size>=B_size);
     //Only:A_size>=B_size
     if(mpn_zero_p(B,B_size)==1){
 	//mpn_zero(ANS,ANS_size);

@@ -13,6 +13,8 @@ extern int test_EFp12(int ecd,int eca,int scm);
 extern void test_Frobenius_map();
 extern void test_skew_frobenius_map();
 extern void test_twist();
+extern void test_Fp(int fp);
+extern int test_mod(int mod);
 extern void test_All();
 extern int Fast_test_BLS12(int g1, int g2,int g3,int pairing);
 #endif

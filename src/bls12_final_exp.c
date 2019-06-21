@@ -90,6 +90,47 @@ void BLS12_Fp12_pow_X_compress(Fp12 *ANS,Fp12 *A){
     Fp12_mul(&tmp,&tmp,&tmp6);
     Fp12_set(ANS,&tmp);
 }
+void BLS12_Fp12_pow_X_compress2(Fp12 *ANS,Fp12 *A){
+    int i;
+    Fp12 buf,tmp,A_inv;
+    Fp12 tmp6,tmp9,tmp11,tmp77;
+    
+    Fp12_init(&tmp);
+    Fp12_init(&A_inv);
+    Fp12_frobenius_map_p6(&A_inv,A);
+    Fp12_set(&tmp,A);
+	
+    for(i=0;i<77;i++){
+    Fp12_sqr_compressed(&tmp,&tmp);
+	if(i==5){
+	Fp12_set(&tmp6,&tmp);
+	}
+	if(i==8){
+	Fp12_set(&tmp9,&tmp);
+	}
+	if(i==10){
+	Fp12_set(&tmp11,&tmp);
+	}
+    }
+	Fp12_sqr_recover_g1_noninv(&tmp6,&tmp6);
+	Fp12_sqr_recover_g1_noninv(&tmp9,&tmp9);
+	Fp12_sqr_recover_g1_noninv(&tmp11,&tmp11);
+	Fp12_sqr_recover_g1_noninv(&tmp77,&tmp);
+	
+    Fp12_sqr_recover_g1_montrick(&tmp6,&tmp9,&tmp11,&tmp77);
+	
+	Fp12_sqr_recover_g0(&tmp6,&tmp6);
+	Fp12_sqr_recover_g0(&tmp9,&tmp9);
+	Fp12_sqr_recover_g0(&tmp11,&tmp11);
+	Fp12_sqr_recover_g0(&tmp77,&tmp77);
+    
+    Fp12_mul(&tmp,&tmp77,&tmp11);
+    Fp12_mul(&buf,&tmp6,&tmp9);
+    Fp12_frobenius_map_p6(&buf,&buf);
+    Fp12_mul(&tmp,&tmp,&buf);
+    Fp12_set(ANS,&tmp);
+}
+
 void BLS12_Fp12_pow_X_lazy(Fp12 *ANS,Fp12 *A){
     int i;
     Fp12 tmp,A_inv;
@@ -362,7 +403,7 @@ void BLS12_Final_exp_optimal_compress(Fp12 *ANS,Fp12 *A){
     
     //HARD PART
     Fp12_sqr_cyclotomic(&t0, &tmp);
-    BLS12_Fp12_pow_X_compress(&t1, &t0);
+    BLS12_Fp12_pow_X_compress2(&t1, &t0);
     
     BLS12_Fp12_pow_X2_compress(&t2,&t1);//t2:=t1^(u2);
     Fp12_frobenius_map_p6(&t3,&tmp);//t3:=f^(-1);

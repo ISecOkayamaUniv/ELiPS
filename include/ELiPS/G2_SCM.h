@@ -95,4 +95,13 @@ extern void BLS12_EFp12_G2_SCM_4split_Jacobian_lazy(EFp12 *ANS,EFp12 *Q,mpz_t sc
  */
 extern void BLS12_EFp12_G2_SCM_4split_Jacobian_table(EFp12 *ANS,EFp12 *Q,mpz_t scalar);
 
+
+/**
+ * @brief Scalar multiplication a EFp12 type struct on G2 for BLS12 (GLV-4split + Jacobian + Lazy Reduction)
+ *
+ * @param[out]ANS --a pointer of answer.
+ * @param[in]P --a pointer in EFp12.
+ * @param[in]scalar --a pointer in mpz.
+ */
+extern void BLS12_EFp12_G2_SCM_4split_Mixture_lazy(EFp12 *ANS,EFp12 *Q,mpz_t scalar);
 #endif

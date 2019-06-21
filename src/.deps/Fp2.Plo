@@ -110,7 +110,8 @@ Fp2.lo: Fp2.c ../include/ELiPS/Fp2.h ../include/ELiPS/Fp.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h
+  /Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/assert.h
 
 ../include/ELiPS/Fp2.h:
 
@@ -341,3 +342,5 @@ Fp2.lo: Fp2.c ../include/ELiPS/Fp2.h ../include/ELiPS/Fp.h \
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h:
 
 /Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/assert.h:

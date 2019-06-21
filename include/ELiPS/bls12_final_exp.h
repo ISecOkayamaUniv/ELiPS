@@ -16,6 +16,7 @@
 extern void BLS12_Final_exp_plain(Fp12 *ANS,Fp12 *A);
 extern void BLS12_Fp12_pow_X(Fp12 *ANS,Fp12 *A);
 extern void BLS12_Fp12_pow_X_compress(Fp12 *ANS,Fp12 *A);
+extern void BLS12_Fp12_pow_X_compress2(Fp12 *ANS,Fp12 *A);
 extern void BLS12_Fp12_pow_X_lazy(Fp12 *ANS,Fp12 *A);
 extern void BLS12_Fp12_pow_X_compress_lazy(Fp12 *ANS,Fp12 *A);
 extern void BLS12_Fp12_pow_X2(Fp12 *ANS,Fp12 *A);

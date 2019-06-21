@@ -360,6 +360,88 @@ void Fp12_sqr_recover_g1(Fp12 *ANS,Fp12 *A){
     Fp2_set(&ANS->x0.x1,&g4);
     Fp2_set(&ANS->x1.x2,&g5);
 }
+void Fp12_sqr_recover_g1_noninv(Fp12 *ANS,Fp12 *A){
+    static Fp2 g1,g2,g3,g4,g5;
+    static Fp2 tmp,f;
+    static Fp2 t0,t1;//g1=t0/t1
+    static Fp2 C12,C02;
+    
+    //set
+    Fp2_set(&g2,&A->x1.x0);
+    Fp2_set(&g3,&A->x0.x2);
+    Fp2_set(&g4,&A->x0.x1);
+    Fp2_set(&g5,&A->x1.x2);
+    
+    //if
+    if(Fp2_cmp_zero(&g2)==1){
+        Fp2_sqr(&tmp,&g5);
+        Fp2_mul_basis(&C12,&tmp);
+        Fp2_sqr(&C02,&g4);
+        Fp2_set(&t0,&C02);
+        Fp2_add(&C02,&C02,&C02);
+        Fp2_add(&C02,&C02,&t0);
+        Fp2_add(&t0,&C12,&C02);
+        Fp2_sub(&t0,&t0,&g3);
+        Fp2_sub(&t0,&t0,&g3);
+        Fp2_add(&t1,&g2,&g2);
+        Fp2_add(&t1,&t1,&t1);
+    //else
+    }else{
+        Fp2_mul(&t0,&g4,&g5);
+        Fp2_add(&t0,&t0,&t0);
+        Fp2_set(&t1,&g3);
+    }
+    
+    //set
+    Fp2_set(&ANS->x0.x0,&t0);
+    Fp2_set(&ANS->x1.x1,&t1);
+    Fp2_set(&ANS->x1.x0,&g2);
+    Fp2_set(&ANS->x0.x2,&g3);
+    Fp2_set(&ANS->x0.x1,&g4);
+    Fp2_set(&ANS->x1.x2,&g5);
+}
+
+void Fp12_sqr_recover_g1_montrick(Fp12 *A,Fp12 *B,Fp12 *C,Fp12 *D){
+    static Fp2 a0,a1,b0,b1,c0,c1,d0,d1,ai,bi,ci,di;
+    static Fp2 inv,all,buf,ab,bc,cd,da;
+    static Fp2 g1,g2,g3,g4,g5;
+    static Fp2 tmp,f;
+    static Fp2 t0,t1;//g1=t0/t1
+    static Fp2 C12,C02;
+    
+    Fp2_set(&a0,&A->x0.x0);
+    Fp2_set(&a1,&A->x1.x1);
+    Fp2_set(&b0,&B->x0.x0);
+    Fp2_set(&b1,&B->x1.x1);
+    Fp2_set(&c0,&C->x0.x0);
+    Fp2_set(&c1,&C->x1.x1);
+    Fp2_set(&d0,&D->x0.x0);
+    Fp2_set(&d1,&D->x1.x1);
+    
+    //TODO:mul cut back
+    Fp2_mul(&ab,&a1,&b1);
+    Fp2_mul(&bc,&b1,&c1);
+    Fp2_mul(&cd,&c1,&d1);
+    Fp2_mul(&da,&d1,&a1);
+    
+    Fp2_mul(&all,&ab,&cd);
+    Fp2_inv(&inv,&all);
+    
+    Fp2_mul(&buf,&b1,&cd);
+    Fp2_mul(&ai,&inv,&buf);
+    Fp2_mul(&buf,&c1,&da);
+    Fp2_mul(&bi,&inv,&buf);
+    Fp2_mul(&buf,&d1,&ab);
+    Fp2_mul(&ci,&inv,&buf);
+    Fp2_mul(&buf,&a1,&bc);
+    Fp2_mul(&di,&inv,&buf);
+
+    
+    Fp2_mul(&A->x1.x1,&ai,&a0);
+    Fp2_mul(&B->x1.x1,&bi,&b0);
+    Fp2_mul(&C->x1.x1,&ci,&c0);
+    Fp2_mul(&D->x1.x1,&di,&d0);
+}
 
 void Fp12_sqr_recover_g1_lazy(Fp12 *ANS,Fp12 *A){
     static Fp2 g1,g2,g3,g4,g5;

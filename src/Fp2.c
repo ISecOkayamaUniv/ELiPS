@@ -41,6 +41,10 @@ void Fp2_lshift(Fp2 *ANS,Fp2 *A,unsigned long int UI){
     Fp_lshift(&ANS->x0,&A->x0,UI);
     Fp_lshift(&ANS->x1,&A->x1,UI);
 }
+void Fp2_lshift2(Fp2 *ANS,Fp2 *A){
+    Fp_lshift2(&ANS->x0,&A->x0);
+    Fp_lshift2(&ANS->x1,&A->x1);
+}
 
 void Fp2_set_random(Fp2 *ANS,gmp_randstate_t state){
     Fp_set_random(&ANS->x0,state);

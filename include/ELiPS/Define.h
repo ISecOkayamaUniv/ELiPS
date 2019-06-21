@@ -10,10 +10,22 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <assert.h>
 
+#define X64
+
+#ifdef X64
 #define FPLIMB_BITS 512
 #define FPLIMB 8
 #define FPLIMB2 16
+#endif
+
+#ifdef X32
+#define FPLIMB_BITS 256
+#define FPLIMB 15
+#define FPLIMB2 30
+#endif
+
 
 #define BN12_X_length 114
 #define BN12_X6_2_length 116
@@ -84,51 +96,51 @@ typedef struct{
 }EFp12;
 
 /*============================================================================*/
-/* Prjective Elliptic Curve                                                   */
+/* Jacobian Elliptic Curve                                                   */
 /*============================================================================*/
 typedef struct{
 	Fp x,y,z;
 	int infinity;
-}EFpZ;
+}EFpJ;
 
 typedef struct{
 	Fp2 x,y,z;
 	int infinity;
-}EFpZ2;
+}EFpJ2;
 
 typedef struct{
 	Fp6 x,y,z;
 	int infinity;
-}EFpZ6;
+}EFpJ6;
 
 typedef struct{
 	Fp12 x,y,z;
 	int infinity;
-}EFpZ12;
+}EFpJ12;
 
 
 /*============================================================================*/
-/* Prjective Elliptic Curve Table                                             */
+/* Jacobian Elliptic Curve Temp                                             */
 /*============================================================================*/
 typedef struct{
 	Fp x,y,z,zz,zzz;
 	int infinity;
-}EFpZT;
+}EFpJT;
 
 typedef struct{
 	Fp2 x,y,z,zz,zzz;
 	int infinity;
-}EFpZT2;
+}EFpJT2;
 
 typedef struct{
 	Fp6 x,y,z,zz,zzz;
 	int infinity;
-}EFpZT6;
+}EFpJT6;
 
 typedef struct{
 	Fp12 x,y,z,zz,zzz;
 	int infinity;
-}EFpZT12;
+}EFpJT12;
 
 /*============================================================================*/
 /* Pairing functions                                                          */
@@ -158,7 +170,7 @@ extern int m;
 /*============================================================================*/
 extern struct timeval tv_start,tv_end;
 extern float MILLER_TATE,MILLER_PLAINATE,MILLER_OPTATE,MILLER_XATE;
-extern float FINALEXP_PLAIN,FINALEXP_OPT_EASY,FINALEXP_OPT_HARD;
+extern float FINALEXP_PLAIN,FINALEXP_OPT,FINALEXP_OPT_EASY,FINALEXP_OPT_HARD;
 
 extern float G1SCM_PLAIN,G1SCM_2SPLIT,G1SCM_2SPLIT_JSF;
 extern float G2SCM_PLAIN,G2SCM_2SPLIT,G2SCM_2SPLIT_JSF,G2SCM_4SPLIT;

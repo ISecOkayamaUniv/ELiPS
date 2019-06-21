@@ -10,7 +10,6 @@
 extern int BLS12_test_rational_point();
 extern void BLS12_test_plain_ate_pairing();
 extern int BLS12_test_opt_ate_pairing();
-extern void BLS12_test_x_ate_pairing();
 extern int BLS12_test_G1_SCM(int scm);
 extern int BLS12_test_G2_SCM(int scm);
 extern int BLS12_test_G3_EXP(int exp);

@@ -114,6 +114,7 @@ bn12_pairing.lo: bn12_pairing.c ../include/ELiPS/bn12_pairing.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/assert.h \
   ../include/ELiPS/twist.h ../include/ELiPS/EFp12.h \
   ../include/ELiPS/EFp6.h ../include/ELiPS/bn12_final_exp.h \
   ../include/ELiPS/test.h ../include/ELiPS/time.h \
@@ -367,6 +368,8 @@ bn12_pairing.lo: bn12_pairing.c ../include/ELiPS/bn12_pairing.h \
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/secure/_string.h:
 
 /Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/assert.h:
 
 ../include/ELiPS/twist.h:
 
