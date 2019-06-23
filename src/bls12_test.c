@@ -289,12 +289,8 @@ for(i=0;i<scm;i++){
     gettimeofday(&tv_B,NULL);
     scm_2split_2NAF_time+=timedifference_msec(tv_A,tv_B);
 
-    gettimeofday(&tv_A,NULL);
-    BLS12_EFp12_G1_SCM_2split_3NAF(&test9,&A_EFp12,scalar);
-    gettimeofday(&tv_B,NULL);
-    scm_2split_3NAF_time+=timedifference_msec(tv_A,tv_B);
     
-    if(EFp12_cmp(&test1,&test2)!=0 || EFp12_cmp(&test1,&test3)!=0 || EFp12_cmp(&test1,&test4)!=0 || EFp12_cmp(&test1,&test5)!=0 || EFp12_cmp(&test1,&test6)!=0 || EFp12_cmp(&test1,&test7)!=0 || EFp12_cmp(&test1,&test8)!=0 || EFp12_cmp(&test1,&test9)!=0){
+    if(EFp12_cmp(&test1,&test2)!=0 || EFp12_cmp(&test1,&test3)!=0 || EFp12_cmp(&test1,&test4)!=0 || EFp12_cmp(&test1,&test5)!=0 || EFp12_cmp(&test1,&test6)!=0 || EFp12_cmp(&test1,&test7)!=0 || EFp12_cmp(&test1,&test8)!=0){
         printf("failed!\n\n");
 	EFp12_printf("test1=",&test1);
 	EFp12_printf("\ntest2=",&test2);
@@ -304,7 +300,6 @@ for(i=0;i<scm;i++){
 	EFp12_printf("\ntest6=",&test6);
 	EFp12_printf("\ntest7=",&test7);
 	EFp12_printf("\ntest8=",&test8);
-	EFp12_printf("\ntest9=",&test9);
 	printf("\n\n");
 	return 1;
     }
@@ -317,7 +312,6 @@ for(i=0;i<scm;i++){
     printf("BLS12 G1 SCM 2split JSF Jacobian table. : %.4f[ms]\n",scm_jacobian_table_time/scm);
     printf("BLS12 G1 SCM 2split JSF Mixture lazy.   : %.4f[ms]\n",scm_mixture_time/scm);
     printf("BLS12 G1 SCM 2split 2NAF.               : %.4f[ms]\n",scm_2split_2NAF_time/scm);
-    printf("BLS12 G1 SCM 2split 3NAF.               : %.4f[ms]\n",scm_2split_3NAF_time/scm);
 
 
     mpz_clear(scalar);
