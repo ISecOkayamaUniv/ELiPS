@@ -17,6 +17,18 @@ void EFp12_printf(char *str,EFp12 *P){
         printf("0");
     }
 }
+void EFp12_println(char *str,EFp12 *P){
+    printf("%s",str);
+    if(P->infinity==0){
+        printf("(");
+        Fp12_printf("",&P->x);
+        printf(",");
+        Fp12_printf("",&P->y);
+        printf(")\n");
+    }else{
+        printf("0\n");
+    }
+}
 void EFp12_set(EFp12 *ANS,EFp12 *A){
     Fp12_set(&ANS->x,&A->x);
     Fp12_set(&ANS->y,&A->y);

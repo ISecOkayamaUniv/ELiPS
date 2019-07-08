@@ -2,10 +2,11 @@
 /*----------------------------------------------------------------------------*/
 //test
 int test_Field(int fp,int fp2,int fp6,int fp12,int sqr){
-    int i,n=0;
+    int i,j,n=0;
     float add_time=0,add_lazy_time=0;
     float shift2_time=0,shift4_time=0,shift8_time=0;
     float mul_time=0,mul_lazy_time=0;
+    float inv_time=0,inv_lazy_time=0;
     float sqr_time=0,sqr_lazy_time=0;
     float com_time=0,rec_time=0,gs_time=0;
     float com_lazy_time=0,rec_lazy_time=0,gs_lazy_time=0;
@@ -52,25 +53,54 @@ int test_Field(int fp,int fp2,int fp6,int fp12,int sqr){
 
     gmp_randinit_default (state);
     gmp_randseed_ui(state,(unsigned long)time(NULL));
-
-
+    
 printf("------------------------------------------------------------------------------------\n");
-    printf("Fp_mul test\n");
-mul_time=0,mul_lazy_time=0;
+    printf("Fp_add test\n");
+add_time=0,add_lazy_time=0;
+n=1000;
 for(i=0;i<fp;i++){
     Fp_set_random(&A_Fp,state);
     Fp_set_random(&B_Fp,state);
 
     gettimeofday(&tv_A,NULL);
-    Fp_mul(&test1_Fp,&A_Fp,&B_Fp);
+    for(j=0;j<n;j++)Fp_add(&test1_Fp,&A_Fp,&B_Fp);
     gettimeofday(&tv_B,NULL);
-    mul_time+=timedifference_msec(tv_A,tv_B);
+    add_time+=timedifference_msec(tv_A,tv_B)/n;
 
     gettimeofday(&tv_A,NULL);
-    Lazy_mul(test2_mpn,A_Fp.x0,B_Fp.x0);
+    for(j=0;j<n;j++)Fp_add_lazy(test2_mpn,FPLIMB,A_Fp.x0,FPLIMB,B_Fp.x0,FPLIMB);
     gettimeofday(&tv_B,NULL);
-    mul_lazy_time+=timedifference_msec(tv_A,tv_B);
-    mpn_mod(&test2_Fp,test2_mpn,FPLIMB2);
+    add_lazy_time+=timedifference_msec(tv_A,tv_B)/n;
+    Fp_mod(&test2_Fp,test2_mpn,FPLIMB);
+
+    if(Fp_cmp(&test1_Fp,&test2_Fp)!=0){
+        printf("failed!\n\n");
+    	Fp_printf("",&test1_Fp);
+	    Fp_printf("\n",&test2_Fp);
+	    printf("\n\n");
+	    return 1;
+    }
+}
+    printf("Fp add.      : %.6f[ms]\n",add_time/fp);
+    printf("Fp add lazy. : %.6f[ms]\n",add_lazy_time/fp);
+printf("------------------------------------------------------------------------------------\n");
+    printf("Fp_mul test\n");
+mul_time=0,mul_lazy_time=0;
+n=1000;
+for(i=0;i<fp;i++){
+    Fp_set_random(&A_Fp,state);
+    Fp_set_random(&B_Fp,state);
+
+    gettimeofday(&tv_A,NULL);
+    for(j=0;j<n;j++)Fp_mul(&test1_Fp,&A_Fp,&B_Fp);
+    gettimeofday(&tv_B,NULL);
+    mul_time+=timedifference_msec(tv_A,tv_B)/n;
+
+    gettimeofday(&tv_A,NULL);
+    for(j=0;j<n;j++)Fp_mul_lazy(test2_mpn,A_Fp.x0,B_Fp.x0);
+    gettimeofday(&tv_B,NULL);
+    mul_lazy_time+=timedifference_msec(tv_A,tv_B)/n;
+    Fp_mod(&test2_Fp,test2_mpn,FPLIMB2);
 
     if(Fp_cmp(&test1_Fp,&test2_Fp)!=0){
         printf("failed!\n\n");
@@ -82,6 +112,22 @@ for(i=0;i<fp;i++){
 }
     printf("Fp mul.      : %.6f[ms]\n",mul_time/fp);
     printf("Fp mul lazy. : %.6f[ms]\n",mul_lazy_time/fp);
+    
+    printf("------------------------------------------------------------------------------------\n");
+    printf("Fp_inv test\n");
+inv_time=0,inv_lazy_time=0;
+n=1000;
+for(i=0;i<fp;i++){
+    Fp_set_random(&A_Fp,state);
+    Fp_set_random(&B_Fp,state);
+
+    gettimeofday(&tv_A,NULL);
+    for(j=0;j<n;j++)Fp_inv(&test1_Fp,&A_Fp);
+    gettimeofday(&tv_B,NULL);
+    inv_time+=timedifference_msec(tv_A,tv_B)/n;
+
+}
+    printf("Fp inv.      : %.6f[ms]\n",inv_time/fp);
     
 printf("------------------------------------------------------------------------------------\n");
     printf("Fp2_add test\n");
@@ -130,19 +176,20 @@ for(i=0;i<fp2;i++){
 printf("------------------------------------------------------------------------------------\n");
     printf("Fp2_mul test\n");
 mul_time=0,mul_lazy_time=0;
+n=100;
 for(i=0;i<fp2;i++){
     Fp2_set_random(&A_Fp2,state);
     Fp2_set_random(&B_Fp2,state);
 
     gettimeofday(&tv_A,NULL);
-    Fp2_mul(&test1_Fp2,&A_Fp2,&B_Fp2);
+    for(j=0;j<n;j++)Fp2_mul(&test1_Fp2,&A_Fp2,&B_Fp2);
     gettimeofday(&tv_B,NULL);
-    mul_time+=timedifference_msec(tv_A,tv_B);
+    mul_time+=timedifference_msec(tv_A,tv_B)/n;
 
     gettimeofday(&tv_A,NULL);
-    Fp2_mul_lazy(&test2_Fp2,&A_Fp2,&B_Fp2);
+    for(j=0;j<n;j++)Fp2_mul_lazy(&test2_Fp2,&A_Fp2,&B_Fp2);
     gettimeofday(&tv_B,NULL);
-    mul_lazy_time+=timedifference_msec(tv_A,tv_B);
+    mul_lazy_time+=timedifference_msec(tv_A,tv_B)/n;
 
 
     if(Fp2_cmp(&test1_Fp2,&test2_Fp2)!=0){
@@ -160,18 +207,19 @@ for(i=0;i<fp2;i++){
 printf("------------------------------------------------------------------------------------\n");
     printf("Fp2_sqr test\n");
 sqr_time=0,sqr_lazy_time=0;
+n=100;
 for(i=0;i<fp2;i++){
     Fp2_set_random(&A_Fp2,state);
 
     gettimeofday(&tv_A,NULL);
-    Fp2_sqr(&test1_Fp2,&A_Fp2);
+    for(j=0;j<n;j++)Fp2_sqr(&test1_Fp2,&A_Fp2);
     gettimeofday(&tv_B,NULL);
-    sqr_time+=timedifference_msec(tv_A,tv_B);
+    sqr_time+=timedifference_msec(tv_A,tv_B)/n;
 
     gettimeofday(&tv_A,NULL);
-    Fp2_sqr_lazy(&test2_Fp2,&A_Fp2);
+    for(j=0;j<n;j++)Fp2_sqr_lazy(&test2_Fp2,&A_Fp2);
     gettimeofday(&tv_B,NULL);
-    sqr_lazy_time+=timedifference_msec(tv_A,tv_B);
+    sqr_lazy_time+=timedifference_msec(tv_A,tv_B)/n;
 
 
     if(Fp2_cmp(&test1_Fp2,&test2_Fp2)!=0){
@@ -184,7 +232,28 @@ for(i=0;i<fp2;i++){
 }
     printf("Fp2 sqr.      : %.6f[ms]\n",sqr_time/fp2);
     printf("Fp2 sqr lazy. : %.6f[ms]\n",sqr_lazy_time/fp2);
+    
+printf("------------------------------------------------------------------------------------\n");
+    printf("Fp2_inv test\n");
+inv_time=0,inv_lazy_time=0;
+n=1000;
+for(i=0;i<fp2;i++){
+    Fp2_set_random(&A_Fp2,state);
+    Fp2_set_random(&B_Fp2,state);
 
+    gettimeofday(&tv_A,NULL);
+    for(j=0;j<n;j++)Fp2_inv(&test1_Fp2,&A_Fp2);
+    gettimeofday(&tv_B,NULL);
+    inv_time+=timedifference_msec(tv_A,tv_B)/n;
+    
+    gettimeofday(&tv_A,NULL);
+    for(j=0;j<n;j++)Fp2_inv_lazy(&test1_Fp2,&A_Fp2);
+    gettimeofday(&tv_B,NULL);
+    inv_lazy_time+=timedifference_msec(tv_A,tv_B)/n;
+
+}
+    printf("Fp2 inv.      : %.6f[ms]\n",inv_time/fp2);
+    printf("Fp2 inv_lazy. : %.6f[ms]\n",inv_lazy_time/fp2);
 
 printf("------------------------------------------------------------------------------------\n");
     printf("Fp6_mul test\n");
@@ -331,7 +400,7 @@ for(i=0;i<fp12;i++){
 
 printf("------------------------------------------------------------------------------------\n");
     printf("Fp12_sqr_compressed test\n");
-
+n=10;
 for(i=0;i<sqr;i++){
     BLS12_EFp12_generate_G1(&P);
     EFp12_generate_G2(&Q);
@@ -349,36 +418,36 @@ for(i=0;i<sqr;i++){
     Fp12_sqr_cyclotomic(&test0_Fp12,&tmp);
     
     gettimeofday(&tv_A,NULL);
-    Fp12_sqr_compressed(&test1_Fp12,&tmp);
+    for(j=0;j<n;j++)Fp12_sqr_compressed(&test1_Fp12,&tmp);
     gettimeofday(&tv_B,NULL);
-    com_time+=timedifference_msec(tv_A,tv_B);
+    com_time+=timedifference_msec(tv_A,tv_B)/n;
     
     gettimeofday(&tv_A,NULL);
-    Fp12_sqr_compressed_lazy(&test1l_Fp12,&tmp);
+    for(j=0;j<n;j++)Fp12_sqr_compressed_lazy(&test1l_Fp12,&tmp);
     gettimeofday(&tv_B,NULL);
-    com_lazy_time+=timedifference_msec(tv_A,tv_B);
+    com_lazy_time+=timedifference_msec(tv_A,tv_B)/n;
     
     gettimeofday(&tv_A,NULL);
-    Fp12_sqr_recover_g1(&test2_Fp12,&test1_Fp12);
-    Fp12_sqr_recover_g0(&test2_Fp12,&test2_Fp12);
+    for(j=0;j<n;j++)Fp12_sqr_recover_g1(&test2_Fp12,&test1_Fp12);
+    for(j=0;j<n;j++)Fp12_sqr_recover_g0(&test2_Fp12,&test2_Fp12);
     gettimeofday(&tv_B,NULL);
-    rec_time+=timedifference_msec(tv_A,tv_B);
+    rec_time+=timedifference_msec(tv_A,tv_B)/n;
     
     gettimeofday(&tv_A,NULL);
-    Fp12_sqr_recover_g1_lazy(&test2l_Fp12,&test1l_Fp12);
-    Fp12_sqr_recover_g0_lazy(&test2l_Fp12,&test2l_Fp12);
+    for(j=0;j<n;j++)Fp12_sqr_recover_g1_lazy(&test2l_Fp12,&test1l_Fp12);
+    for(j=0;j<n;j++)Fp12_sqr_recover_g0_lazy(&test2l_Fp12,&test2l_Fp12);
     gettimeofday(&tv_B,NULL);
-    rec_lazy_time+=timedifference_msec(tv_A,tv_B);
+    rec_lazy_time+=timedifference_msec(tv_A,tv_B)/n;
     
     gettimeofday(&tv_A,NULL);
-    Fp12_sqr_GS(&test3_Fp12,&tmp);
+    for(j=0;j<n;j++)Fp12_sqr_GS(&test3_Fp12,&tmp);
     gettimeofday(&tv_B,NULL);
-    gs_time+=timedifference_msec(tv_A,tv_B);
+    gs_time+=timedifference_msec(tv_A,tv_B)/n;
     
     gettimeofday(&tv_A,NULL);
-    Fp12_sqr_GS_lazy(&test3l_Fp12,&tmp);
+    for(j=0;j<n;j++)Fp12_sqr_GS_lazy(&test3l_Fp12,&tmp);
     gettimeofday(&tv_B,NULL);
-    gs_lazy_time+=timedifference_msec(tv_A,tv_B);
+    gs_lazy_time+=timedifference_msec(tv_A,tv_B)/n;
     
     if(Fp12_cmp(&test0_Fp12,&test2_Fp12)!=0 || Fp12_cmp(&test1_Fp12,&test1l_Fp12)!=0 || Fp12_cmp(&test2_Fp12,&test2l_Fp12)!=0 || Fp12_cmp(&test0_Fp12,&test3_Fp12)!=0 || Fp12_cmp(&test3_Fp12,&test3l_Fp12)!=0){
         printf("failed!\n\n");
@@ -416,8 +485,8 @@ for(i=0;i<fp;i++){
     mpn_random(A,FPLIMB);
     mpn_random(B,FPLIMB);
 
-    Lazy_mod(A,A,FPLIMB);
-    Lazy_mod(B,B,FPLIMB);
+    mpn_mod(A,A,FPLIMB);
+    mpn_mod(B,B,FPLIMB);
 
     mpn_mul_n(At,A,A,FPLIMB);
     mpn_mul_n(Bt,B,B,FPLIMB);
@@ -444,7 +513,7 @@ for(i=0;i<fp;i++){
     mul_time+=timedifference_msec(tv_A,tv_B);
 
     gettimeofday(&tv_A,NULL);
-    for(j=0;j<n;j++)    mpn_mod(&test1,test_mul,FPLIMB2);
+    for(j=0;j<n;j++)    Fp_mod(&test1,test_mul,FPLIMB2);
     gettimeofday(&tv_B,NULL);
     mod_time+=timedifference_msec(tv_A,tv_B);
     }
@@ -477,8 +546,8 @@ for(i=0;i<mod;i++){
     mpn_random(A,FPLIMB);
     mpn_random(B,FPLIMB);
 
-    Lazy_mod(A,A,FPLIMB);
-    Lazy_mod(B,B,FPLIMB);
+    mpn_mod(A,A,FPLIMB);
+    mpn_mod(B,B,FPLIMB);
 
     mpn_mul_n(C1,A,B,FPLIMB);
 
@@ -503,7 +572,7 @@ for(i=0;i<mod;i++){
     Fp_rdc_monty_basic(&Cf,Ct);
 
     gettimeofday(&tv_A,NULL);
-    mpn_mod(&test1,C1,FPLIMB2);
+    Fp_mod(&test1,C1,FPLIMB2);
     gettimeofday(&tv_B,NULL);
     mod_time+=timedifference_msec(tv_A,tv_B);
 
@@ -534,25 +603,40 @@ for(i=0;i<mod;i++){
 }
 
 int test_EFp(int ecd,int eca,int scm){
-    int i,n=0;
-    float ecd_time=0,ecd_lazy_time=0,ecd_Jacobian_time=0,ecd_Jacobian_lazy_time=0;
-    float eca_time=0,eca_lazy_time=0,eca_Jacobian_time=0,eca_Jacobian_lazy_time=0;
+    int i,j,n=0;
+    float ecd_time=0,ecd_lazy_time=0,ecd_Projective_lazy_time=0,ecd_Jacobian_time=0,ecd_Jacobian_lazy_time=0;
+    float eca_time=0,eca_lazy_time=0,eca_Projective_lazy_time=0,eca_Jacobian_time=0,eca_Jacobian_lazy_time=0,eca_Mixture_time=0,eca_Mixture_lazy_time=0;
     float scm_time=0,scm_lazy_time=0,scm_Jacobian_time=0,scm_Jacobian_lazy_time=0;
     struct timeval tv_A,tv_B;
     printf("====================================================================================\n");
-    EFp A_EFp,B_EFp,test0,test1,test2,test3;
-    EFpJ A_EFpJ,B_EFpJ,testZ1,testZ2,testZ3;
+    EFp A_EFp,B_EFp,test0,test1,test2,test3,test4,test5,test6;
+    EFpP A_EFpP,B_EFpP,testP1,testP2,testP3;
+    EFpJ A_EFpJ,B_EFpJ,testJ1,testJ2,testJ3;
+    EFpJ A_EFpM,B_EFpM,testM1,testM2,testM3;
     EFp_init(&A_EFp);
     EFp_init(&B_EFp);
     EFp_init(&test0);
     EFp_init(&test1);
     EFp_init(&test2);
     EFp_init(&test3);
+    EFp_init(&test4);
+    EFp_init(&test5);
+    EFp_init(&test6);
+    EFpP_init(&A_EFpP);
+    EFpP_init(&B_EFpP);
+    EFpP_init(&testP1);
+    EFpP_init(&testP2);
+    EFpP_init(&testP3);
     EFpJ_init(&A_EFpJ);
     EFpJ_init(&B_EFpJ);
-    EFpJ_init(&testZ1);
-    EFpJ_init(&testZ2);
-    EFpJ_init(&testZ3);
+    EFpJ_init(&testJ1);
+    EFpJ_init(&testJ2);
+    EFpJ_init(&testJ3);
+    EFpJ_init(&A_EFpM);
+    EFpJ_init(&B_EFpM);
+    EFpJ_init(&testM1);
+    EFpJ_init(&testM2);
+    EFpJ_init(&testM3);
     mpz_t scalar;
     mpz_init(scalar);
     
@@ -562,99 +646,146 @@ int test_EFp(int ecd,int eca,int scm){
 
 printf("------------------------------------------------------------------------------------\n");
     printf("EFp_ECD test\n");
-
+n=100;
 for(i=0;i<ecd;i++){
-
     EFp_rational_point(&B_EFp);
+    EFp_to_EFpP(&B_EFpP,&B_EFp);
     EFp_to_EFpJ(&B_EFpJ,&B_EFp);
+    EFp_ECD(&B_EFp,&B_EFp);
+    EFp_ECD_Projective_lazy(&B_EFpP,&B_EFpP);
+    EFp_ECD_Jacobian(&B_EFpJ,&B_EFpJ);
 
     gettimeofday(&tv_A,NULL);
-    EFp_ECD(&test0,&B_EFp);
+    for(j=0;j<n;j++)EFp_ECD(&test0,&B_EFp);
     gettimeofday(&tv_B,NULL);
-    ecd_time+=timedifference_msec(tv_A,tv_B);
+    ecd_time+=timedifference_msec(tv_A,tv_B)/n;
 
     gettimeofday(&tv_A,NULL);
-    EFp_ECD_lazy(&test1,&B_EFp);
+    for(j=0;j<n;j++)EFp_ECD_lazy(&test1,&B_EFp);
     gettimeofday(&tv_B,NULL);
-    ecd_lazy_time+=timedifference_msec(tv_A,tv_B);
+    ecd_lazy_time+=timedifference_msec(tv_A,tv_B)/n;
     
     gettimeofday(&tv_A,NULL);
-    EFp_ECD_Jacobian(&testZ2,&B_EFpJ);
-    EFp_Jacobian(&test2,&testZ2);
+    for(j=0;j<n;j++)EFp_ECD_Projective_lazy(&testP1,&B_EFpP);
     gettimeofday(&tv_B,NULL);
-    ecd_Jacobian_time+=timedifference_msec(tv_A,tv_B);
+    ecd_Projective_lazy_time+=timedifference_msec(tv_A,tv_B)/n;
+    EFp_Projective(&test2,&testP1);
+    
+    gettimeofday(&tv_A,NULL);
+    for(j=0;j<n;j++)EFp_ECD_Jacobian(&testJ1,&B_EFpJ);
+    gettimeofday(&tv_B,NULL);
+    ecd_Jacobian_time+=timedifference_msec(tv_A,tv_B)/n;
+    EFp_Jacobian(&test3,&testJ1);
 
     gettimeofday(&tv_A,NULL);
-    EFp_ECD_Jacobian_lazy(&testZ3,&B_EFpJ);
-    EFp_Jacobian(&test3,&testZ3);
+    for(j=0;j<n;j++)EFp_ECD_Jacobian_lazy(&testJ2,&B_EFpJ);
     gettimeofday(&tv_B,NULL);
-    ecd_Jacobian_lazy_time+=timedifference_msec(tv_A,tv_B);
+    ecd_Jacobian_lazy_time+=timedifference_msec(tv_A,tv_B)/n;
+    EFp_Jacobian(&test4,&testJ2);
 
-    if(EFp_cmp(&test0,&test1)!=0 || EFp_cmp(&test1,&test2)!=0 || EFp_cmp(&test1,&test3)!=0){
+    if(EFp_cmp(&test0,&test1)!=0 || EFp_cmp(&test1,&test2)!=0 || EFp_cmp(&test1,&test3)!=0 || EFp_cmp(&test1,&test4)!=0){
         printf("failed!\n\n");
-	    EFp_printf("",&test1);
-	    EFp_printf("\n",&test2);
-	    EFp_printf("\n",&test3);
-	    EFpJ_printf("\ntestZ2=",&testZ2);
-	    EFpJ_printf("\ntestZ3=",&testZ3);
+	    EFp_println("test1=",&test1);
+	    EFp_println("test2=",&test2);
+	    EFp_println("test3=",&test3);
+	    EFp_println("test4=",&test4);
+	    EFpP_printf("testP1=",&testP1);
+	    EFpJ_printf("\ntestJ1=",&testJ1);
+	    EFpJ_printf("\ntestJ2=",&testJ2);
 	    printf("\n\n");
 	    return 1;
     }
 }
-    printf("EFp ECD.               : %.4f[ms]\n",ecd_time/ecd);
-    printf("EFp ECD lazy.          : %.4f[ms]\n",ecd_lazy_time/ecd);
-    printf("EFp ECD Jacobian.      : %.4f[ms]\n",ecd_Jacobian_time/ecd);
-    printf("EFp ECD Jacobian lazy. : %.4f[ms]\n",ecd_Jacobian_lazy_time/ecd);
+    printf("EFp ECD.                 : %.4f[ms]\n",ecd_time/ecd);
+    printf("EFp ECD lazy.            : %.4f[ms]\n",ecd_lazy_time/ecd);
+    printf("EFp ECD Projective lazy. : %.4f[ms]\n",ecd_Projective_lazy_time/ecd);
+    printf("EFp ECD Jacobian.        : %.4f[ms]\n",ecd_Jacobian_time/ecd);
+    printf("EFp ECD Jacobian lazy.   : %.4f[ms]\n",ecd_Jacobian_lazy_time/ecd);
 
 
 printf("------------------------------------------------------------------------------------\n");
     printf("EFp_ECA test\n");
-    
+    n=100;
     EFp_rational_point(&A_EFp);
+    EFp_to_EFpP(&A_EFpP,&A_EFp);
     EFp_to_EFpJ(&A_EFpJ,&A_EFp);
-
+    EFp_to_EFpJ(&A_EFpM,&A_EFp);
+    //EFp_ECD(&A_EFp,&A_EFp);
+    //EFp_ECD_Projective_lazy(&A_EFpP,&A_EFpP);
+    //EFp_ECD_Jacobian(&A_EFpJ,&A_EFpJ);
+sleep(1);
 for(i=0;i<eca;i++){
 
     EFp_rational_point(&B_EFp);
+    EFp_to_EFpP(&B_EFpP,&B_EFp);
     EFp_to_EFpJ(&B_EFpJ,&B_EFp);
+    EFp_ECD(&B_EFp,&B_EFp);
+    EFp_ECD_Projective_lazy(&B_EFpP,&B_EFpP);
+    EFp_ECD_Jacobian(&B_EFpJ,&B_EFpJ);
 
     gettimeofday(&tv_A,NULL);
-    EFp_ECA(&test0,&A_EFp,&B_EFp);
+    for(j=0;j<n;j++)EFp_ECA(&test0,&A_EFp,&B_EFp);
     gettimeofday(&tv_B,NULL);
-    eca_time+=timedifference_msec(tv_A,tv_B);
+    eca_time+=timedifference_msec(tv_A,tv_B)/n;
     
     gettimeofday(&tv_A,NULL);
-    EFp_ECA_lazy(&test1,&A_EFp,&B_EFp);
+    for(j=0;j<n;j++)EFp_ECA_lazy(&test1,&A_EFp,&B_EFp);
     gettimeofday(&tv_B,NULL);
-    eca_lazy_time+=timedifference_msec(tv_A,tv_B);
+    eca_lazy_time+=timedifference_msec(tv_A,tv_B)/n;
+
+    gettimeofday(&tv_A,NULL);
+    for(j=0;j<n;j++)EFp_ECA_Projective_lazy(&testP1,&A_EFpP,&B_EFpP);
+    gettimeofday(&tv_B,NULL);
+    eca_Projective_lazy_time+=timedifference_msec(tv_A,tv_B)/n;
+    EFp_Projective(&test2,&testP1);
     
     gettimeofday(&tv_A,NULL);
-    EFp_ECA_Jacobian(&testZ2,&A_EFpJ,&B_EFpJ);
-    EFp_Jacobian(&test2,&testZ2);
+    for(j=0;j<n;j++)EFp_ECA_Jacobian(&testJ1,&A_EFpJ,&B_EFpJ);
     gettimeofday(&tv_B,NULL);
-    eca_Jacobian_time+=timedifference_msec(tv_A,tv_B);
+    eca_Jacobian_time+=timedifference_msec(tv_A,tv_B)/n;
+    EFp_Jacobian(&test3,&testJ1);
 
     gettimeofday(&tv_A,NULL);
-    EFp_ECA_Jacobian_lazy(&testZ3,&A_EFpJ,&B_EFpJ);
-    EFp_Jacobian(&test3,&testZ3);
+    for(j=0;j<n;j++)EFp_ECA_Jacobian_lazy(&testJ2,&A_EFpJ,&B_EFpJ);
     gettimeofday(&tv_B,NULL);
-    eca_Jacobian_lazy_time+=timedifference_msec(tv_A,tv_B);
+    eca_Jacobian_lazy_time+=timedifference_msec(tv_A,tv_B)/n;
+    EFp_Jacobian(&test4,&testJ2);
+    
+    gettimeofday(&tv_A,NULL);
+    for(j=0;j<n;j++)EFp_ECA_Mixture(&testM1,&B_EFpJ,&A_EFpM);
+    gettimeofday(&tv_B,NULL);
+    eca_Mixture_time+=timedifference_msec(tv_A,tv_B)/n;
+    EFp_Jacobian(&test5,&testM1);
+    
+    gettimeofday(&tv_A,NULL);
+    for(j=0;j<n;j++)EFp_ECA_Mixture_lazy(&testM2,&B_EFpJ,&A_EFpM);
+    gettimeofday(&tv_B,NULL);
+    eca_Mixture_lazy_time+=timedifference_msec(tv_A,tv_B)/n;
+    EFp_Jacobian(&test6,&testM2);
 
-    if(EFp_cmp(&test0,&test1)!=0 || EFp_cmp(&test1,&test2)!=0 || EFp_cmp(&test1,&test3)!=0){
+    if(EFp_cmp(&test0,&test1)!=0 || EFp_cmp(&test1,&test2)!=0 || EFp_cmp(&test1,&test3)!=0 || EFp_cmp(&test1,&test4)!=0 || EFp_cmp(&test1,&test5)!=0 || EFp_cmp(&test1,&test6)!=0){
         printf("failed!\n\n");
-	    EFp_printf("",&test1);
-	    EFp_printf("\n",&test2);
-	    EFp_printf("\n",&test3);
-	    EFpJ_printf("\ntestZ2=",&testZ2);
-	    EFpJ_printf("\ntestZ3=",&testZ3);
+	    EFp_println("test1=",&test1);
+	    EFp_println("test2=",&test2);
+	    EFp_println("test3=",&test3);
+	    EFp_println("test4=",&test4);
+	    EFp_println("test5=",&test5);
+	    EFp_println("test6=",&test6);
+	    EFpP_printf("testP1=",&testP1);
+	    EFpJ_printf("\ntestJ1=",&testJ1);
+	    EFpJ_printf("\ntestJ2=",&testJ2);
+	    EFpJ_printf("\ntestM1=",&testM1);
 	    printf("\n\n");
 	    return 1;
     }
 }
-    printf("EFp ECA.               : %.4f[ms]\n",eca_time/eca);
-    printf("EFp ECA lazy.          : %.4f[ms]\n",eca_lazy_time/eca);
-    printf("EFp ECA Jacobian.      : %.4f[ms]\n",eca_Jacobian_time/eca);
-    printf("EFp ECA Jacobian lazy. : %.4f[ms]\n",eca_Jacobian_lazy_time/eca);
+    printf("EFp ECA.                 : %.4f[ms]\n",eca_time/eca);
+    printf("EFp ECA lazy.            : %.4f[ms]\n",eca_lazy_time/eca);
+    printf("EFp ECA Projective lazy. : %.4f[ms]\n",eca_Projective_lazy_time/eca);
+    printf("EFp ECA Jacobian.        : %.4f[ms]\n",eca_Jacobian_time/eca);
+    printf("EFp ECA Jacobian lazy.   : %.4f[ms]\n",eca_Jacobian_lazy_time/eca);
+    printf("EFp ECA Mixture.         : %.4f[ms]\n",eca_Mixture_time/eca);
+    printf("EFp ECA Mixture lazy.    : %.4f[ms]\n",eca_Mixture_lazy_time/eca);
 
 printf("------------------------------------------------------------------------------------\n");
     printf("EFp_SCM test\n");

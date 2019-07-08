@@ -13,6 +13,14 @@ void Fp12_printf(char *str,Fp12 *A){
     gmp_printf(")");
 }
 
+void Fp12_println(char *str,Fp12 *A){
+    gmp_printf("%s(",str);
+    Fp6_printf("",&A->x0);
+    gmp_printf(",");
+    Fp6_printf("",&A->x1);
+    gmp_printf(")\n");
+}
+
 void Fp12_set(Fp12 *ANS,Fp12 *A){
     Fp6_set(&ANS->x0,&A->x0);
     Fp6_set(&ANS->x1,&A->x1);
@@ -1045,4 +1053,28 @@ void Fp12_frobenius_map_p10(Fp12 *ANS,Fp12 *A){
     Fp2_set_neg(&ANS->x1.x1,&A->x1.x1);
     Fp2_mul_mpn(&ANS->x1.x2,&A->x1.x2,frobenius_constant[f_p10][5].x0.x0);
 }
-
+int Fp12_montgomery_trick(Fp12 *A_inv,Fp12 *A,int n){
+    int i;
+    Fp12 ANS[n],ALL_inv;
+	Fp12_set(&ANS[0],&A[0]);
+	Fp12 check;
+	
+	for(i=1;i<n;i++){
+	Fp12_mul_lazy(&ANS[i],&ANS[i-1],&A[i]);
+	}
+	Fp12_inv_lazy(&ALL_inv,&ANS[n-1]);	
+	for(i=n-1;i>0;i--){
+    Fp12_mul_lazy(&A_inv[i],&ALL_inv,&ANS[i-1]);	
+    Fp12_mul_lazy(&ALL_inv,&ALL_inv,&A[i]);
+    }
+    
+    Fp12_set(&A_inv[0],&ALL_inv);
+    /*
+    for(i=0;i<n;i++){
+    Fp12_mul(&check,&A[i],&A_inv[i]);
+    printf("check:%d",i);	
+	Fp12_println("=",&check);
+    }
+    */
+    return 0;
+}

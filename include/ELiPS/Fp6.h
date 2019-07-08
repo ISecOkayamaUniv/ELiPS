@@ -19,6 +19,14 @@ extern void Fp6_init(Fp6 *A);
 extern void Fp6_printf(char *str,Fp6 *A);
 
 /**
+ * @brief Print a Fp6 type struct
+ *
+ * @param[in]str --a pointer to be printed.
+ * @param[in]A --a pointer to be printed.
+ */
+extern void Fp6_println(char *str,Fp6 *A);
+
+/**
  * @brief Set a Fp6 type struct to a Fp6 type struct
  *
  * @param[out]ANS --a pointer to be setted.

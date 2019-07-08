@@ -7,6 +7,9 @@ void Fp_init(Fp *A){
 void Fp_printf(char *str,Fp *A){
     gmp_printf("%s%Nu",str,A->x0,FPLIMB);
 }
+void Fp_println(char *str,Fp *A){
+    gmp_printf("%s%Nu\n",str,A->x0,FPLIMB);
+}
 
 void Fp_set(Fp *ANS,Fp *A){
     mpn_copyd(ANS->x0,A->x0,FPLIMB);
@@ -21,18 +24,11 @@ void Fp_set_mpn(Fp *ANS,mp_limb_t *A){
 
 void Fp_set_neg(Fp *ANS,Fp *A){
     mpn_sub_n(ANS->x0,prime,A->x0,FPLIMB);
-    mpn_mod(ANS,ANS->x0,FPLIMB);
+    Fp_mod(ANS,ANS->x0,FPLIMB);
 }
-/*
-void Fp_lshift(Fp *ANS,Fp *A,unsigned long int UI){
-    static mp_limb_t buf[FPLIMB];
-    mpn_lshift(buf,A->x0,FPLIMB,UI);
-    mpn_mod(ANS,buf,FPLIMB);
-}
-*/
 void Fp_lshift(Fp *ANS,Fp *A,unsigned long int UI){
     mpn_lshift(ANS->x0,A->x0,FPLIMB,UI);
-    mpn_mod(ANS,ANS->x0,FPLIMB);
+    Fp_mod(ANS,ANS->x0,FPLIMB);
 }
 void Fp_lshift2(Fp *ANS,Fp *A){
     static mp_limb_t buf[FPLIMB];    
@@ -47,7 +43,7 @@ void Fp_set_random(Fp *ANS,gmp_randstate_t state){
     mpn_set_mpz(ANS->x0,tmp);
     
     //mpn_random(buf,FPLIMB);
-    //mpn_mod(ANS,buf,FPLIMB);
+    //Fp_mod(ANS,buf,FPLIMB);
     
     mpz_clear(tmp);
 }
@@ -115,161 +111,17 @@ void Fp_MR(mp_limb_t *ANS,mp_limb_t *T,mp_size_t T_size){
     if(mpn_cmp(buf,prime,FPLIMB)>0)mpn_sub_n(ANS,buf,prime,FPLIMB);
     else mpn_copyd(ANS,buf,FPLIMB);
 }
-
-void Lazy_add(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size,mp_limb_t *B,mp_size_t B_size){
-    if(mpn_zero_p(A,A_size)==1){
-	mpn_copyd(ANS,B,B_size);
-    }else if(mpn_zero_p(B,B_size)==1){
-	mpn_copyd(ANS,A,A_size);
-    }else{
-	mpn_add_n(ANS,A,B,ANS_size);
-    }
-}
-void Lazy_sub(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size,mp_limb_t *B,mp_size_t B_size){
-    static mp_limb_t buf[FPLIMB],bufL[FPLIMB2];
-    //assert(A_size>=B_size);
-    //Only:A_size>=B_size
-    if(mpn_zero_p(B,B_size)==1){
-	//mpn_zero(ANS,ANS_size);
-	mpn_copyd(ANS,A,A_size);
-    }else if(mpn_zero_p(A,A_size)==1){
-	    mpn_zero(ANS,ANS_size);
-	    Lazy_mod(buf,B,B_size);
-    	    mpn_sub_n(ANS,prime,buf,FPLIMB);
-    }else{
-	if(A_size>B_size){
-	    if(mpn_chk_limb(A,FPLIMB,FPLIMB2)==0){
-	        mpn_sub(ANS,A,A_size,B,B_size);
-            }else{
-		if(mpn_cmp(A,B,FPLIMB)<0){
-		    mpn_sub_n(buf,B,A,FPLIMB);
-		    Lazy_mod(buf,buf,FPLIMB);
-		    mpn_zero(ANS,ANS_size);
-    		    mpn_sub_n(ANS,prime,buf,FPLIMB);
-                }else{
-		    mpn_zero(ANS,ANS_size);
-		    mpn_sub_n(ANS,A,B,FPLIMB);
-	        }
-	    }
-	}else{
-	    if(mpn_cmp(A,B,ANS_size)<0){
-    		mpn_sub_n(ANS,B,A,ANS_size);
-		Lazy_mod(buf,ANS,ANS_size);
-		mpn_zero(ANS,ANS_size);
-    		mpn_sub_n(ANS,prime,buf,FPLIMB);
-            }else{
-		mpn_sub_n(ANS,A,B,ANS_size);
-	    }
-	}
-    }
-}
-/*
-void Lazy_sub(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size,mp_limb_t *B,mp_size_t B_size){
-    static mp_limb_t buf[FPLIMB],bufL[FPLIMB2];
-    //Only:A_size>=B_size
-    if(mpn_zero_p(B,B_size)==1){
-	//mpn_zero(ANS,ANS_size);
-	mpn_copyd(ANS,A,A_size);
-    }else if(mpn_zero_p(A,A_size)==1){
-    	if(B_size==FPLIMB2){
-	    mpn_copyd(bufL,B,FPLIMB2);
-    	    while(mpn_cmp(bufL,prime2,FPLIMB2)>0) mpn_sub_n(bufL,bufL,prime2,FPLIMB2);
-	    mpn_zero(ANS,ANS_size);
-    	    mpn_sub_n(ANS,prime2,bufL,FPLIMB2);
-    	}else{
-	    mpn_copyd(buf,B,B_size);
-    	    while(mpn_cmp(buf,prime,FPLIMB)>0) mpn_sub_n(buf,buf,prime,FPLIMB);
-	    mpn_zero(ANS,ANS_size);
-    	    mpn_sub_n(ANS,prime,buf,FPLIMB);
-	}
-    }else{
-	//A_size==FPLIMB2 && B_size==FPLIMB2
-	if(A_size==FPLIMB2 && B_size==FPLIMB2){
-	    if(mpn_cmp(A,B,FPLIMB2)<0){
-    		mpn_sub_n(bufL,B,A,FPLIMB2);
-    		while(mpn_cmp(bufL,prime2,FPLIMB2)>0) mpn_sub_n(bufL,bufL,prime2,FPLIMB2);
-		mpn_zero(ANS,ANS_size);
-    		mpn_sub_n(ANS,prime2,bufL,FPLIMB2);
-            }else{
-		mpn_sub_n(ANS,A,B,ANS_size);
-	    }
-	//A_size==FPLIMB2 && B_size==FPLIMB
-	}else if(A_size==FPLIMB2 && B_size==FPLIMB){
-	    //A=FPLIMB2
-	    if(mpn_chk_limb(A,FPLIMB,FPLIMB2)==0){
-	        mpn_sub(ANS,A,A_size,B,B_size);
-	    //A=FPLIMB
-            }else{
-		if(mpn_cmp(A,B,FPLIMB)<0){
-		    mpn_sub_n(buf,B,A,FPLIMB);
-    		    while(mpn_cmp(buf,prime,FPLIMB)>0) mpn_sub_n(buf,buf,prime,FPLIMB);
-		    mpn_zero(ANS,ANS_size);
-    		    mpn_sub_n(ANS,prime,buf,FPLIMB);
-                }else{
-		    mpn_zero(ANS,ANS_size);
-		    mpn_sub_n(ANS,A,B,FPLIMB);
-	        }
-	    }
-	//A_size==FPLIMB && B_size==FPLIMB
-	}else{
-	    if(mpn_cmp(A,B,FPLIMB)<0){
-    		mpn_sub_n(buf,B,A,FPLIMB);
-    		while(mpn_cmp(buf,prime,FPLIMB)>0) mpn_sub_n(buf,buf,prime,FPLIMB);
-		mpn_zero(ANS,ANS_size);
-    		mpn_sub_n(ANS,prime,buf,FPLIMB);
-            }else{
-		mpn_sub_n(ANS,A,B,ANS_size);
-	    }
-	}
-    }
-}
-*/
-void Lazy_sub_mod(Fp *ANS,mp_limb_t *A,mp_limb_t *B){
-    //Only:A_size=B_size=FPLIMB2
-    static mp_limb_t buf[FPLIMB2];
-    if(mpn_zero_p(B,FPLIMB2)==1){
-	mpn_mod(ANS,A,FPLIMB2);
-    }else{
-	if(mpn_cmp(A,B,FPLIMB2)<0){
-    	    mpn_sub_n(buf,B,A,FPLIMB2);
-	    mpn_mod(ANS,buf,FPLIMB2);
-    	    mpn_sub_n(ANS->x0,prime,ANS->x0,FPLIMB);
-        }else{
-	    mpn_sub_n(buf,A,B,FPLIMB2);
-	    mpn_mod(ANS,buf,FPLIMB2);
-	}
-    }
-}
-void Lazy_mul(mp_limb_t *ANS,mp_limb_t *A,mp_limb_t *B){
-    if(mpn_zero_p(A,FPLIMB)==1||mpn_zero_p(B,FPLIMB)==1){
-	mpn_set_ui(ANS,FPLIMB2,0);
-    }else if(mpn_cmp_ui(A,FPLIMB,1)==0){
-	mpn_zero(ANS,FPLIMB2);
-	mpn_copyd(ANS,B,FPLIMB);
-    }else if(mpn_cmp_ui(B,FPLIMB,1)==0){
-	mpn_zero(ANS,FPLIMB2);
-	mpn_copyd(ANS,A,FPLIMB);
-    }else{
-        mpn_mul_n(ANS,A,B,FPLIMB);
-    }
-
-}
-void Lazy_sqr(mp_limb_t *ANS,mp_limb_t *A){
-    if(mpn_zero_p(A,FPLIMB)==1){
-	mpn_set_ui(ANS,FPLIMB2,1);
-    }else if(mpn_cmp_ui(A,FPLIMB,0)==0){
-	mpn_set_ui(ANS,FPLIMB2,0);
-    }else{
-        mpn_sqr(ANS,A,FPLIMB);
-    }
-
+void Fp_mod(Fp *ans,mp_limb_t *a,mp_size_t size_a){
+	mp_limb_t dumy[size_a];
+	mpn_tdiv_qr(dumy,ans->x0,0,a,size_a,prime,FPLIMB);
 }
 
-void Lazy_mod(mp_limb_t *ans,mp_limb_t *a,mp_size_t size_a){
-    mp_limb_t dumy[size_a];
-    mpn_tdiv_qr(dumy,ans,0,a,size_a,prime,FPLIMB);
-}
+void Fp_mod_ui(Fp *ans,mp_limb_t *a,mp_size_t size_a,unsigned long int UI){
+	mp_limb_t dumy[size_a];
 
+	mpn_set_ui(buf,FPLIMB,UI);
+	mpn_tdiv_qr(dumy,ans->x0,0,a,size_a,buf,1);
+}
 void Fp_mul(Fp *ANS,Fp *A,Fp *B){
     static mp_limb_t tmp_mul[FPLIMB2];
     if(mpn_zero_p(A->x0,FPLIMB)==1||mpn_zero_p(B->x0,FPLIMB)==1){
@@ -280,7 +132,20 @@ void Fp_mul(Fp *ANS,Fp *A,Fp *B){
         Fp_set(ANS,A);
     }else{
         mpn_mul_n(tmp_mul,A->x0,B->x0,FPLIMB);
-        mpn_mod(ANS,tmp_mul,FPLIMB2);
+        Fp_mod(ANS,tmp_mul,FPLIMB2);
+    }
+}
+void Fp_mul_lazy(mp_limb_t *ANS,mp_limb_t *A,mp_limb_t *B){
+    if(mpn_zero_p(A,FPLIMB)==1||mpn_zero_p(B,FPLIMB)==1){
+	mpn_set_ui(ANS,FPLIMB2,0);
+    }else if(mpn_cmp_ui(A,FPLIMB,1)==0){
+	mpn_zero(ANS,FPLIMB2);
+	mpn_copyd(ANS,B,FPLIMB);
+    }else if(mpn_cmp_ui(B,FPLIMB,1)==0){
+	mpn_zero(ANS,FPLIMB2);
+	mpn_copyd(ANS,A,FPLIMB);
+    }else{
+        mpn_mul_n(ANS,A,B,FPLIMB);
     }
 }
 void Fp_mul_montgomery(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size){
@@ -299,18 +164,18 @@ void Fp_mul_final(Fp *ANS,Fp *A,Fp *B){
     if(mpn_zero_p(A->x0,FPLIMB)==1||mpn_zero_p(B->x0,FPLIMB)==1){
 	mpn_set_ui(ANS->x0,FPLIMB,0);
     }else if(mpn_cmp_ui(A->x0,FPLIMB,1)==0){
-	mpn_mod(ANS,B->x0,FPLIMB);
+	Fp_mod(ANS,B->x0,FPLIMB);
     }else if(mpn_cmp_ui(B->x0,FPLIMB,1)==0){
-	mpn_mod(ANS,A->x0,FPLIMB);
+	Fp_mod(ANS,A->x0,FPLIMB);
     }else{
         mpn_mul_n(tmp_mul,A->x0,B->x0,FPLIMB);
-        mpn_mod(ANS,tmp_mul,FPLIMB2);
+        Fp_mod(ANS,tmp_mul,FPLIMB2);
     }
 }
 void Fp_mul_ui(Fp *ANS,Fp *A,unsigned long int UI){
     static mp_limb_t tmp_mul[FPLIMB2];
     mpn_mul_ui(tmp_mul,A->x0,FPLIMB,UI);
-    mpn_mod(ANS,tmp_mul,FPLIMB2);
+    Fp_mod(ANS,tmp_mul,FPLIMB2);
 }
 void Fp_mul_mpn(Fp *ANS,Fp *A,mp_limb_t *B){
     static mp_limb_t tmp_mul[FPLIMB2];
@@ -322,7 +187,16 @@ void Fp_mul_mpn(Fp *ANS,Fp *A,mp_limb_t *B){
         Fp_set(ANS,A);
     }else{
         mpn_mul_n(tmp_mul,A->x0,B,FPLIMB);
-        mpn_mod(ANS,tmp_mul,FPLIMB2);
+        Fp_mod(ANS,tmp_mul,FPLIMB2);
+    }
+}
+void Fp_sqr_lazy(mp_limb_t *ANS,mp_limb_t *A){
+    if(mpn_zero_p(A,FPLIMB)==1){
+	mpn_set_ui(ANS,FPLIMB2,1);
+    }else if(mpn_cmp_ui(A,FPLIMB,0)==0){
+	mpn_set_ui(ANS,FPLIMB2,0);
+    }else{
+        mpn_sqr(ANS,A,FPLIMB);
     }
 }
 void Fp_add(Fp *ANS,Fp *A,Fp *B){
@@ -337,16 +211,34 @@ void Fp_add(Fp *ANS,Fp *A,Fp *B){
 	else mpn_copyd(ANS->x0,buf,FPLIMB);
     }
 }
-
+void Fp_add_lazy(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size,mp_limb_t *B,mp_size_t B_size){
+    if(mpn_zero_p(A,A_size)==1){
+	mpn_copyd(ANS,B,B_size);
+    }else if(mpn_zero_p(B,B_size)==1){
+	mpn_copyd(ANS,A,A_size);
+    }else{
+	mpn_add_n(ANS,A,B,ANS_size);
+    }
+}
+void Fp_add_lazy_mod(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size,mp_limb_t *B,mp_size_t B_size){
+    if(mpn_zero_p(A,A_size)==1){
+	mpn_copyd(ANS,B,B_size);
+    }else if(mpn_zero_p(B,B_size)==1){
+	mpn_copyd(ANS,A,A_size);
+    }else{
+	mpn_add_n(ANS,A,B,ANS_size);
+	if(mpn_cmp(buf,prime,FPLIMB)>=0)mpn_sub_n(ANS,buf,prime,FPLIMB);
+    }
+}
 void Fp_add_final(Fp *ANS,Fp *A,Fp *B){
     static mp_limb_t buf[FPLIMB];
     if(mpn_zero_p(A->x0,FPLIMB)==1){
-	mpn_mod(ANS,B->x0,FPLIMB);
+	Fp_mod(ANS,B->x0,FPLIMB);
     }else if(mpn_zero_p(B->x0,FPLIMB)==1){
-	mpn_mod(ANS,A->x0,FPLIMB);
+	Fp_mod(ANS,A->x0,FPLIMB);
     }else{
 	mpn_add_n(buf,A->x0,B->x0,FPLIMB);
-	mpn_mod(ANS,buf,FPLIMB);
+	Fp_mod(ANS,buf,FPLIMB);
     }
 
 }
@@ -387,19 +279,72 @@ void Fp_sub(Fp *ANS,Fp *A,Fp *B){
 	}
     }
 }
-
+void Fp_sub_lazy(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size,mp_limb_t *B,mp_size_t B_size){
+    static mp_limb_t buf[FPLIMB],bufL[FPLIMB2];
+    //assert(A_size>=B_size);
+    //Only:A_size>=B_size
+    if(mpn_zero_p(B,B_size)==1){
+	//mpn_zero(ANS,ANS_size);
+	mpn_copyd(ANS,A,A_size);
+    }else if(mpn_zero_p(A,A_size)==1){
+	    mpn_zero(ANS,ANS_size);
+	    mpn_mod(buf,B,B_size);
+    	    mpn_sub_n(ANS,prime,buf,FPLIMB);
+    }else{
+	if(A_size>B_size){
+	    if(mpn_chk_limb(A,FPLIMB,FPLIMB2)==0){
+	        mpn_sub(ANS,A,A_size,B,B_size);
+            }else{
+		if(mpn_cmp(A,B,FPLIMB)<0){
+		    mpn_sub_n(buf,B,A,FPLIMB);
+		    mpn_mod(buf,buf,FPLIMB);
+		    mpn_zero(ANS,ANS_size);
+    		    mpn_sub_n(ANS,prime,buf,FPLIMB);
+                }else{
+		    mpn_zero(ANS,ANS_size);
+		    mpn_sub_n(ANS,A,B,FPLIMB);
+	        }
+	    }
+	}else{
+	    if(mpn_cmp(A,B,ANS_size)<0){
+    		mpn_sub_n(ANS,B,A,ANS_size);
+			mpn_mod(buf,ANS,ANS_size);
+			mpn_zero(ANS,ANS_size);
+    		mpn_sub_n(ANS,prime,buf,FPLIMB);
+            }else{
+		mpn_sub_n(ANS,A,B,ANS_size);
+	    }
+	}
+    }
+}
+void Fp_sub_lazy_mod(Fp *ANS,mp_limb_t *A,mp_limb_t *B){
+    //Only:A_size=B_size=FPLIMB2
+    static mp_limb_t buf[FPLIMB2];
+    if(mpn_zero_p(B,FPLIMB2)==1){
+	Fp_mod(ANS,A,FPLIMB2);
+    }else{
+	if(mpn_cmp(A,B,FPLIMB2)<0){
+    	    mpn_sub_n(buf,B,A,FPLIMB2);
+	    	Fp_mod(ANS,buf,FPLIMB2);
+    	    mpn_sub_n(ANS->x0,prime,ANS->x0,FPLIMB);
+        }else{
+	    mpn_sub_n(buf,A,B,FPLIMB2);
+	    Fp_mod(ANS,buf,FPLIMB2);
+	}
+    }
+}
 void Fp_sub_final(Fp *ANS,Fp *A,Fp *B){
     static mp_limb_t buf[FPLIMB];
     if(mpn_zero_p(B->x0,FPLIMB)==1){
-	mpn_mod(ANS,A->x0,FPLIMB);
+	Fp_mod(ANS,A->x0,FPLIMB);
     }else{
         if(mpn_cmp(A->x0,B->x0,FPLIMB)<0){
     	    mpn_sub_n(buf,B->x0,A->x0,FPLIMB);
-	    mpn_mod(ANS,buf,FPLIMB);
+	    Fp_mod(ANS,buf,FPLIMB);
     	    mpn_sub_n(ANS->x0,prime,ANS->x0,FPLIMB);
         }else{
 	    mpn_sub_n(buf,A->x0,B->x0,FPLIMB);
-	    mpn_mod(ANS,buf,FPLIMB);
+	    Fp_mod(ANS,buf,FPLIMB);
 	}
     }
 }
@@ -419,10 +364,10 @@ void Fp_sub_mpn(Fp *ANS,Fp *A,mp_limb_t *B){
         if(mpn_cmp(A->x0,B,FPLIMB)<0){
     	    mpn_sub_n(buf,B,A->x0,FPLIMB);
     	    mpn_sub_n(buf,prime,buf,FPLIMB);
-	    mpn_mod(ANS,buf,FPLIMB);
+	    Fp_mod(ANS,buf,FPLIMB);
         }else{
 	    mpn_sub_n(buf,A->x0,B,FPLIMB);
-	    mpn_mod(ANS,buf,FPLIMB);
+	    Fp_mod(ANS,buf,FPLIMB);
 	}
     }
 }
@@ -446,7 +391,7 @@ void Fp_inv(Fp *ANS,Fp *A){
 	mpn_copyd(tmp,sp,FPLIMB);
     }
     
-    mpn_mod(ANS,tmp,FPLIMB);
+    Fp_mod(ANS,tmp,FPLIMB);
 }
 int  Fp_legendre(Fp *A){
 
@@ -648,4 +593,29 @@ int  Fp_cmp_one(Fp *A){
     }
     return 1;
 }
-/*----------------------------------------------------------------------------*/
+
+int Fp_montgomery_trick(Fp *A_inv,Fp *A,int n){
+    int i;
+    Fp ANS[n],ALL_inv;
+	Fp_set(&ANS[0],&A[0]);
+	Fp check;
+	
+	for(i=1;i<n;i++){
+	Fp_mul(&ANS[i],&ANS[i-1],&A[i]);
+	}
+	Fp_inv(&ALL_inv,&ANS[n-1]);	
+	for(i=n-1;i>0;i--){
+    Fp_mul(&A_inv[i],&ALL_inv,&ANS[i-1]);	
+    Fp_mul(&ALL_inv,&ALL_inv,&A[i]);
+    }
+    
+    Fp_set(&A_inv[0],&ALL_inv);
+    /*
+    for(i=0;i<n;i++){
+    Fp_mul(&check,&A[i],&A_inv[i]);
+    printf("check:%d",i);	
+	Fp_println("=",&check);
+    }
+    */
+    return 0;
+}

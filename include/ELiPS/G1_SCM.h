@@ -70,6 +70,33 @@ extern void BLS12_EFp12_G1_SCM_2split(EFp12 *ANS,EFp12 *P,mpz_t scalar);
 extern void BLS12_EFp12_G1_SCM_2split_2NAF(EFp12 *ANS,EFp12 *P,mpz_t scalar);
 
 /**
+ * @brief Scalar multiplication a EFp12 type struct on G1 for BLS12 (GLV-2split + NAF)
+ *
+ * @param[out]ANS --a pointer of answer.
+ * @param[in]P --a pointer in EFp12.
+ * @param[in]scalar --a pointer in mpz.
+ */
+extern void BLS12_EFp12_G1_SCM_2split_3NAF_shamia(EFp12 *ANS,EFp12 *P,mpz_t scalar);
+
+/**
+ * @brief Scalar multiplication a EFp12 type struct on G1 for BLS12 (GLV-2split + NAF)
+ *
+ * @param[out]ANS --a pointer of answer.
+ * @param[in]P --a pointer in EFp12.
+ * @param[in]scalar --a pointer in mpz.
+ */
+extern void BLS12_EFp12_G1_SCM_2split_3NAF_interleaving(EFp12 *ANS,EFp12 *P,mpz_t scalar);
+
+/**
+ * @brief Scalar multiplication a EFp12 type struct on G1 for BLS12 (GLV-2split + NAF)
+ *
+ * @param[out]ANS --a pointer of answer.
+ * @param[in]P --a pointer in EFp12.
+ * @param[in]scalar --a pointer in mpz.
+ */
+extern void BLS12_EFp12_G1_SCM_2split_5NAF_interleaving(EFp12 *ANS,EFp12 *P,mpz_t scalar);
+
+/**
  * @brief Scalar multiplication a EFp12 type struct on G1 for BLS12 (GLV-2split + JSF)
  *
  * @param[out]ANS --a pointer of answer.
@@ -104,6 +131,32 @@ extern void BLS12_EFp12_G1_SCM_2split_JSF_Jacobian_lazy(EFp12 *ANS,EFp12 *P,mpz_
  * @param[in]scalar --a pointer in mpz.
  */
 extern void BLS12_EFp12_G1_SCM_2split_JSF_Mixture_lazy(EFp12 *ANS,EFp12 *P,mpz_t scalar);
+
+/**
+ * @brief Scalar multiplication a EFp12 type struct on G1 for BLS12 (GLV-2split + 5NAF_interleaving + Jacobian)
+ *
+ * @param[out]ANS --a pointer of answer.
+ * @param[in]P --a pointer in EFp12.
+ * @param[in]scalar --a pointer in mpz.
+ */
+extern void BLS12_EFp12_G1_SCM_2split_5NAF_interleaving_Mixture(EFp12 *ANS,EFp12 *P,mpz_t scalar);
+/**
+ * @brief Scalar multiplication a EFp12 type struct on G1 for BLS12 (GLV-2split + 5NAF_interleaving + Jacobian + Lazy Reduction)
+ *
+ * @param[out]ANS --a pointer of answer.
+ * @param[in]P --a pointer in EFp12.
+ * @param[in]scalar --a pointer in mpz.
+ */
+extern void BLS12_EFp12_G1_SCM_2split_5NAF_interleaving_Mixture_lazy(EFp12 *ANS,EFp12 *P,mpz_t scalar);
+
+/**
+ * @brief Scalar multiplication a EFp12 type struct on G1 for BLS12 (GLV-2split + 5NAF_interleaving + Jacobian + Lazy Reduction)
+ *
+ * @param[out]ANS --a pointer of answer.
+ * @param[in]P --a pointer in EFp12.
+ * @param[in]scalar --a pointer in mpz.
+ */
+extern void BLS12_EFp12_G1_SCM_2split_7NAF_interleaving_Mixture_lazy(EFp12 *ANS,EFp12 *P,mpz_t scalar);
 
 /**
  * @brief Scalar multiplication a EFp12 type struct on G1 for BLS12 (GLV-2split + JSF + Jacobian + Lazy Reduction)

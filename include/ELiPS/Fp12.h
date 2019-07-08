@@ -20,6 +20,14 @@ extern void Fp12_init(Fp12 *A);
 extern void Fp12_printf(char *str,Fp12 *A);
 
 /**
+ * @brief Print a Fp12 type struct
+ *
+ * @param[in]str --a pointer to be printed.
+ * @param[in]A --a pointer to be printed.
+ */
+extern void Fp12_println(char *str,Fp12 *A);
+
+/**
  * @brief Set a Fp12 type struct to a Fp12 type struct
  *
  * @param[out]ANS --a pointer to be setted.
@@ -362,4 +370,5 @@ extern void Fp12_frobenius_map_p6(Fp12 *ANS,Fp12 *A);
 extern void Fp12_frobenius_map_p8(Fp12 *ANS,Fp12 *A);
 extern void Fp12_frobenius_map_p10(Fp12 *ANS,Fp12 *A);
 
+extern int Fp12_montgomery_trick(Fp12 *A_inv,Fp12 *A,int n);
 #endif

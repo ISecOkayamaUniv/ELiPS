@@ -32,6 +32,18 @@ void EFp2_printf(char *str,EFp2 *P){
         printf("0");
     }
 }
+void EFp2_println(char *str,EFp2 *P){
+    printf("%s",str);
+    if(P->infinity==0){
+        printf("(");
+        Fp2_printf("",&P->x);
+        printf(",");
+        Fp2_printf("",&P->y);
+        printf(")\n");
+    }else{
+        printf("0\n");
+    }
+}
 void EFpJ2_printf(char *str,EFpJ2 *P){
     printf("%s",str);
     if(P->infinity==0){
@@ -118,7 +130,12 @@ void EFp2_set_neg(EFp2 *ANS,EFp2 *A){
     Fp2_set_neg(&ANS->y,&A->y);
     ANS->infinity=A->infinity;
 }
-
+void EFpJ2_set_neg(EFpJ2 *ANS,EFpJ2 *A){
+    Fp2_set(&ANS->x,&A->x);
+    Fp2_set_neg(&ANS->y,&A->y);
+    Fp2_set(&ANS->z,&A->z);
+    ANS->infinity=A->infinity;
+}
 
 int  EFp2_cmp(EFp2 *A,EFp2 *B){
     if(Fp2_cmp(&A->x,&B->x)==0 && Fp2_cmp(&A->y,&B->y)==0){
@@ -907,6 +924,40 @@ void EFp2_skew_frobenius_map_p3(EFp2 *ANS,EFp2 *A){
     Fp2_mul(&ANS->y,&ANS->y,&frobenius_constant[f_p3][4]);
 }
 
+void EFpJ2_skew_frobenius_map_p1(EFpJ2 *ANS,EFpJ2 *A){
+    //x
+    Fp_set(&ANS->x.x0,&A->x.x0);
+    Fp_set_neg(&ANS->x.x1,&A->x.x1);
+    Fp2_mul(&ANS->x,&ANS->x,&frobenius_constant[f_p1][1]);
+    //y
+    Fp_set(&ANS->y.x0,&A->y.x0);
+    Fp_set_neg(&ANS->y.x1,&A->y.x1);
+    Fp2_mul(&ANS->y,&ANS->y,&frobenius_constant[f_p1][4]);
+    //z
+    Fp2_set(&ANS->z,&A->z);
+}
+
+void EFpJ2_skew_frobenius_map_p2(EFpJ2 *ANS,EFpJ2 *A){
+    //x
+    Fp2_mul(&ANS->x,&A->x,&frobenius_constant[f_p2][1]);
+    //y
+    Fp2_mul(&ANS->y,&A->y,&frobenius_constant[f_p2][4]);
+    //z
+    Fp2_set(&ANS->z,&A->z);
+}
+
+void EFpJ2_skew_frobenius_map_p3(EFpJ2 *ANS,EFpJ2 *A){
+    //x
+    Fp_set(&ANS->x.x0,&A->x.x0);
+    Fp_set_neg(&ANS->x.x1,&A->x.x1);
+    Fp2_mul(&ANS->x,&ANS->x,&frobenius_constant[f_p3][1]);
+    //y
+    Fp_set(&ANS->y.x0,&A->y.x0);
+    Fp_set_neg(&ANS->y.x1,&A->y.x1);
+    Fp2_mul(&ANS->y,&ANS->y,&frobenius_constant[f_p3][4]);
+    //z
+    Fp2_set(&ANS->z,&A->z);
+}
 void EFp2_skew_frobenius_map_p10(EFp2 *ANS,EFp2 *A){
     //x
     Fp2_mul(&ANS->x,&A->x,&frobenius_constant[f_p10][1]);

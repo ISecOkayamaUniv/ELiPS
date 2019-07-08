@@ -267,7 +267,7 @@ void BLS12_set_montgomery(){
     mpn_invert(Ri,R,prime);
 
     mpn_mul_n(buf,R,R,FPLIMB);
-    Lazy_mod(RR,buf,FPLIMB2);
+    mpn_mod(RR,buf,FPLIMB2);
 
     mpn_invert(tmp,prime,R);
     mpn_sub_n(Ni,R,tmp,FPLIMB);

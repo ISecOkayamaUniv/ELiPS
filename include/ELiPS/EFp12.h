@@ -19,6 +19,14 @@ extern void EFp12_init(EFp12 *P);
 extern void EFp12_printf(char *str,EFp12 *P);
 
 /**
+ * @brief Print a EFp12 type struct
+ *
+ * @param[in]str --a pointer to be printed.
+ * @param[in]P --a pointer to be printed.
+ */
+extern void EFp12_println(char *str,EFp12 *P);
+
+/**
  * @brief Set a EFp12 type struct to a EFp12 type struct
  *
  * @param[out]ANS --a pointer to be setted.

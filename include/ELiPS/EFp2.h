@@ -33,6 +33,14 @@ extern void EFpJT2_init(EFpJT2 *P);
 extern void EFp2_printf(char *str,EFp2 *P);
 
 /**
+ * @brief Print a EFp2 type struct
+ *
+ * @param[in]str --a pointer to be printed.
+ * @param[in]P --a pointer to be printed.
+ */
+extern void EFp2_println(char *str,EFp2 *P);
+
+/**
  * @brief Print a EFpJ2 type struct
  *
  * @param[in]str --a pointer to be printed.
@@ -120,6 +128,14 @@ extern void EFp2_set_mpn(EFp2 *ANS,mp_limb_t *A);
  * @param[in]A --a pointer to be negated.
  */
 extern void EFp2_set_neg(EFp2 *ANS,EFp2 *A);
+
+/**
+ * @brief Negate EFp2 type struct on prime field
+ *
+ * @param[out]ANS --a pointer of answer.
+ * @param[in]A --a pointer to be negated.
+ */
+extern void EFpJ2_set_neg(EFpJ2 *ANS,EFpJ2 *A);
 
 /**
  * @brief Compare EFp2 type construct and EFp2 type construct
@@ -285,6 +301,9 @@ extern void EFp2_SCM_Jacobian_lazy(EFp2 *ANS,EFp2 *P,mpz_t scalar);
 extern void EFp2_skew_frobenius_map_p1(EFp2 *ANS,EFp2 *A);
 extern void EFp2_skew_frobenius_map_p2(EFp2 *ANS,EFp2 *A);
 extern void EFp2_skew_frobenius_map_p3(EFp2 *ANS,EFp2 *A);
+extern void EFpJ2_skew_frobenius_map_p1(EFpJ2 *ANS,EFpJ2 *A);
+extern void EFpJ2_skew_frobenius_map_p2(EFpJ2 *ANS,EFpJ2 *A);
+extern void EFpJ2_skew_frobenius_map_p3(EFpJ2 *ANS,EFpJ2 *A);
 extern void EFp2_skew_frobenius_map_p10(EFp2 *ANS,EFp2 *A);
 
 #endif

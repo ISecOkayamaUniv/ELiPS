@@ -18,7 +18,18 @@ void EFp6_printf(char *str,EFp6 *P){
         printf("0");
     }
 }
-
+void EFp6_println(char *str,EFp6 *P){
+    printf("%s",str);
+    if(P->infinity==0){
+        printf("(");
+        Fp6_printf("",&P->x);
+        printf(",");
+        Fp6_printf("",&P->y);
+        printf(")\n");
+    }else{
+        printf("0\n");
+    }
+}
 void EFp6_set(EFp6 *ANS,EFp6 *A){
     Fp6_set(&ANS->x,&A->x);
     Fp6_set(&ANS->y,&A->y);

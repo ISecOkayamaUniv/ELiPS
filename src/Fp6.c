@@ -16,6 +16,16 @@ void Fp6_printf(char *str,Fp6 *A){
     gmp_printf(")");
 }
 
+void Fp6_println(char *str,Fp6 *A){
+    gmp_printf("%s(",str);
+    Fp2_printf("",&A->x0);
+    gmp_printf(",");
+    Fp2_printf("",&A->x1);
+    gmp_printf(",");
+    Fp2_printf("",&A->x2);
+    gmp_printf(")\n");
+}
+
 void Fp6_set(Fp6 *ANS,Fp6 *A){
     Fp2_set(&ANS->x0,&A->x0);
     Fp2_set(&ANS->x1,&A->x1);
@@ -192,8 +202,8 @@ void Fp6_mul_basis_lazy(Fp6 *ANS,Fp6 *A){
     mpn_copyd(tmp1,A->x2.x0.x0,FPLIMB);
     mpn_copyd(tmp2,A->x2.x1.x0,FPLIMB);
 	
-    Lazy_sub(ANS->x0.x0.x0,FPLIMB,tmp1,FPLIMB,tmp2,FPLIMB);
-    Lazy_add(ANS->x0.x1.x0,FPLIMB,tmp1,FPLIMB,tmp2,FPLIMB);
+    Fp_sub_lazy(ANS->x0.x0.x0,FPLIMB,tmp1,FPLIMB,tmp2,FPLIMB);
+    Fp_add_lazy(ANS->x0.x1.x0,FPLIMB,tmp1,FPLIMB,tmp2,FPLIMB);
 
     Fp_set(&ANS->x1.x0,&tmp1_Fp2.x0);
     Fp_set(&ANS->x1.x1,&tmp1_Fp2.x1);

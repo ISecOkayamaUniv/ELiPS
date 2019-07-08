@@ -101,6 +101,29 @@ typedef struct{
 typedef struct{
 	Fp x,y,z;
 	int infinity;
+}EFpP;
+
+typedef struct{
+	Fp2 x,y,z;
+	int infinity;
+}EFpP2;
+
+typedef struct{
+	Fp6 x,y,z;
+	int infinity;
+}EFpP6;
+
+typedef struct{
+	Fp12 x,y,z;
+	int infinity;
+}EFpP12;
+
+/*============================================================================*/
+/* Jacobian Elliptic Curve                                                   */
+/*============================================================================*/
+typedef struct{
+	Fp x,y,z;
+	int infinity;
 }EFpJ;
 
 typedef struct{

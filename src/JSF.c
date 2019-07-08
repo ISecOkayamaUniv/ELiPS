@@ -86,46 +86,95 @@ void w_naf(int **binary,mpz_t scalar,int w){
 	mpz_clear(k[1]);	
 }
 */
-void w_naf(int *dw,mpz_t d,int w){
+int w_naf(int *dw,mpz_t d,int w){
 	int i=0;
-
-	if(w==2){
 	//set
+	mpz_t dw_t,buf,n;
 	mp_limb_t tmp_d[FPLIMB];
+    mpz_init(dw_t);
+    mpz_init(buf);
+    mpz_init(n);
+	if(w==2){
 	//mpn_set_mpz(tmp_d,d);
 	while(mpz_cmp_ui(d,0)>0){
 	mpn_set_mpz(tmp_d,d);
 		if(mpz_odd_p(d)!=0){
 			dw[i]=tmp_d[0]&0x3;
-    	//printf("[%d]\n",dw[i]);
 			if(dw[i]>2)dw[i]=dw[i]-4;
 			if(dw[i]>=0)		mpz_sub_ui(d,d,dw[i]);
 			else		mpz_add_ui(d,d,-dw[i]);
 		}else dw[i]=0;
 		mpz_tdiv_q_2exp(d,d,1);
+		i++;
+	}
+	}
+	if(w==3){
+	while(mpz_cmp_ui(d,0)>0){
+		if(mpz_odd_p(d)!=0){
+			mpz_mod_ui(dw_t,d,8);
+			
+			if(mpz_cmp_ui(dw_t,4)<=0)	{
+				dw[i]=mpz_get_ui(dw_t);
+				mpz_sub_ui(d,d,dw[i]);
+			}
+			else if(mpz_cmp_ui(dw_t,5)==0) {
+				dw[i]=-3;
+				mpz_add_ui(d,d,3);
+			}else if(mpz_cmp_ui(dw_t,7)==0){
+				dw[i]=-1;
+				mpz_add_ui(d,d,1);
+			}
+		}else dw[i]=0;
+		mpz_tdiv_q_2exp(d,d,1);
 		
-    	//printf("[%d]\n",dw[i]);
 		i++;
 	}
 	}
 	
-	if(w==3){
-	//set
-	mp_limb_t tmp_d[FPLIMB];
-	//mpn_set_mpz(tmp_d,d);
+	if(w==5){
+	mpz_set_ui(n,32);
 	while(mpz_cmp_ui(d,0)>0){
-	mpn_set_mpz(tmp_d,d);
 		if(mpz_odd_p(d)!=0){
-			dw[i]=tmp_d[0]&0x7;
-    	//printf("[%d]\n",dw[i]);
-			if(dw[i]>4)dw[i]=dw[i]-8;
-			if(dw[i]>=0)		mpz_sub_ui(d,d,dw[i]);
-			else		mpz_add_ui(d,d,-dw[i]);
+			mpz_mod(dw_t,d,n);
+			if(mpz_cmp_ui(dw_t,16)<=0)	{
+				dw[i]=mpz_get_ui(dw_t);
+				mpz_sub_ui(d,d,dw[i]);
+			}
+			else if(mpz_cmp_ui(d,0)>0) {
+				mpz_sub(buf,n,dw_t);
+				dw[i]=-mpz_get_ui(buf);
+				mpz_add(d,d,buf);
+			}
 		}else dw[i]=0;
 		mpz_tdiv_q_2exp(d,d,1);
 		
-    	//printf("[%d]\n",dw[i]);
 		i++;
 	}
 	}
+
+	if(w==7){
+	mpz_set_ui(n,128);
+	while(mpz_cmp_ui(d,0)>0){
+		if(mpz_odd_p(d)!=0){
+			mpz_mod(dw_t,d,n);
+			if(mpz_cmp_ui(dw_t,64)<=0)	{
+				dw[i]=mpz_get_ui(dw_t);
+				mpz_sub_ui(d,d,dw[i]);
+			}
+			else if(mpz_cmp_ui(d,0)>0) {
+				mpz_sub(buf,n,dw_t);
+				dw[i]=-mpz_get_ui(buf);
+				mpz_add(d,d,buf);
+			}
+		}else dw[i]=0;
+		mpz_tdiv_q_2exp(d,d,1);
+		
+		i++;
+	}
+	}
+
+    mpz_clear(dw_t);
+    mpz_clear(buf);
+    mpz_clear(n);
+	return i-1;
 }

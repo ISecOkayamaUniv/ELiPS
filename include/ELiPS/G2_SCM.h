@@ -104,4 +104,8 @@ extern void BLS12_EFp12_G2_SCM_4split_Jacobian_table(EFp12 *ANS,EFp12 *Q,mpz_t s
  * @param[in]scalar --a pointer in mpz.
  */
 extern void BLS12_EFp12_G2_SCM_4split_Mixture_lazy(EFp12 *ANS,EFp12 *Q,mpz_t scalar);
+
+
+extern void BLS12_EFp12_G2_SCM_4split_3NAF_interleaving_Mixture_lazy(EFp12 *ANS,EFp12 *Q,mpz_t scalar);
+extern void BLS12_EFp12_G2_SCM_4split_5NAF_interleaving_Mixture_lazy(EFp12 *ANS,EFp12 *Q,mpz_t scalar);
 #endif

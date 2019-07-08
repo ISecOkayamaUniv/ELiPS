@@ -19,6 +19,14 @@ extern void Fp2_init(Fp2 *A);
 extern void Fp2_printf(char *str,Fp2 *A);
 
 /**
+ * @brief Print a Fp2 type struct
+ *
+ * @param[in]str --a pointer to be printed.
+ * @param[in]A --a pointer to be printed.
+ */
+extern void Fp2_println(char *str,Fp2 *A);
+
+/**
  * @brief Set a Fp2 type struct to a Fp2 type struct
  *
  * @param[out]ANS --a pointer to be setted.
@@ -383,4 +391,5 @@ extern int  Fp2_cmp_zero(Fp2 *A);
  */
 extern int  Fp2_cmp_one(Fp2 *A);
 
+extern int Fp2_montgomery_trick(Fp2 *A_inv,Fp2 *A,int n);
 #endif

@@ -42,21 +42,11 @@ extern void mpn_set_mpz(mp_limb_t *ans,mpz_t a);
 /**
  * @brief Modulo a mpn type struct on prime field
  *
- * @param[out]ans --a pointer of answer in Fp.
+ * @param[out]ans --a pointer of answer in mp_limb_t.
  * @param[in]a --a pointer to be mod.
- * @param[in]a_size --a size of a.
+ * @param[in]size_a --a size of a.
  */
-extern void mpn_mod(Fp *ans,mp_limb_t *a,mp_size_t size_a);
-
-/**
- * @brief Modulo a mpn type struct
- *
- * @param[out]ans --a pointer of answer in Fp.
- * @param[in]a --a pointer to be mod.
- * @param[in]a_size --a size of a.
- * @param[in]ui --a unsigned long int to mod.
- */
-extern void mpn_mod_ui(Fp *ans,mp_limb_t *a,mp_size_t size_a,unsigned long int UI);
+extern void mpn_mod(mp_limb_t *ans,mp_limb_t *a,mp_size_t size_a);
 
 /**
  * @brief Compare mpn type construct and char

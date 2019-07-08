@@ -58,17 +58,10 @@ void mpn_set_mpz(mp_limb_t *ans,mpz_t a){
 	
 	free(str);
 }
-void mpn_mod(Fp *ans,mp_limb_t *a,mp_size_t size_a){
-	mp_limb_t dumy[size_a];
-	//mpn_init(dumy,size_a);
-	mpn_tdiv_qr(dumy,ans->x0,0,a,size_a,prime,FPLIMB);
-}
 
-void mpn_mod_ui(Fp *ans,mp_limb_t *a,mp_size_t size_a,unsigned long int UI){
-	mp_limb_t dumy[size_a];
-
-	mpn_set_ui(buf,FPLIMB,UI);
-	mpn_tdiv_qr(dumy,ans->x0,0,a,size_a,buf,1);
+void mpn_mod(mp_limb_t *ans,mp_limb_t *a,mp_size_t size_a){
+    mp_limb_t dumy[size_a];
+    mpn_tdiv_qr(dumy,ans,0,a,size_a,prime,FPLIMB);
 }
 
 int mpn_cmp_char(mp_limb_t *a,char *str){
@@ -275,7 +268,6 @@ void mpn_tdiv_q_ui(mp_limb_t *ans,mp_limb_t *a,mp_size_t size_a,unsigned long in
 	mpn_tdiv_qr(ans,dumy,0,a,size_a,buf,1);
 }
 void mpn_invert(mp_limb_t *ANS,mp_limb_t *A,mp_limb_t *p){
-    Fp ANS_tmp;
     mp_limb_t prime_tmp[FPLIMB],gp[FPLIMB],sp[FPLIMB],tmp[FPLIMB];
     mp_size_t buf_size;
 	
@@ -295,6 +287,5 @@ void mpn_invert(mp_limb_t *ANS,mp_limb_t *A,mp_limb_t *p){
 	mpn_copyd(tmp,sp,FPLIMB);
     }
     
-    mpn_mod(&ANS_tmp,tmp,FPLIMB);
-    mpn_copyd(ANS,ANS_tmp.x0,FPLIMB);
+    mpn_mod(ANS,tmp,FPLIMB);
 }
