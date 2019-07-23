@@ -2,7 +2,6 @@
 #define EFP_H
 
 #include <ELiPS/Fp12.h>
-
 /**
  * @brief Initializes a EFp type struct
  *

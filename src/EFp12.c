@@ -68,9 +68,9 @@ void EFp12_rational_point(EFp12 *P){
     Fp12_init(&tmp1);
     Fp12_init(&tmp2);
 
-    gmp_randinit_default (state);
-    gmp_randseed_ui(state,(unsigned long)time(NULL));
-    gmp_randseed_ui(state,1);
+    //gmp_randinit_default (state);
+    //gmp_randseed_ui(state,(unsigned long)time(NULL));
+    //gmp_randseed_ui(state,1);
     
     while(1){
         Fp12_set_random(&P->x,state);

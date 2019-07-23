@@ -212,8 +212,8 @@ void EFp_rational_point(EFp *P){
     Fp_init(&tmp1);
     Fp_init(&tmp2);
     Fp_init(&tmp_x);
-    gmp_randinit_default (state);
-    gmp_randseed_ui(state,(unsigned long)time(NULL));
+    //gmp_randinit_default (state);
+    //gmp_randseed_ui(state,(unsigned long)time(NULL));
 	
     while(1){
         Fp_set_random(&P->x,state);
@@ -796,7 +796,7 @@ void EFp_ECA_Jacobian_lazy(EFpJ *ANS,EFpJ *P1,EFpJ *P2){
     static EFpJ Pt1,Pt2;
     static mp_limb_t U1[FPLIMB],U2[FPLIMB],S1[FPLIMB],S2[FPLIMB],H[FPLIMB],r[FPLIMB];
 
-    static mp_limb_t bufL[FPLIMB2],tmpL1[FPLIMB2];
+    static mp_limb_t bufL[FPLIMB2],tmpL1[FPLIMB2],tmpL2[FPLIMB2];
     static mp_limb_t buf[FPLIMB],tmp1[FPLIMB];
     static mp_limb_t tmpZ1[FPLIMB],tmpZ2[FPLIMB],tmpH2[FPLIMB],tmpH3[FPLIMB],tmpU1H2[FPLIMB];
     Fp out;
@@ -820,15 +820,15 @@ void EFp_ECA_Jacobian_lazy(EFpJ *ANS,EFpJ *P1,EFpJ *P2){
     EFpJ_set(&Pt2,P2);
 
     //U1
-    //Fp_sqr_lazy(bufL,Pt2.z.x0);
-    Fp_mul_lazy(bufL,Pt2.z.x0,Pt2.z.x0);
+    Fp_sqr_lazy(bufL,Pt2.z.x0);
+    //Fp_mul_lazy(bufL,Pt2.z.x0,Pt2.z.x0);
     mpn_mod(tmpZ2,bufL,FPLIMB2);
     Fp_mul_lazy(tmpL1,tmpZ2,Pt1.x.x0);
     mpn_mod(U1,tmpL1,FPLIMB2);
 
     //U2
-    //Fp_sqr_lazy(bufL,Pt1.z.x0);
-    Fp_mul_lazy(bufL,Pt1.z.x0,Pt1.z.x0);
+    Fp_sqr_lazy(bufL,Pt1.z.x0);
+    //Fp_mul_lazy(bufL,Pt1.z.x0,Pt1.z.x0);
     mpn_mod(tmpZ1,bufL,FPLIMB2);
     Fp_mul_lazy(tmpL1,tmpZ1,Pt2.x.x0);
     mpn_mod(U2,tmpL1,FPLIMB2);
@@ -857,15 +857,15 @@ void EFp_ECA_Jacobian_lazy(EFpJ *ANS,EFpJ *P1,EFpJ *P2){
     //gmp_printf("r=%Nu\n",r,FPLIMB);
 
     //ANS->x
-    //Fp_sqr_lazy(bufL,r);
-    Fp_mul_lazy(bufL,r,r);
+    Fp_sqr_lazy(tmpL2,r);
+    //Fp_mul_lazy(tmpL2,r,r);
 
-    //Fp_sqr_lazy(tmpL1,H);
-    Fp_mul_lazy(tmpL1,H,H);
+    Fp_sqr_lazy(tmpL1,H);
+    //Fp_mul_lazy(tmpL1,H,H);
     mpn_mod(tmpH2,tmpL1,FPLIMB2);
     Fp_mul_lazy(tmpL1,tmpH2,H);
     mpn_mod(tmpH3,tmpL1,FPLIMB2);
-    Fp_sub_lazy(bufL,FPLIMB2,bufL,FPLIMB2,tmpL1,FPLIMB2);
+    Fp_sub_lazy(bufL,FPLIMB2,tmpL2,FPLIMB2,tmpL1,FPLIMB2);
 
     Fp_mul_lazy(tmpL1,tmpH2,U1);
     mpn_mod(tmpU1H2,tmpL1,FPLIMB2);
@@ -885,6 +885,7 @@ void EFp_ECA_Jacobian_lazy(EFpJ *ANS,EFpJ *P1,EFpJ *P2){
     Fp_mul_lazy(bufL,tmp1,H);
     Fp_mod(&ANS->z,bufL,FPLIMB2);
 }
+
 void EFp_ECA_Mixture_lazy(EFpJ *ANS,EFpJ *P1,EFpJ *P2){
     static EFpJ Pt1,Pt2;
     static mp_limb_t Z1Z1[FPLIMB],HH[FPLIMB],I[FPLIMB],J[FPLIMB],V[FPLIMB];

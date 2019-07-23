@@ -180,6 +180,14 @@ extern void Fp_mul_mpn(Fp *ANS,Fp *A,mp_limb_t *B);
 /**
  * @brief Squraring a mpn type struct and a mpn type struct on prime field
  *
+ * @param[out]ANS --a pointer of answer in Fp.
+ * @param[in]A --a pointer in Fp.
+ */
+extern void Fp_sqr(Fp *ANS,Fp *A);
+
+/**
+ * @brief Squraring a mpn type struct and a mpn type struct on prime field
+ *
  * @param[out]ANS --a pointer of answer in mpn.
  * @param[in]A --a pointer in mpn.
  */

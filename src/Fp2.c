@@ -241,7 +241,7 @@ void Fp2_inv(Fp2 *ANS,Fp2 *A){
     Fp_set(&tmp1_Fp,&A->x0);
     Fp_set_neg(&tmp2_Fp,&A->x1);
     
-    Fp_mul(&tmp3_Fp,&tmp1_Fp,&A->x0);
+    Fp_sqr(&tmp3_Fp,&tmp1_Fp);
     Fp_mul(&tmp4_Fp,&tmp2_Fp,&A->x1);
     Fp_sub(&tmp3_Fp,&tmp3_Fp,&tmp4_Fp);
     Fp_inv(&tmp3_Fp,&tmp3_Fp);
@@ -255,7 +255,7 @@ void Fp2_inv_lazy(Fp2 *ANS,Fp2 *A){
     Fp_set(&tmp1_Fp,&A->x0);
     Fp_set_neg(&tmp2_Fp,&A->x1);
     
-    Fp_mul_lazy(tmp1,tmp1_Fp.x0,A->x0.x0);
+    Fp_sqr_lazy(tmp1,tmp1_Fp.x0);
     Fp_mul_lazy(tmp2,tmp2_Fp.x0,A->x1.x0);
     Fp_sub_lazy_mod(&tmp3,tmp1,tmp2);
     Fp_inv(&tmp3,&tmp3);

@@ -148,6 +148,7 @@ void Fp_mul_lazy(mp_limb_t *ANS,mp_limb_t *A,mp_limb_t *B){
         mpn_mul_n(ANS,A,B,FPLIMB);
     }
 }
+
 void Fp_mul_montgomery(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size){
     static mp_limb_t tmp_mul[FPLIMB2];
     if(mpn_zero_p(A,A_size)==1){
@@ -190,11 +191,22 @@ void Fp_mul_mpn(Fp *ANS,Fp *A,mp_limb_t *B){
         Fp_mod(ANS,tmp_mul,FPLIMB2);
     }
 }
+void Fp_sqr(Fp *ANS,Fp *A){
+    static mp_limb_t tmp_sqr[FPLIMB2];
+    if(mpn_zero_p(A->x0,FPLIMB)==1){
+	mpn_set_ui(ANS->x0,FPLIMB,0);
+    }else if(mpn_cmp_ui(A->x0,FPLIMB,1)==0){
+	mpn_set_ui(ANS->x0,FPLIMB,1);
+    }else{
+        mpn_sqr(tmp_sqr,A->x0,FPLIMB);
+        Fp_mod(ANS,tmp_sqr,FPLIMB2);
+    }
+}
 void Fp_sqr_lazy(mp_limb_t *ANS,mp_limb_t *A){
     if(mpn_zero_p(A,FPLIMB)==1){
-	mpn_set_ui(ANS,FPLIMB2,1);
-    }else if(mpn_cmp_ui(A,FPLIMB,0)==0){
 	mpn_set_ui(ANS,FPLIMB2,0);
+    }else if(mpn_cmp_ui(A,FPLIMB,1)==0){
+	mpn_set_ui(ANS,FPLIMB2,1);
     }else{
         mpn_sqr(ANS,A,FPLIMB);
     }
@@ -272,13 +284,14 @@ void Fp_sub(Fp *ANS,Fp *A,Fp *B){
 	Fp_set(ANS,A);
     }else{
         if(mpn_cmp(A->x0,B->x0,FPLIMB)<0){
-    	    mpn_sub_n(buf,B->x0,A->x0,FPLIMB);
-    	    mpn_sub_n(ANS->x0,prime,buf,FPLIMB);
+    	    mpn_sub_n(buf,A->x0,B->x0,FPLIMB);
+    	    mpn_add_n(ANS->x0,prime,buf,FPLIMB);
         }else{
 	    mpn_sub_n(ANS->x0,A->x0,B->x0,FPLIMB);
 	}
     }
 }
+/*
 void Fp_sub_lazy(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size,mp_limb_t *B,mp_size_t B_size){
     static mp_limb_t buf[FPLIMB],bufL[FPLIMB2];
     //assert(A_size>=B_size);
@@ -315,6 +328,67 @@ void Fp_sub_lazy(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size
 		mpn_sub_n(ANS,A,B,ANS_size);
 	    }
 	}
+    }
+}
+*/
+void Fp_sub_lazy(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size,mp_limb_t *B,mp_size_t B_size){
+    static mp_limb_t buf[FPLIMB],bufL[FPLIMB2];
+    //assert(A_size>=B_size);
+    //Only:A_size>=B_size
+    
+    if(mpn_zero_p(B,B_size)==1){
+		//mpn_zero(ANS,ANS_size);
+		mpn_copyd(ANS,A,A_size);
+    }else if(mpn_zero_p(A,A_size)==1){
+	    mpn_zero(ANS,ANS_size);
+	    mpn_mod(buf,B,B_size);
+    	mpn_sub_n(ANS,prime,buf,FPLIMB);
+    }else{
+		if(A_size==FPLIMB2 && B_size==FPLIMB){
+	    	if(mpn_chk_limb(A,FPLIMB,FPLIMB2)==0){
+	    	    mpn_sub(ANS,A,A_size,B,B_size);
+        	}else{
+				if(mpn_cmp(A,B,FPLIMB)<0){
+			    	mpn_sub_n(ANS,A,B,FPLIMB);
+    				while(mpn_cmp(ANS,prime,FPLIMB)>=0)mpn_add_n(ANS,ANS,prime,FPLIMB);
+    				
+    				//TODO:If there bug, shoud use this.
+			    	//mpn_sub_n(ANS,B,A,FPLIMB);
+    				//while(mpn_cmp(ANS,prime,FPLIMB)>=0)mpn_sub_n(ANS,ANS,prime,FPLIMB);
+    				//mpn_sub_n(ANS,prime,ANS,FPLIMB);
+        		}else{
+        			//TODO:bug
+			    	mpn_zero(ANS,ANS_size);
+			    	mpn_sub_n(ANS,A,B,FPLIMB);
+	    	    }
+	    	}
+		}else if(A_size==FPLIMB2 && B_size==FPLIMB2){
+		    if(mpn_cmp(A,B,ANS_size)<0){
+    			mpn_sub_n(ANS,A,B,ANS_size);
+				mpn_add_n(ANS + FPLIMB, ANS + FPLIMB,prime, FPLIMB);
+    	    }else{
+				mpn_sub_n(ANS,A,B,ANS_size);
+		    }
+		}else if(A_size==FPLIMB && B_size==FPLIMB){
+			if(ANS_size==FPLIMB2){
+				printf("error:limb size");
+				exit(1);
+			}
+		    if(mpn_cmp(A,B,FPLIMB)<0){
+    			mpn_sub_n(ANS,A,B,FPLIMB);
+    			while(mpn_cmp(ANS,prime,FPLIMB)>=0)mpn_add_n(ANS,ANS,prime,FPLIMB);
+    			
+    			//TODO:If there bug, shoud use this.
+    			//mpn_sub_n(ANS,B,A,FPLIMB);
+    			//while(mpn_cmp(ANS,prime,FPLIMB)>=0)mpn_sub_n(ANS,ANS,prime,FPLIMB);
+    			//mpn_sub_n(ANS,prime,ANS,FPLIMB);
+    	    }else{
+				mpn_sub_n(ANS,A,B,ANS_size);
+		    }
+		}else{
+			printf("error:limb size");
+			exit(1);
+		}
     }
 }
 void Fp_sub_lazy_mod(Fp *ANS,mp_limb_t *A,mp_limb_t *B){
@@ -448,13 +522,13 @@ void Fp_sqrt(Fp *ANS,Fp *A){
     mpz_init(q);
     mpz_init(z);
     mpz_init(result);
-    gmp_randstate_t state;
-    gmp_randinit_default (state);
-    gmp_randseed_ui(state,(unsigned long)time(NULL));
-    Fp_set_random(&n,state);
+    gmp_randstate_t state1;
+    gmp_randinit_default (state1);
+    gmp_randseed_ui(state1,(unsigned long)time(NULL));
+    Fp_set_random(&n,state1);
     
     while(Fp_legendre(&n)!=-1){
-        Fp_set_random(&n,state);
+        Fp_set_random(&n,state1);
     }
     mpz_sub_ui(q,prime_z,1);
     mpz_mod_ui(result,q,2);

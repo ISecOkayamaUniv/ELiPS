@@ -83,6 +83,7 @@ for(i=0;i<fp;i++){
 }
     printf("Fp add.      : %.6f[ms]\n",add_time/fp);
     printf("Fp add lazy. : %.6f[ms]\n",add_lazy_time/fp);
+    
 printf("------------------------------------------------------------------------------------\n");
     printf("Fp_mul test\n");
 mul_time=0,mul_lazy_time=0;
@@ -112,6 +113,35 @@ for(i=0;i<fp;i++){
 }
     printf("Fp mul.      : %.6f[ms]\n",mul_time/fp);
     printf("Fp mul lazy. : %.6f[ms]\n",mul_lazy_time/fp);
+    
+    printf("------------------------------------------------------------------------------------\n");
+    printf("Fp_sqr test\n");
+sqr_time=0,sqr_lazy_time=0;
+n=1000;
+for(i=0;i<fp;i++){
+    Fp_set_random(&A_Fp,state);
+
+    gettimeofday(&tv_A,NULL);
+    for(j=0;j<n;j++)Fp_sqr(&test1_Fp,&A_Fp);
+    gettimeofday(&tv_B,NULL);
+    sqr_time+=timedifference_msec(tv_A,tv_B)/n;
+
+    gettimeofday(&tv_A,NULL);
+    for(j=0;j<n;j++)Fp_sqr_lazy(test2_mpn,A_Fp.x0);
+    gettimeofday(&tv_B,NULL);
+    sqr_lazy_time+=timedifference_msec(tv_A,tv_B)/n;
+    Fp_mod(&test2_Fp,test2_mpn,FPLIMB2);
+
+    if(Fp_cmp(&test1_Fp,&test2_Fp)!=0){
+        printf("failed!\n\n");
+    	Fp_printf("",&test1_Fp);
+	    Fp_printf("\n",&test2_Fp);
+	    printf("\n\n");
+	    return 1;
+    }
+}
+    printf("Fp sqr.      : %.6f[ms]\n",sqr_time/fp);
+    printf("Fp sqr lazy. : %.6f[ms]\n",sqr_lazy_time/fp);
     
     printf("------------------------------------------------------------------------------------\n");
     printf("Fp_inv test\n");
@@ -696,11 +726,11 @@ for(i=0;i<ecd;i++){
 	    return 1;
     }
 }
-    printf("EFp ECD.                 : %.4f[ms]\n",ecd_time/ecd);
-    printf("EFp ECD lazy.            : %.4f[ms]\n",ecd_lazy_time/ecd);
-    printf("EFp ECD Projective lazy. : %.4f[ms]\n",ecd_Projective_lazy_time/ecd);
-    printf("EFp ECD Jacobian.        : %.4f[ms]\n",ecd_Jacobian_time/ecd);
-    printf("EFp ECD Jacobian lazy.   : %.4f[ms]\n",ecd_Jacobian_lazy_time/ecd);
+    printf("EFp ECD.                 : %.6f[ms]\n",ecd_time/ecd);
+    printf("EFp ECD lazy.            : %.6f[ms]\n",ecd_lazy_time/ecd);
+    printf("EFp ECD Projective lazy. : %.6f[ms]\n",ecd_Projective_lazy_time/ecd);
+    printf("EFp ECD Jacobian.        : %.6f[ms]\n",ecd_Jacobian_time/ecd);
+    printf("EFp ECD Jacobian lazy.   : %.6f[ms]\n",ecd_Jacobian_lazy_time/ecd);
 
 
 printf("------------------------------------------------------------------------------------\n");
@@ -779,13 +809,13 @@ for(i=0;i<eca;i++){
 	    return 1;
     }
 }
-    printf("EFp ECA.                 : %.4f[ms]\n",eca_time/eca);
-    printf("EFp ECA lazy.            : %.4f[ms]\n",eca_lazy_time/eca);
-    printf("EFp ECA Projective lazy. : %.4f[ms]\n",eca_Projective_lazy_time/eca);
-    printf("EFp ECA Jacobian.        : %.4f[ms]\n",eca_Jacobian_time/eca);
-    printf("EFp ECA Jacobian lazy.   : %.4f[ms]\n",eca_Jacobian_lazy_time/eca);
-    printf("EFp ECA Mixture.         : %.4f[ms]\n",eca_Mixture_time/eca);
-    printf("EFp ECA Mixture lazy.    : %.4f[ms]\n",eca_Mixture_lazy_time/eca);
+    printf("EFp ECA.                 : %.6f[ms]\n",eca_time/eca);
+    printf("EFp ECA lazy.            : %.6f[ms]\n",eca_lazy_time/eca);
+    printf("EFp ECA Projective lazy. : %.6f[ms]\n",eca_Projective_lazy_time/eca);
+    printf("EFp ECA Jacobian.        : %.6f[ms]\n",eca_Jacobian_time/eca);
+    printf("EFp ECA Jacobian lazy.   : %.6f[ms]\n",eca_Jacobian_lazy_time/eca);
+    printf("EFp ECA Mixture.         : %.6f[ms]\n",eca_Mixture_time/eca);
+    printf("EFp ECA Mixture lazy.    : %.6f[ms]\n",eca_Mixture_lazy_time/eca);
 
 printf("------------------------------------------------------------------------------------\n");
     printf("EFp_SCM test\n");
@@ -825,10 +855,10 @@ for(i=0;i<scm;i++){
     }
 }
 
-    printf("EFp SCM.               : %.4f[ms]\n",scm_time/scm);
-    printf("EFp SCM lazy.          : %.4f[ms]\n",scm_lazy_time/scm);
-    printf("EFp SCM Jacobian.      : %.4f[ms]\n",scm_Jacobian_time/scm);
-    printf("EFp SCM Jacobian Lazy. : %.4f[ms]\n",scm_Jacobian_lazy_time/scm);
+    printf("EFp SCM.               : %.6f[ms]\n",scm_time/scm);
+    printf("EFp SCM lazy.          : %.6f[ms]\n",scm_lazy_time/scm);
+    printf("EFp SCM Jacobian.      : %.6f[ms]\n",scm_Jacobian_time/scm);
+    printf("EFp SCM Jacobian Lazy. : %.6f[ms]\n",scm_Jacobian_lazy_time/scm);
 
     return 0;
 }
