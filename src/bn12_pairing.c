@@ -18,7 +18,7 @@ void BN12_Opt_ate_pairing(Fp12 *ANS,EFp12 *P,EFp12 *Q){
     gettimeofday(&tv_start,NULL);
     BN12_Miller_algo_for_opt_ate(ANS,P,Q);
     gettimeofday(&tv_end,NULL);
-    MILLER_OPTATE=timedifference_msec(tv_start,tv_end);
+    MILLER_OPT=timedifference_msec(tv_start,tv_end);
     
     //Final Exp.
     BN12_Final_exp_optimal(ANS,ANS);
@@ -30,7 +30,7 @@ void BN12_Opt_ate_pairing_lazy(Fp12 *ANS,EFp12 *P,EFp12 *Q){
     gettimeofday(&tv_start,NULL);
     BN12_Miller_algo_for_opt_ate_lazy(ANS,P,Q);
     gettimeofday(&tv_end,NULL);
-    MILLER_OPTATE=timedifference_msec(tv_start,tv_end);
+    MILLER_OPT=timedifference_msec(tv_start,tv_end);
     
     //Final Exp.
     BN12_Final_exp_optimal_lazy(ANS,ANS);

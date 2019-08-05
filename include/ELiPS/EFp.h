@@ -132,6 +132,7 @@ extern void EFp_to_EFpP(EFpP *ANS,EFp *A);
  */
 extern void EFp_to_EFpJ(EFpJ *ANS,EFp *A);
 
+extern void EFp_to_EFpJ_montgomery(EFpJ *ANS,EFp *A);
 /**
  * @brief Set Jacobian to Affine
  *
@@ -148,7 +149,15 @@ extern void EFp_Projective(EFp *ANS,EFpP *A);
  */
 extern void EFp_Jacobian(EFp *ANS,EFpJ *A);
 
+extern void EFp_Jacobian_montgomery(EFp *ANS,EFpJ *A);
+
 extern void EFp_mix(EFpJ *ANS,EFpJ *A,Fp *Zi);
+extern void EFp_mix_montgomery(EFpJ *ANS,EFpJ *A,Fp *Zi);
+
+extern void EFp_mod_montgomery(EFp *ANS,EFp *A);
+
+extern void EFp_to_montgomery(EFp *ANS,EFp *A);
+
 /**
  * @brief Set an unsigned int to a EFp type struct
  *
@@ -246,6 +255,7 @@ extern void EFp_ECD_Projective_lazy(EFpP *ANS,EFpP *P);
  */
 extern void EFp_ECD_Jacobian_lazy(EFpJ *ANS,EFpJ *P);
 
+extern void EFp_ECD_Jacobian_lazy_montgomery(EFpJ *ANS,EFpJ *P);
 /**
  * @brief Addition a EFp type struct and a EFp type struct
  *
@@ -300,6 +310,7 @@ extern void EFp_ECA_Projective_lazy(EFpP *ANS,EFpP *P1,EFpP *P2);
  */
 extern void EFp_ECA_Jacobian_lazy(EFpJ *ANS,EFpJ *P1,EFpJ *P2);
 
+extern void EFp_ECA_Jacobian_lazy_montgomery(EFpJ *ANS,EFpJ *P1,EFpJ *P2);
 /**
  * @brief Addition a EFp type struct and a EFp type struct (Jacobian + Lazy Reduction)
  *
@@ -309,6 +320,7 @@ extern void EFp_ECA_Jacobian_lazy(EFpJ *ANS,EFpJ *P1,EFpJ *P2);
  */
 extern void EFp_ECA_Mixture_lazy(EFpJ *ANS,EFpJ *P1,EFpJ *P2);
 
+extern void EFp_ECA_Mixture_lazy_montgomery(EFpJ *ANS,EFpJ *P1,EFpJ *P2);
 /**
  * @brief Addition a EFp type struct and a EFp type struct (Jacobian + Lazy Reduction)
  *
@@ -356,5 +368,5 @@ extern void EFp_SCM_Jacobian_lazy(EFp *ANS,EFp *P,mpz_t scalar);
 //skew_frobenius_map
 extern void EFp_skew_frobenius_map_p2(EFp *ANS,EFp *A);
 extern void EFpJ_skew_frobenius_map_p2(EFpJ *ANS,EFpJ *A);
-
+extern void EFpJ_skew_frobenius_map_p2_montgomery(EFpJ *ANS,EFpJ *A);
 #endif

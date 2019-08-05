@@ -108,4 +108,5 @@ extern void BLS12_EFp12_G2_SCM_4split_Mixture_lazy(EFp12 *ANS,EFp12 *Q,mpz_t sca
 
 extern void BLS12_EFp12_G2_SCM_4split_3NAF_interleaving_Mixture_lazy(EFp12 *ANS,EFp12 *Q,mpz_t scalar);
 extern void BLS12_EFp12_G2_SCM_4split_5NAF_interleaving_Mixture_lazy(EFp12 *ANS,EFp12 *Q,mpz_t scalar);
+extern void BLS12_EFp12_G2_SCM_4split_5NAF_interleaving_Mixture_lazy_montgomery(EFp12 *ANS,EFp12 *Q,mpz_t scalar);
 #endif

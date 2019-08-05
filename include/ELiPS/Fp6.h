@@ -26,6 +26,7 @@ extern void Fp6_printf(char *str,Fp6 *A);
  */
 extern void Fp6_println(char *str,Fp6 *A);
 
+extern void Fp6_printf_montgomery(char *str,Fp6 *A);
 /**
  * @brief Set a Fp6 type struct to a Fp6 type struct
  *
@@ -67,6 +68,8 @@ extern void Fp6_set_mpn(Fp6 *ANS,mp_limb_t *A);
  */
 extern void Fp6_set_neg(Fp6 *ANS,Fp6 *A);
 
+extern void Fp6_to_montgomery(Fp6 *ANS,Fp6 *A);
+extern void Fp6_mod_montgomery(Fp6 *ANS,Fp6 *A);
 /**
  * @brief Set a random number to a Fp6 type struct
  *
@@ -92,6 +95,7 @@ extern void Fp6_mul(Fp6 *ANS,Fp6 *A,Fp6 *B);
  * @param[in]B --a pointer in Fp6.
  */
 extern void Fp6_mul_lazy(Fp6 *ANS,Fp6 *A,Fp6 *B);
+extern void Fp6_mul_lazy_montgomery(Fp6 *ANS,Fp6 *A,Fp6 *B);
 
 /**
  * @brief Multiplication a Fp6 type struct and an unsigned long int on prime field
@@ -144,6 +148,7 @@ extern void Fp6_sqr(Fp6 *ANS,Fp6 *A);
  * @param[in]B --a pointer in Fp6.
  */
 extern void Fp6_sqr_lazy(Fp6 *ANS,Fp6 *A);
+extern void Fp6_sqr_lazy_montgomery(Fp6 *ANS,Fp6 *A);
 
 /**
  * @brief Addition a Fp6 type struct and a Fp6 type struct on prime field
@@ -268,6 +273,7 @@ extern void Fp6_inv(Fp6 *ANS,Fp6 *A);
  * @param[in]A --a pointer to be inverted.
  */
 extern void Fp6_inv_lazy(Fp6 *ANS,Fp6 *A);
+extern void Fp6_inv_lazy_montgomery(Fp6 *ANS,Fp6 *A);
 
 /**
  * @brief LegendreSymbol on prime field

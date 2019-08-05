@@ -26,7 +26,7 @@ extern void Fp12_printf(char *str,Fp12 *A);
  * @param[in]A --a pointer to be printed.
  */
 extern void Fp12_println(char *str,Fp12 *A);
-
+extern void Fp12_printf_montgomery(char *str,Fp12 *A);
 /**
  * @brief Set a Fp12 type struct to a Fp12 type struct
  *
@@ -67,6 +67,8 @@ extern void Fp12_set_mpn(Fp12 *ANS,mp_limb_t *A);
  */
 extern void Fp12_set_neg(Fp12 *ANS,Fp12 *A);
 
+extern void Fp12_to_montgomery(Fp12 *ANS,Fp12 *A);
+extern void Fp12_mod_montgomery(Fp12 *ANS,Fp12 *A);
 /**
  * @brief Set a random number to a Fp12 type struct
  *
@@ -92,6 +94,7 @@ extern void Fp12_mul(Fp12 *ANS,Fp12 *A,Fp12 *B);
  * @param[in]B --a pointer in Fp12.
  */
 extern void Fp12_mul_lazy(Fp12 *ANS,Fp12 *A,Fp12 *B);
+extern void Fp12_mul_lazy_montgomery(Fp12 *ANS,Fp12 *A,Fp12 *B);
 
 /**
  * @brief Multiplication a Fp12 type struct and an unsigned long int on prime field
@@ -128,6 +131,7 @@ extern void Fp12_sqr(Fp12 *ANS,Fp12 *A);
  * @param[in]B --a pointer in Fp12.
  */
 extern void Fp12_sqr_lazy(Fp12 *ANS,Fp12 *A);
+extern void Fp12_sqr_lazy_montgomery(Fp12 *ANS,Fp12 *A);
 
 /**
  * @brief Squaring a Fp12 type struct and a Fp12 type struct on prime field
@@ -159,16 +163,21 @@ extern void Fp12_sqr_cyclotomic_lazy(Fp12 *ANS,Fp12 *A);
 extern void Fp12_sqr_Karabina(Fp12 *ANS,Fp12 *A);
 extern void Fp12_sqr_compressed(Fp12 *ANS,Fp12 *A);
 extern void Fp12_sqr_compressed_lazy(Fp12 *ANS,Fp12 *A);
+extern void Fp12_sqr_compressed_lazy_montgomery(Fp12 *ANS,Fp12 *A);
 extern void Fp12_sqr_recover_g1(Fp12 *ANS,Fp12 *A);
 extern void Fp12_sqr_recover_g1_noninv(Fp12 *ANS,Fp12 *A);
 extern void Fp12_sqr_recover_g1_montrick(Fp12 *A,Fp12 *B,Fp12 *C,Fp12 *D);
 extern void Fp12_sqr_recover_g1_lazy(Fp12 *ANS,Fp12 *A);
+extern void Fp12_sqr_recover_g1_lazy_montgomery(Fp12 *ANS,Fp12 *A);
 extern void Fp12_sqr_recover_g0(Fp12 *ANS,Fp12 *A);
 extern void Fp12_sqr_recover_g0_lazy(Fp12 *ANS,Fp12 *A);
+extern void Fp12_sqr_recover_g0_lazy_montgomery(Fp12 *ANS,Fp12 *A);
 extern void Fp12_sqr_GS(Fp12 *ANS,Fp12 *A);
 extern void Fp4_sqr(Fp2 *t0,Fp2 *t1,Fp2 *g0,Fp2 *g1);
 extern void Fp12_sqr_GS_lazy(Fp12 *ANS,Fp12 *A);
+extern void Fp12_sqr_GS_lazy_montgomery(Fp12 *ANS,Fp12 *A);
 extern void Fp4_sqr_lazy(Fp2 *t0,Fp2 *t1,Fp2 *g0,Fp2 *g1);
+extern void Fp4_sqr_lazy_montgomery(Fp2 *t0,Fp2 *t1,Fp2 *g0,Fp2 *g1);
 /**
  * @brief Addition a Fp12 type struct and a Fp12 type struct on prime field
  *
@@ -274,6 +283,7 @@ extern void Fp12_inv(Fp12 *ANS,Fp12 *A);
  * @param[in]A --a pointer to be inverted.
  */
 extern void Fp12_inv_lazy(Fp12 *ANS,Fp12 *A);
+extern void Fp12_inv_lazy_montgomery(Fp12 *ANS,Fp12 *A);
 
 /**
  * @brief LegendreSymbol on prime field
@@ -369,6 +379,11 @@ extern void Fp12_frobenius_map_p4(Fp12 *ANS,Fp12 *A);
 extern void Fp12_frobenius_map_p6(Fp12 *ANS,Fp12 *A);
 extern void Fp12_frobenius_map_p8(Fp12 *ANS,Fp12 *A);
 extern void Fp12_frobenius_map_p10(Fp12 *ANS,Fp12 *A);
+
+extern void Fp12_frobenius_map_p1_lazy_montgomery(Fp12 *ANS,Fp12 *A);
+extern void Fp12_frobenius_map_p2_montgomery(Fp12 *ANS,Fp12 *A);
+extern void Fp12_frobenius_map_p3_lazy_montgomery(Fp12 *ANS,Fp12 *A);
+extern void Fp12_frobenius_map_p6_montgomery(Fp12 *ANS,Fp12 *A);
 
 extern int Fp12_montgomery_trick(Fp12 *A_inv,Fp12 *A,int n);
 #endif

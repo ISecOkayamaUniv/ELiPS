@@ -13,7 +13,8 @@ void BLS12_init(){
         BLS12_set_frobenius_constant();
         BLS12_set_curve_parameter();
         BLS12_set_root2();
-	BLS12_set_montgomery();
+	    BLS12_set_montgomery();
+	    pre_montgomery();
     }else{
         BLS12_clear();
         printf("error : prime\nexit\n");

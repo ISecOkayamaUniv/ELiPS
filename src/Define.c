@@ -33,12 +33,15 @@ mp_limb_t curve_b[FPLIMB];
 //montgomery
 mp_limb_t R[FPLIMB],Ri[FPLIMB],R1[FPLIMB],RR[FPLIMB],Ni[FPLIMB];
 int m;
+mp_limb_t u;
+mp_limb_t N[FPLIMB2],R2[FPLIMB],R3[FPLIMB],RmodP[FPLIMB];
 /*============================================================================*/
 /* Test functions                                                             */
 /*============================================================================*/
 struct timeval tv_start,tv_end;
-float MILLER_TATE,MILLER_PLAINATE,MILLER_OPTATE,MILLER_XATE;
+float MILLER_TATE,MILLER_PLAINATE,MILLER_OPT,MILLER_XATE;
 float FINALEXP_PLAIN,FINALEXP_OPT,FINALEXP_OPT_EASY,FINALEXP_OPT_HARD;
+float MILLER_OPT_MONTGOMERY,FINALEXP_OPT_MONTGOMERY;
 
 float G1SCM_PLAIN,G1SCM_2SPLIT,G1SCM_2SPLIT_JSF;
 float G2SCM_PLAIN,G2SCM_2SPLIT,G2SCM_2SPLIT_JSF,G2SCM_4SPLIT;

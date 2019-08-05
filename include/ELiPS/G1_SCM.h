@@ -148,7 +148,7 @@ extern void BLS12_EFp12_G1_SCM_2split_5NAF_interleaving_Mixture(EFp12 *ANS,EFp12
  * @param[in]scalar --a pointer in mpz.
  */
 extern void BLS12_EFp12_G1_SCM_2split_5NAF_interleaving_Mixture_lazy(EFp12 *ANS,EFp12 *P,mpz_t scalar);
-
+extern void BLS12_EFp12_G1_SCM_2split_5NAF_interleaving_Mixture_lazy_montgomery(EFp12 *ANS,EFp12 *P,mpz_t scalar);
 /**
  * @brief Scalar multiplication a EFp12 type struct on G1 for BLS12 (GLV-2split + 5NAF_interleaving + Jacobian + Lazy Reduction)
  *
@@ -157,6 +157,7 @@ extern void BLS12_EFp12_G1_SCM_2split_5NAF_interleaving_Mixture_lazy(EFp12 *ANS,
  * @param[in]scalar --a pointer in mpz.
  */
 extern void BLS12_EFp12_G1_SCM_2split_7NAF_interleaving_Mixture_lazy(EFp12 *ANS,EFp12 *P,mpz_t scalar);
+
 
 /**
  * @brief Scalar multiplication a EFp12 type struct on G1 for BLS12 (GLV-2split + JSF + Jacobian + Lazy Reduction)

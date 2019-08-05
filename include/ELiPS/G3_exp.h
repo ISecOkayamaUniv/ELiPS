@@ -98,4 +98,6 @@ extern void BLS12_Fp12_G3_EXP_4split_GS_lazy(Fp12 *ANS,Fp12 *A,mpz_t scalar);
 
 
 extern void BLS12_Fp12_G3_EXP_4split_5NAF_interleaving_GS_lazy(Fp12 *ANS,Fp12 *A,mpz_t scalar);
+
+extern void BLS12_Fp12_G3_EXP_4split_5NAF_interleaving_GS_lazy_montgomery(Fp12 *ANS,Fp12 *A,mpz_t scalar);
 #endif

@@ -49,6 +49,7 @@ extern void BLS12_Opt_ate_pairing_lazy(Fp12 *ANS,EFp12 *P,EFp12 *Q);
  * @param[in]Q --a pointer in EFp12 on G2.
  */
 extern void BLS12_Opt_ate_pairing_compress_lazy(Fp12 *ANS,EFp12 *P,EFp12 *Q);
+extern void BLS12_Opt_ate_pairing_compress_lazy_montgomery(Fp12 *ANS,EFp12 *P,EFp12 *Q);
 
 
 #endif

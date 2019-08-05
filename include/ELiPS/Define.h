@@ -188,12 +188,17 @@ extern mp_limb_t curve_b[FPLIMB];
 //montgomery
 extern mp_limb_t R[FPLIMB],Ri[FPLIMB],R1[FPLIMB],RR[FPLIMB],Ni[FPLIMB];
 extern int m;
+
+extern mp_limb_t u;
+extern mp_limb_t N[FPLIMB2],R2[FPLIMB],R3[FPLIMB],RmodP[FPLIMB];
 /*============================================================================*/
 /* Test functions                                                             */
 /*============================================================================*/
 extern struct timeval tv_start,tv_end;
-extern float MILLER_TATE,MILLER_PLAINATE,MILLER_OPTATE,MILLER_XATE;
+extern float MILLER_TATE,MILLER_PLAINATE,MILLER_OPT,MILLER_XATE;
 extern float FINALEXP_PLAIN,FINALEXP_OPT,FINALEXP_OPT_EASY,FINALEXP_OPT_HARD;
+extern float MILLER_OPT_MONTGOMERY,FINALEXP_OPT_MONTGOMERY;
+
 
 extern float G1SCM_PLAIN,G1SCM_2SPLIT,G1SCM_2SPLIT_JSF;
 extern float G2SCM_PLAIN,G2SCM_2SPLIT,G2SCM_2SPLIT_JSF,G2SCM_4SPLIT;

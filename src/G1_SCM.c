@@ -1867,6 +1867,127 @@ void BLS12_EFp12_G1_SCM_2split_5NAF_interleaving_Mixture_lazy(EFp12 *ANS,EFp12 *
         mpz_clear(s[i]);
     }
 }
+void BLS12_EFp12_G1_SCM_2split_5NAF_interleaving_Mixture_lazy_montgomery(EFp12 *ANS,EFp12 *P,mpz_t scalar){
+    
+    //s=s0+s1[x^4]
+    int i,length_s[2],loop_length;
+    EFp next_tmp_P,tmp_P;
+    EFpJ next_tmpJ_P,tmpJ_P[8],tmpJ_P_neg[8],tmpJ_P_4x[8],tmpJ_P_4x_neg[8],tmpJ_2P;
+    EFp_init(&next_tmp_P);
+    EFp_init(&tmp_P);
+    EFpJ_init(&tmpJ_2P);
+    for(i=0;i<8;i++){
+    EFpJ_init(&tmpJ_P[i]);
+    EFpJ_init(&tmpJ_P_neg[i]);
+    EFpJ_init(&tmpJ_P_4x[i]);
+    EFpJ_init(&tmpJ_P_4x_neg[i]);
+    }
+    EFpJ_init(&next_tmpJ_P);
+    
+    mpz_t s[2],buf;
+    mpz_init(buf);
+    for(i=0; i<2; i++){
+        mpz_init(s[i]);
+    }
+    //table
+    EFpJ table0[17],table1[17];
+    for(i=0; i<17; i++){
+        EFpJ_init(&table0[i]);
+        EFpJ_init(&table1[i]);
+    }
+    
+    //set
+    EFp12_to_EFp(&tmp_P,P);                    //tmp_P
+	EFp_to_montgomery(&tmp_P,&tmp_P);
+    EFp_to_EFpJ_montgomery(&tmpJ_P[0],&tmp_P);
+    EFp_ECD_Jacobian_lazy_montgomery(&tmpJ_2P,&tmpJ_P[0]);
+    for(i=1;i<8;i++){
+	    EFp_ECA_Jacobian_lazy_montgomery(&tmpJ_P[i],&tmpJ_P[i-1],&tmpJ_2P);
+    }
+	
+	Fp point_table[8],inv_table[8];
+	for(i=0;i<8;i++)    Fp_set(&point_table[i],&tmpJ_P[i].z);
+    Fp_montgomery_trick_montgomery(inv_table,point_table,8);
+	for(i=0;i<8;i++)     EFp_mix_montgomery(&tmpJ_P[i],&tmpJ_P[i],&inv_table[i]);
+	
+	for(i=0;i<8;i++){
+	    EFpJ_set_neg(&tmpJ_P_neg[i],&tmpJ_P[i]);            //tmp_P_neg
+    	EFpJ_skew_frobenius_map_p2_montgomery(&tmpJ_P_4x[i],&tmpJ_P[i]);        //tmp_P_4x
+    	EFpJ_set_neg(&tmpJ_P_4x_neg[i],&tmpJ_P_4x[i]);        //tmp_P_4x_neg
+    }
+    //set table
+    table0[0].infinity=1;                        //0
+    table1[0].infinity=1;                        //0
+    
+    for(i=0;i<8;i++){
+    EFpJ_set(&table0[i+1],&tmpJ_P[i]);                //[1]P
+    EFpJ_set(&table0[i+9],&tmpJ_P_neg[i]);                //[-1]P
+    EFpJ_set(&table1[i+1],&tmpJ_P_4x[i]);                //[1]P'
+    EFpJ_set(&table1[i+9],&tmpJ_P_4x_neg[i]);                //[-1]P'
+    }
+    //s0,s1
+    mpz_neg(buf,X_z);
+    mpz_pow_ui(buf,buf,2);
+    mpz_tdiv_qr(s[1],s[0],scalar,buf);
+    
+    //get loop_length
+    loop_length=0;
+    for(i=0; i<2; i++){
+        length_s[i]=(int)mpz_sizeinbase(s[i],2);
+            if(loop_length<length_s[i]){
+            loop_length=length_s[i];
+        }
+    }
+    //NAF
+    int NAF_length,NAF_length0,NAF_length1;
+    int NAF_binary[2][loop_length+1];
+    for(i=0; i<loop_length+1; i++){
+        NAF_binary[0][i]=0;
+        NAF_binary[1][i]=0;
+    }
+    int *NAF_pointer[2];
+    NAF_pointer[0]=NAF_binary[0];
+    NAF_pointer[1]=NAF_binary[1];
+    
+    NAF_length0 = w_naf(NAF_binary[0],s[0],5);
+    NAF_length1 = w_naf(NAF_binary[1],s[1],5);
+    if(NAF_length0<NAF_length1)	NAF_length=NAF_length1;
+    else NAF_length=NAF_length0;
+    
+    //NAF_length=loop_length-1;
+    int binary0[NAF_length+1],binary1[NAF_length+1];
+    
+     for(i=NAF_length; i>=0; i--){
+        if(NAF_binary[0][i]==0)         binary0[i]=0;
+     	else if(NAF_binary[0][i]>0)     	binary0[i]=(NAF_binary[0][i]+1)>>1;
+        else	binary0[i]=((17-(NAF_binary[0][i]+16))>>1)+8;
+        
+        if(NAF_binary[1][i]==0)         binary1[i]=0;
+     	else if(NAF_binary[1][i]>0)     	binary1[i]=(NAF_binary[1][i]+1)>>1;
+        else	binary1[i]=((17-(NAF_binary[1][i]+16))>>1)+8;
+    }
+   if(NAF_length0==NAF_length1)	EFp_ECA_Jacobian_lazy_montgomery(&next_tmpJ_P,&table0[binary0[NAF_length]],&table1[binary1[NAF_length]]);
+   else if(NAF_length0<NAF_length1)	EFpJ_set(&next_tmpJ_P,&table1[binary1[NAF_length]]);
+    else EFpJ_set(&next_tmpJ_P,&table0[binary0[NAF_length]]);
+    
+    //SCM
+    for(i=NAF_length-1; i>=0; i--){
+        EFp_ECD_Jacobian_lazy_montgomery(&next_tmpJ_P,&next_tmpJ_P);
+        if(binary0[i]!=0)        EFp_ECA_Mixture_lazy_montgomery(&next_tmpJ_P,&next_tmpJ_P,&table0[binary0[i]]);
+        if(binary1[i]!=0)        EFp_ECA_Mixture_lazy_montgomery(&next_tmpJ_P,&next_tmpJ_P,&table1[binary1[i]]);
+    }
+    
+    EFp_Jacobian_montgomery(&next_tmp_P,&next_tmpJ_P);
+    EFp_mod_montgomery(&next_tmp_P,&next_tmp_P);
+    EFp_to_EFp12(ANS,&next_tmp_P);
+    ANS->infinity=next_tmp_P.infinity;
+    
+    
+    mpz_clear(buf);
+    for(i=0; i<2; i++){
+        mpz_clear(s[i]);
+    }
+}
 void BLS12_EFp12_G1_SCM_2split_7NAF_interleaving_Mixture_lazy(EFp12 *ANS,EFp12 *P,mpz_t scalar){
     
     //s=s0+s1[x^4]

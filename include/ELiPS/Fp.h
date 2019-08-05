@@ -25,6 +25,8 @@ extern void Fp_printf(char *str,Fp *A);
  * @param[in]A --a pointer to be printed.
  */
 extern void Fp_println(char *str,Fp *A);
+
+extern void Fp_printf_montgomery(char *str,Fp *A);
 /**
  * @brief Set a Fp type struct to a Fp type struct
  *
@@ -89,10 +91,14 @@ extern void Fp_set_random(Fp *ANS,gmp_randstate_t state);
  * @param[out]ANS --a pointer of answer in Fp.
  * @param[in]A --a pointer in Fp.
  */
+extern void pre_montgomery();
+extern void Fp_mulmod_montgomery(Fp *ANS,Fp *A,Fp *B);
+extern void mpn_mulmod_montgomery(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size,mp_limb_t *B,mp_size_t B_size);
+extern void mpn_mod_montgomery(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size);
+extern void Fp_mod_montgomery(Fp *ANS,Fp *A);
+extern void Fp_to_montgomery(Fp *ANS, Fp *A);
+extern void mpn_to_montgomery(mp_limb_t *ANS, mp_limb_t *A);
 extern void Fp_MR(mp_limb_t *ANS,mp_limb_t *T,mp_size_t T_size);
-
-extern void Fp_rdc_monty_basic(Fp *c, mp_limb_t *a);
-extern void Fp_mod_pre(mp_limb_t *u);
 
 
 /**
@@ -307,6 +313,9 @@ extern void Fp_sub_mpn(Fp *ANS,Fp *A,mp_limb_t *B);
  */
 extern void Fp_inv(Fp *ANS,Fp *A);
 
+extern void Fp_inv_montgomery(Fp *ANS,Fp *A);
+
+
 /**
  * @brief LegendreSymbol on prime field
  *
@@ -405,4 +414,5 @@ extern int  Fp_cmp_zero(Fp *A);
 extern int  Fp_cmp_one(Fp *A);
 
 extern int Fp_montgomery_trick(Fp *A_inv,Fp *A,int n);
+extern int Fp_montgomery_trick_montgomery(Fp *A_inv,Fp *A,int n);
 #endif

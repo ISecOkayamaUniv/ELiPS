@@ -17,7 +17,7 @@ extern void Fp2_init(Fp2 *A);
  * @param[in]A --a pointer to be printed.
  */
 extern void Fp2_printf(char *str,Fp2 *A);
-
+extern void Fp2_printf_montgomery(char *str,Fp2 *A);
 /**
  * @brief Print a Fp2 type struct
  *
@@ -66,6 +66,8 @@ extern void Fp2_set_mpn(Fp2 *ANS,mp_limb_t *A);
  */
 extern void Fp2_set_neg(Fp2 *ANS,Fp2 *A);
 
+extern void Fp2_to_montgomery(Fp2 *ANS,Fp2 *A);
+extern void Fp2_mod_montgomery(Fp2 *ANS,Fp2 *A);
 /**
  * @brief Left Shift Fp2 type struct on prime field
  *
@@ -109,7 +111,7 @@ extern void Fp2_mul(Fp2 *ANS,Fp2 *A,Fp2 *B);
  * @param[in]B --a pointer in Fp2.
  */
 extern void Fp2_mul_lazy(Fp2 *ANS,Fp2 *A,Fp2 *B);
-
+extern void Fp2_mul_lazy_montgomery(Fp2 *ANS,Fp2 *A,Fp2 *B);
 /**
  * @brief Multiplication a Fp2 type struct and an unsigned long int on prime field
  *
@@ -127,6 +129,7 @@ extern void Fp2_mul_ui(Fp2 *ANS,Fp2 *A,unsigned long int UI);
  * @param[in]B --a pointer in mpn.
  */
 extern void Fp2_mul_mpn(Fp2 *ANS,Fp2 *A,mp_limb_t *B);
+extern void Fp2_mul_mpn_montgomery(Fp2 *ANS,Fp2 *A,mp_limb_t *B);
 
 /**
  * @brief Multiplication a Fp2 type struct and alpha on prime field A*beta^2
@@ -181,6 +184,7 @@ extern void Fp2_sqr(Fp2 *ANS,Fp2 *A);
  * @param[in]B --a pointer in Fp2.
  */
 extern void Fp2_sqr_lazy(Fp2 *ANS,Fp2 *A);
+extern void Fp2_sqr_lazy_montgomery(Fp2 *ANS,Fp2 *A);
 
 /**
  * @brief Addition a Fp2 type struct and a Fp2 type struct on prime field
@@ -306,6 +310,7 @@ extern void Fp2_inv(Fp2 *ANS,Fp2 *A);
  */
 extern void Fp2_inv_lazy(Fp2 *ANS,Fp2 *A);
 
+extern void Fp2_inv_lazy_montgomery(Fp2 *ANS,Fp2 *A);
 /**
  * @brief LegendreSymbol on prime field
  *
@@ -392,4 +397,5 @@ extern int  Fp2_cmp_zero(Fp2 *A);
 extern int  Fp2_cmp_one(Fp2 *A);
 
 extern int Fp2_montgomery_trick(Fp2 *A_inv,Fp2 *A,int n);
+extern int Fp2_montgomery_trick_montgomery(Fp2 *A_inv,Fp2 *A,int n);
 #endif

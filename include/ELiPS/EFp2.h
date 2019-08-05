@@ -47,6 +47,7 @@ extern void EFp2_println(char *str,EFp2 *P);
  * @param[in]P --a pointer to be printed.
  */
 extern void EFpJ2_printf(char *str,EFpJ2 *P);
+extern void EFpJ2_printf_montgomery(char *str,EFpJ2 *P);
 
 /**
  * @brief Set a EFp2 type struct to a EFp2 type struct
@@ -78,7 +79,7 @@ extern void EFpJT2_set(EFpJT2 *P,EFpJT2 *A);
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --a pointer to set.
  */
-void EFpJT2_to_EFpJ2(EFpJ2 *ANS,EFpJT2 *A);
+extern void EFpJT2_to_EFpJ2(EFpJ2 *ANS,EFpJT2 *A);
 
 /**
  * @brief Set a EFpJT2 type struct to a EFpJ2 type struct
@@ -86,7 +87,7 @@ void EFpJT2_to_EFpJ2(EFpJ2 *ANS,EFpJT2 *A);
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --a pointer to set.
  */
-void EFpJ2_to_EFpJT2(EFpJT2 *ANS,EFpJ2 *A);
+extern void EFpJ2_to_EFpJT2(EFpJT2 *ANS,EFpJ2 *A);
 
 /**
  * @brief Set Affine to Jacobian
@@ -95,6 +96,8 @@ void EFpJ2_to_EFpJT2(EFpJT2 *ANS,EFpJ2 *A);
  * @param[in]A --a pointer to set.
  */
 extern void EFp2_to_EFpJ2(EFpJ2 *ANS,EFp2 *A);
+
+extern void EFp2_to_EFpJ2_montgomery(EFpJ2 *ANS,EFp2 *A);
 
 /**
  * @brief Set Jacobian to Affine
@@ -105,6 +108,12 @@ extern void EFp2_to_EFpJ2(EFpJ2 *ANS,EFp2 *A);
 extern void EFp2_Jacobian(EFp2 *ANS,EFpJ2 *A);
 
 extern void EFp2_mix(EFpJ2 *ANS,EFpJ2 *A,Fp2 *Zi);
+
+extern void EFp2_Jacobian_montgomery(EFp2 *ANS,EFpJ2 *A);
+
+extern void EFp2_mix_montgomery(EFpJ2 *ANS,EFpJ2 *A,Fp2 *Zi);
+extern void EFp2_to_montgomery(EFp2 *ANS,EFp2 *A);
+extern void EFp2_mod_montgomery(EFp2 *ANS,EFp2 *A);
 /**
  * @brief Set an unsigned int to a EFp2 type struct
  *
@@ -185,6 +194,7 @@ extern void EFp2_ECD_lazy(EFp2 *ANS,EFp2 *P);
  * @param[in]P --a pointer in EFpJ2.
  */
 extern void EFp2_ECD_Jacobian_lazy(EFpJ2 *ANS,EFpJ2 *P);
+extern void EFp2_ECD_Jacobian_lazy_montgomery(EFpJ2 *ANS,EFpJ2 *P);
 
 /**
  * @brief Addition a EFp2 type struct and a EFp2 type struct
@@ -232,7 +242,7 @@ extern void EFp2_ECA_lazy(EFp2 *ANS,EFp2 *P1,EFp2 *P2);
  * @param[in]P2 --a pointer in EFpJ2.
  */
 extern void EFp2_ECA_Jacobian_lazy(EFpJ2 *ANS,EFpJ2 *P1,EFpJ2 *P2);
-
+extern void EFp2_ECA_Jacobian_lazy_montgomery(EFpJ2 *ANS,EFpJ2 *P1,EFpJ2 *P2);
 /**
  * @brief Addition a EFp2 type struct and a EFp2 type struct (Jacobian + Lazy Reduction)
  *
@@ -241,7 +251,7 @@ extern void EFp2_ECA_Jacobian_lazy(EFpJ2 *ANS,EFpJ2 *P1,EFpJ2 *P2);
  * @param[in]P2 --a pointer in EFpJ2.
  */
 extern void EFp2_ECA_Mixture_lazy(EFpJ2 *ANS,EFpJ2 *P1,EFpJ2 *P2);
-
+extern void EFp2_ECA_Mixture_lazy_montgomery(EFpJ2 *ANS,EFpJ2 *P1,EFpJ2 *P2);
 /**
  * @brief Addition a EFp2 type struct and a EFp2 type struct (Jacobian + Lazy Reduction)
  *
@@ -304,6 +314,9 @@ extern void EFp2_skew_frobenius_map_p3(EFp2 *ANS,EFp2 *A);
 extern void EFpJ2_skew_frobenius_map_p1(EFpJ2 *ANS,EFpJ2 *A);
 extern void EFpJ2_skew_frobenius_map_p2(EFpJ2 *ANS,EFpJ2 *A);
 extern void EFpJ2_skew_frobenius_map_p3(EFpJ2 *ANS,EFpJ2 *A);
+extern void EFpJ2_skew_frobenius_map_p1_montgomery(EFpJ2 *ANS,EFpJ2 *A);
+extern void EFpJ2_skew_frobenius_map_p2_montgomery(EFpJ2 *ANS,EFpJ2 *A);
+extern void EFpJ2_skew_frobenius_map_p3_montgomery(EFpJ2 *ANS,EFpJ2 *A);
 extern void EFp2_skew_frobenius_map_p10(EFp2 *ANS,EFp2 *A);
 
 #endif

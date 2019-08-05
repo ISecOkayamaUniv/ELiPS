@@ -19,10 +19,12 @@ extern void BLS12_Fp12_pow_X_compress(Fp12 *ANS,Fp12 *A);
 extern void BLS12_Fp12_pow_X_compress2(Fp12 *ANS,Fp12 *A);
 extern void BLS12_Fp12_pow_X_lazy(Fp12 *ANS,Fp12 *A);
 extern void BLS12_Fp12_pow_X_compress_lazy(Fp12 *ANS,Fp12 *A);
+extern void BLS12_Fp12_pow_X_compress_lazy_montgomery(Fp12 *ANS,Fp12 *A);
 extern void BLS12_Fp12_pow_X2(Fp12 *ANS,Fp12 *A);
 extern void BLS12_Fp12_pow_X2_compress(Fp12 *ANS,Fp12 *A);
 extern void BLS12_Fp12_pow_X2_lazy(Fp12 *ANS,Fp12 *A);
 extern void BLS12_Fp12_pow_X2_compress_lazy(Fp12 *ANS,Fp12 *A);
+extern void BLS12_Fp12_pow_X2_compress_lazy_montgomery(Fp12 *ANS,Fp12 *A);
 
 /**
  * @brief Calculation final exponentiation on prime field for Optimal-ate pairing
@@ -56,4 +58,5 @@ extern void BLS12_Final_exp_optimal_lazy(Fp12 *ANS,Fp12 *A);
  */
 extern void BLS12_Final_exp_optimal_compress_lazy(Fp12 *ANS,Fp12 *A);
 
+extern void BLS12_Final_exp_optimal_compress_lazy_montgomery(Fp12 *ANS,Fp12 *A);
 #endif

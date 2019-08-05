@@ -1722,3 +1722,180 @@ void BLS12_EFp12_G2_SCM_4split_5NAF_interleaving_Mixture_lazy(EFp12 *ANS,EFp12 *
         mpz_clear(s[i]);
     }
 }
+void BLS12_EFp12_G2_SCM_4split_5NAF_interleaving_Mixture_lazy_montgomery(EFp12 *ANS,EFp12 *Q,mpz_t scalar){
+    //gettimeofday(&tv_start,NULL);
+    
+    //s=s0+s1[x^1]+s2[x^2]+s3[x^3]
+    int i,j,length_s[4],loop_length;
+    EFp2 next_twisted_Q,twisted_Q,twisted_2Q;
+    EFpJ2 next_twistedJ_Q,twistedJ_2Q;
+    EFpJ2 twistedJ_Q[8],twistedJ_Q_x[8],twistedJ_Q_2x[8],twistedJ_Q_3x[8];
+    EFpJ2 twistedJ_Q_neg[8],twistedJ_Q_x_neg[8],twistedJ_Q_2x_neg[8],twistedJ_Q_3x_neg[8];
+    
+    EFp2_init(&twisted_Q);
+    EFp2_init(&twisted_2Q);
+    EFp2_init(&next_twisted_Q);
+    EFpJ2_init(&next_twistedJ_Q);
+    EFpJ2_init(&twistedJ_2Q);
+    for(i=0;i<8;i++){
+    EFpJ2_init(&twistedJ_Q[i]);
+    EFpJ2_init(&twistedJ_Q_x[i]);
+    EFpJ2_init(&twistedJ_Q_2x[i]);
+    EFpJ2_init(&twistedJ_Q_3x[i]);
+    EFpJ2_init(&twistedJ_Q_neg[i]);
+    EFpJ2_init(&twistedJ_Q_x_neg[i]);
+    EFpJ2_init(&twistedJ_Q_2x_neg[i]);
+    EFpJ2_init(&twistedJ_Q_3x_neg[i]);
+    }
+    
+    mpz_t A,B,s[4],x_2,x_1;
+    mpz_init(A);
+    mpz_init(B);
+    mpz_init(x_1);
+    mpz_init(x_2);
+    for(i=0; i<4; i++){
+        mpz_init(s[i]);
+    }
+    //table
+    EFpJ2 table[4][17];
+    for(i=0; i<17; i++){
+        EFpJ2_init(&table[0][i]);
+        EFpJ2_init(&table[1][i]);
+        EFpJ2_init(&table[2][i]);
+        EFpJ2_init(&table[3][i]);
+    }
+    
+    //set
+    EFp12_to_EFp2(&twisted_Q,Q);                    //twisted_Q
+    EFp2_ECD_lazy(&twisted_2Q,&twisted_Q);
+	EFp2_to_montgomery(&twisted_Q,&twisted_Q);
+	EFp2_to_montgomery(&twisted_2Q,&twisted_2Q);
+    EFp2_to_EFpJ2_montgomery(&twistedJ_Q[0],&twisted_Q);
+    EFp2_to_EFpJ2_montgomery(&twistedJ_2Q,&twisted_2Q);
+    for(i=1;i<8;i++){
+	    EFp2_ECA_Jacobian_lazy_montgomery(&twistedJ_Q[i],&twistedJ_Q[i-1],&twistedJ_2Q);
+    }
+    
+	Fp2 point_table[8],inv_table[8];
+	for(i=0;i<8;i++)    Fp2_set(&point_table[i],&twistedJ_Q[i].z);
+    Fp2_montgomery_trick_montgomery(inv_table,point_table,8);
+	for(i=0;i<8;i++)     EFp2_mix_montgomery(&twistedJ_Q[i],&twistedJ_Q[i],&inv_table[i]);
+	
+	
+	for(i=0;i<8;i++){
+	    EFpJ2_set_neg(&twistedJ_Q_neg[i],&twistedJ_Q[i]);            //twisted_P_neg
+    	EFpJ2_skew_frobenius_map_p1_montgomery(&twistedJ_Q_x[i],&twistedJ_Q[i]);        //twisted_Q_x
+    	EFpJ2_skew_frobenius_map_p2_montgomery(&twistedJ_Q_2x[i],&twistedJ_Q[i]);    //twisted_Q_2x
+    	EFpJ2_skew_frobenius_map_p3_montgomery(&twistedJ_Q_3x[i],&twistedJ_Q[i]);    //twisted_Q_3x
+    	EFpJ2_set_neg(&twistedJ_Q_x_neg[i],&twistedJ_Q_x[i]);        //twisted_P_4x_neg
+    	EFpJ2_set_neg(&twistedJ_Q_2x_neg[i],&twistedJ_Q_2x[i]);        //twisted_P_4x_neg
+    	EFpJ2_set_neg(&twistedJ_Q_3x_neg[i],&twistedJ_Q_3x[i]);        //twisted_P_4x_neg
+    }
+    
+    //set table
+    table[0][0].infinity=1;                        //0
+    table[1][0].infinity=1;                        //0
+    table[2][0].infinity=1;                        //0
+    table[3][0].infinity=1;                        //0
+    
+    for(i=0;i<8;i++){
+    	EFpJ2_set(&table[0][i+1],&twistedJ_Q[i]);
+    	EFpJ2_set(&table[0][i+9],&twistedJ_Q_neg[i]);
+    	EFpJ2_set(&table[1][i+1],&twistedJ_Q_x[i]);
+    	EFpJ2_set(&table[1][i+9],&twistedJ_Q_x_neg[i]);
+    	EFpJ2_set(&table[2][i+1],&twistedJ_Q_2x[i]);
+    	EFpJ2_set(&table[2][i+9],&twistedJ_Q_2x_neg[i]);
+    	EFpJ2_set(&table[3][i+1],&twistedJ_Q_3x[i]); 
+    	EFpJ2_set(&table[3][i+9],&twistedJ_Q_3x_neg[i]);
+    }
+    
+    //set
+    //s0,s1,s2,s3
+    mpz_set(x_1,X_z);
+    mpz_mul(x_2,x_1,x_1);
+    mpz_tdiv_qr(B,A,scalar,x_2);
+    mpz_tdiv_qr(s[1],s[0],A,x_1);
+    mpz_tdiv_qr(s[3],s[2],B,x_1);
+    
+    //binary
+    loop_length=0;
+    for(i=0; i<4; i++){
+        length_s[i]=(int)mpz_sizeinbase(s[i],2);
+        if(loop_length<length_s[i]){
+            loop_length=length_s[i];
+        }
+    }
+    
+    //NAF
+    int NAF_length[5];
+    int NAF_binary[4][loop_length+1];
+    for(i=0; i<loop_length+1; i++){
+        NAF_binary[0][i]=0;
+        NAF_binary[1][i]=0;
+        NAF_binary[2][i]=0;
+        NAF_binary[3][i]=0;
+    }
+    int *NAF_pointer[4];
+    NAF_pointer[0]=NAF_binary[0];
+    NAF_pointer[1]=NAF_binary[1];
+    NAF_pointer[2]=NAF_binary[2];
+    NAF_pointer[3]=NAF_binary[3];
+    
+    NAF_length[1] = w_naf(NAF_binary[0],s[0],5);
+    NAF_length[2] = w_naf(NAF_binary[1],s[1],5);
+    NAF_length[3] = w_naf(NAF_binary[2],s[2],5);
+    NAF_length[4] = w_naf(NAF_binary[3],s[3],5);
+    
+    NAF_length[0]=NAF_length[1];
+    for(i=2;i<5;i++){
+    	if(NAF_length[0]<NAF_length[i])NAF_length[0]=NAF_length[i];
+       }
+    //NAF_length=loop_length-1;
+    int binary[4][NAF_length[0]+1];
+    
+     for(i=NAF_length[0]; i>=0; i--){
+        if(NAF_binary[0][i]==0)         binary[0][i]=0;
+     	else if(NAF_binary[0][i]>0)     	binary[0][i]=(NAF_binary[0][i]+1)>>1;
+        else	binary[0][i]=((17-(NAF_binary[0][i]+16))>>1)+8;
+        
+        if(NAF_binary[1][i]==0)         binary[1][i]=0;
+     	else if(NAF_binary[1][i]>0)     	binary[1][i]=(NAF_binary[1][i]+1)>>1;
+        else	binary[1][i]=((17-(NAF_binary[1][i]+16))>>1)+8;
+        
+        if(NAF_binary[2][i]==0)         binary[2][i]=0;
+     	else if(NAF_binary[2][i]>0)     	binary[2][i]=(NAF_binary[2][i]+1)>>1;
+        else	binary[2][i]=((17-(NAF_binary[2][i]+16))>>1)+8;
+        
+        if(NAF_binary[3][i]==0)         binary[3][i]=0;
+     	else if(NAF_binary[3][i]>0)     	binary[3][i]=(NAF_binary[3][i]+1)>>1;
+        else	binary[3][i]=((17-(NAF_binary[3][i]+16))>>1)+8;
+    }
+    
+	next_twistedJ_Q.infinity=1;
+	for(i=1;i<5;i++){
+		if(NAF_length[0]==NAF_length[i]){
+			EFp2_ECA_Jacobian_lazy_montgomery(&next_twistedJ_Q,&next_twistedJ_Q,&table[i-1][binary[i-1][NAF_length[0]]]);
+		}
+	}
+	
+    //SCM
+    for(i=NAF_length[0]-1; i>=0; i--){
+        EFp2_ECD_Jacobian_lazy_montgomery(&next_twistedJ_Q,&next_twistedJ_Q);
+        if(binary[0][i]!=0)        EFp2_ECA_Mixture_lazy_montgomery(&next_twistedJ_Q,&next_twistedJ_Q,&table[0][binary[0][i]]);
+        if(binary[1][i]!=0)        EFp2_ECA_Mixture_lazy_montgomery(&next_twistedJ_Q,&next_twistedJ_Q,&table[1][binary[1][i]]);
+        if(binary[2][i]!=0)        EFp2_ECA_Mixture_lazy_montgomery(&next_twistedJ_Q,&next_twistedJ_Q,&table[2][binary[2][i]]);
+        if(binary[3][i]!=0)        EFp2_ECA_Mixture_lazy_montgomery(&next_twistedJ_Q,&next_twistedJ_Q,&table[3][binary[3][i]]);
+    }
+    
+        
+    EFp2_Jacobian_montgomery(&next_twisted_Q,&next_twistedJ_Q);
+    EFp2_mod_montgomery(&next_twisted_Q,&next_twisted_Q);
+    EFp2_to_EFp12(ANS,&next_twisted_Q);
+    ANS->infinity=next_twisted_Q.infinity;
+
+    mpz_clear(x_1);
+    mpz_clear(x_2);
+    for(i=0; i<4; i++){
+        mpz_clear(s[i]);
+    }
+}

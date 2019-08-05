@@ -20,7 +20,13 @@ void Fp12_println(char *str,Fp12 *A){
     Fp6_printf("",&A->x1);
     gmp_printf(")\n");
 }
-
+void Fp12_printf_montgomery(char *str,Fp12 *A){
+    gmp_printf("%s(",str);
+    Fp6_printf_montgomery("",&A->x0);
+    gmp_printf(",");
+    Fp6_printf_montgomery("",&A->x1);
+    gmp_printf(")");
+}
 void Fp12_set(Fp12 *ANS,Fp12 *A){
     Fp6_set(&ANS->x0,&A->x0);
     Fp6_set(&ANS->x1,&A->x1);
@@ -36,14 +42,21 @@ void Fp12_set_ui_ui(Fp12 *ANS,unsigned long int UI){
 
 void Fp12_set_mpn(Fp12 *ANS,mp_limb_t *A){
     Fp6_set_mpn(&ANS->x0,A);
-    Fp6_set_mpn(&ANS->x1,A);    
+    Fp6_set_ui(&ANS->x1,0);    
 }
 
 void Fp12_set_neg(Fp12 *ANS,Fp12 *A){
     Fp6_set_neg(&ANS->x0,&A->x0);
     Fp6_set_neg(&ANS->x1,&A->x1);
 }
-
+void Fp12_to_montgomery(Fp12 *ANS,Fp12 *A){
+    Fp6_to_montgomery(&ANS->x0,&A->x0);
+    Fp6_to_montgomery(&ANS->x1,&A->x1);
+}
+void Fp12_mod_montgomery(Fp12 *ANS,Fp12 *A){
+    Fp6_mod_montgomery(&ANS->x0,&A->x0);
+    Fp6_mod_montgomery(&ANS->x1,&A->x1);
+}
 void Fp12_set_random(Fp12 *ANS,gmp_randstate_t state){
     Fp6_set_random(&ANS->x0,state);
     Fp6_set_random(&ANS->x1,state);
@@ -75,6 +88,23 @@ void Fp12_mul_lazy(Fp12 *ANS,Fp12 *A,Fp12 *B){
     Fp6_add_lazy(&ANS->x1,&B->x0,&B->x1);//c+d
     Fp6_mul_lazy(&ANS->x1,&tmp1_Fp6,&ANS->x1);//(a+b)(c+d)
     Fp6_mul_lazy(&tmp1_Fp6,&A->x0,&B->x0);//a*c
+    
+    //x0
+    Fp6_mul_basis(&ANS->x0,&tmp2_Fp6);//b*d*v
+    Fp6_add(&ANS->x0,&ANS->x0,&tmp1_Fp6);//a*c+b*d*v
+    
+    //x1
+    Fp6_sub(&ANS->x1,&ANS->x1,&tmp1_Fp6);
+    Fp6_sub(&ANS->x1,&ANS->x1,&tmp2_Fp6);
+}
+void Fp12_mul_lazy_montgomery(Fp12 *ANS,Fp12 *A,Fp12 *B){
+    static Fp6 tmp1_Fp6,tmp2_Fp6;
+    //set
+    Fp6_mul_lazy_montgomery(&tmp2_Fp6,&A->x1,&B->x1);//b*d
+    Fp6_add_lazy(&tmp1_Fp6,&A->x0,&A->x1);//a+b
+    Fp6_add_lazy(&ANS->x1,&B->x0,&B->x1);//c+d
+    Fp6_mul_lazy_montgomery(&ANS->x1,&tmp1_Fp6,&ANS->x1);//(a+b)(c+d)
+    Fp6_mul_lazy_montgomery(&tmp1_Fp6,&A->x0,&B->x0);//a*c
     
     //x0
     Fp6_mul_basis(&ANS->x0,&tmp2_Fp6);//b*d*v
@@ -145,7 +175,22 @@ void Fp12_sqr_lazy(Fp12 *ANS,Fp12 *A){
     //x1
     Fp6_add(&ANS->x1,&tmp3_Fp6,&tmp3_Fp6);
 }
-
+void Fp12_sqr_lazy_montgomery(Fp12 *ANS,Fp12 *A){
+    static Fp6 tmp1_Fp6,tmp2_Fp6,tmp3_Fp6;
+    Fp6_add_lazy(&tmp1_Fp6,&A->x0,&A->x1);
+    Fp6_mul_basis_lazy(&tmp2_Fp6,&A->x1);
+    Fp6_add_lazy(&tmp2_Fp6,&tmp2_Fp6,&A->x0);
+    Fp6_mul_lazy_montgomery(&tmp3_Fp6,&A->x0,&A->x1);
+	
+    //x0
+    Fp6_mul_lazy_montgomery(&ANS->x0,&tmp1_Fp6,&tmp2_Fp6);
+    Fp6_sub(&ANS->x0,&ANS->x0,&tmp3_Fp6);
+    Fp6_mul_basis(&tmp1_Fp6,&tmp3_Fp6);
+    Fp6_sub(&ANS->x0,&ANS->x0,&tmp1_Fp6);
+    
+    //x1
+    Fp6_add(&ANS->x1,&tmp3_Fp6,&tmp3_Fp6);
+}
 void Fp12_sqr_cyclotomic(Fp12 *ANS,Fp12 *A){
     static Fp6 tmp1_Fp6,tmp2_Fp6;
     //A=a+b*gamma in G3
@@ -295,6 +340,78 @@ void Fp12_sqr_compressed_lazy(Fp12 *ANS,Fp12 *A){
     Fp2_add(&t1,&t1,&t1);
     
     Fp2_sqr_lazy(&T1,&g3);
+    
+    Fp2_add(&g3,&t1,&t2);
+    
+    Fp2_mul_basis(&T0,&T1);
+    
+    Fp2_add(&T0,&T0,&T2);
+    
+    Fp2_set(&t0,&T0);
+    Fp2_sub(&g4,&t0,&g4);//add->sub
+    Fp2_add(&g4,&g4,&g4);
+    
+    Fp2_add(&g4,&g4,&t0);
+    
+    Fp2_add(&T2,&T2,&T1);
+    Fp2_sub(&T3,&T3,&T2);//sub->add
+    
+    Fp2_set(&t0,&T3);
+    Fp2_add(&g5,&g5,&t0);
+    Fp2_add(&g5,&g5,&g5);
+    
+    Fp2_add(&g5,&g5,&t0);
+    
+    //set
+    Fp2_set_ui_ui(&ANS->x0.x0,0);
+    Fp2_set_ui_ui(&ANS->x1.x1,0);
+    Fp2_set(&ANS->x1.x0,&g2);
+    Fp2_set(&ANS->x0.x2,&g3);
+    Fp2_set(&ANS->x0.x1,&g4);
+    Fp2_set(&ANS->x1.x2,&g5);
+}
+void Fp12_sqr_compressed_lazy_montgomery(Fp12 *ANS,Fp12 *A){
+    static Fp2 g2,g3,g4,g5;
+    static Fp2 T0,T1,T2,T3;
+    static Fp2 t0,t1,t2;
+    static Fp2 B1;
+    
+    //set
+    Fp2_set(&g2,&A->x1.x0);
+    Fp2_set(&g3,&A->x0.x2);
+    Fp2_set(&g4,&A->x0.x1);
+    Fp2_set(&g5,&A->x1.x2);
+    
+    Fp2_sqr_lazy_montgomery(&T0,&g4);
+    Fp2_sqr_lazy_montgomery(&T1,&g5);
+    
+    Fp2_mul_basis(&T2,&T1);
+    
+    Fp2_add(&T2,&T2,&T0);
+    
+    Fp2_set(&t2,&T2);
+    
+    Fp2_add(&t0,&g4,&g5);
+    Fp2_sqr_lazy_montgomery(&T2,&t0);
+    
+    Fp2_add(&T0,&T0,&T1);
+    Fp2_sub(&T2,&T2,&T0);
+    
+    Fp2_set(&t0,&T2);
+    Fp2_add(&t1,&g2,&g3);
+    Fp2_sqr_lazy_montgomery(&T3,&t1);
+    Fp2_sqr_lazy_montgomery(&T2,&g2);
+    
+    Fp2_mul_basis(&t1,&t0);
+    
+    Fp2_add(&g2,&g2,&t1);
+    Fp2_add(&g2,&g2,&g2);
+    
+    Fp2_add(&g2,&g2,&t1);
+    Fp2_sub(&t1,&t2,&g3);
+    Fp2_add(&t1,&t1,&t1);
+    
+    Fp2_sqr_lazy_montgomery(&T1,&g3);
     
     Fp2_add(&g3,&t1,&t2);
     
@@ -494,6 +611,49 @@ void Fp12_sqr_recover_g1_lazy(Fp12 *ANS,Fp12 *A){
     Fp2_set(&ANS->x0.x1,&g4);
     Fp2_set(&ANS->x1.x2,&g5);
 }
+void Fp12_sqr_recover_g1_lazy_montgomery(Fp12 *ANS,Fp12 *A){
+    static Fp2 g1,g2,g3,g4,g5;
+    static Fp2 tmp,f;
+    static Fp2 t0,t1;//g1=t0/t1
+    static Fp2 C12,C02;
+    
+    //set
+    Fp2_set(&g2,&A->x1.x0);
+    Fp2_set(&g3,&A->x0.x2);
+    Fp2_set(&g4,&A->x0.x1);
+    Fp2_set(&g5,&A->x1.x2);
+    
+    //if
+    if(Fp2_cmp_zero(&g2)==1){
+        Fp2_sqr_lazy_montgomery(&tmp,&g5);
+        Fp2_mul_basis(&C12,&tmp);
+        Fp2_sqr_lazy_montgomery(&C02,&g4);
+        Fp2_set(&t0,&C02);
+        Fp2_add(&C02,&C02,&C02);
+        Fp2_add(&C02,&C02,&t0);
+        Fp2_add(&t0,&C12,&C02);
+        Fp2_sub(&t0,&t0,&g3);
+        Fp2_sub(&t0,&t0,&g3);
+        Fp2_add(&t1,&g2,&g2);
+        Fp2_add(&t1,&t1,&t1);
+    //else
+    }else{
+        Fp2_mul_lazy_montgomery(&t0,&g4,&g5);
+        Fp2_add(&t0,&t0,&t0);
+        Fp2_set(&t1,&g3);
+    }
+    
+    Fp2_inv_lazy_montgomery(&t1,&t1);
+    Fp2_mul_lazy_montgomery(&g1,&t0,&t1);
+    
+    //set
+    Fp2_set_ui_ui(&ANS->x0.x0,0);
+    Fp2_set(&ANS->x1.x1,&g1);
+    Fp2_set(&ANS->x1.x0,&g2);
+    Fp2_set(&ANS->x0.x2,&g3);
+    Fp2_set(&ANS->x0.x1,&g4);
+    Fp2_set(&ANS->x1.x2,&g5);
+}
 void Fp12_sqr_recover_g0(Fp12 *ANS,Fp12 *A){
     static Fp2 g0,g1,g2,g3,g4,g5;
     static Fp2 one;
@@ -551,6 +711,40 @@ void Fp12_sqr_recover_g0_lazy(Fp12 *ANS,Fp12 *A){
     Fp2_add(&t0,&t0,&t0);
     Fp2_sub(&t0,&t0,&t1);
     Fp2_mul_lazy(&t1,&g2,&g5);
+    Fp2_add(&t0,&t0,&t1);
+    Fp2_mul_basis(&g0,&t0);
+    Fp2_add(&g0,&g0,&one);
+    
+    //set
+    Fp2_set(&ANS->x0.x0,&g0);
+    Fp2_set(&ANS->x1.x1,&g1);
+    Fp2_set(&ANS->x1.x0,&g2);
+    Fp2_set(&ANS->x0.x2,&g3);
+    Fp2_set(&ANS->x0.x1,&g4);
+    Fp2_set(&ANS->x1.x2,&g5);
+}
+void Fp12_sqr_recover_g0_lazy_montgomery(Fp12 *ANS,Fp12 *A){
+    static Fp2 g0,g1,g2,g3,g4,g5;
+    static Fp2 one;
+    static Fp2 t0,t1;
+    static Fp2 C12,C02;
+    
+    Fp2_set_ui(&one,1);
+    
+    //set
+    Fp2_set(&g0,&A->x0.x0);
+    Fp2_set(&g1,&A->x1.x1);
+    Fp2_set(&g2,&A->x1.x0);
+    Fp2_set(&g3,&A->x0.x2);
+    Fp2_set(&g4,&A->x0.x1);
+    Fp2_set(&g5,&A->x1.x2);
+    
+    Fp2_sqr_lazy_montgomery(&t0,&g1);
+    Fp2_mul_lazy_montgomery(&t1,&g3,&g4);
+    Fp2_sub(&t0,&t0,&t1);
+    Fp2_add(&t0,&t0,&t0);
+    Fp2_sub(&t0,&t0,&t1);
+    Fp2_mul_lazy_montgomery(&t1,&g2,&g5);
     Fp2_add(&t0,&t0,&t1);
     Fp2_mul_basis(&g0,&t0);
     Fp2_add(&g0,&g0,&one);
@@ -676,6 +870,56 @@ void Fp12_sqr_GS_lazy(Fp12 *ANS,Fp12 *A){
     Fp2_set(&ANS->x0.x1,&z4);
     Fp2_set(&ANS->x1.x2,&z5);
 }
+void Fp12_sqr_GS_lazy_montgomery(Fp12 *ANS,Fp12 *A){
+    static Fp2 z0,z1,z2,z3,z4,z5;
+    static Fp2 t0,t1,t2,t3;
+    static Fp2 tmp0,tmp1;
+    
+    //set
+    Fp2_set(&z0,&A->x0.x0);
+    Fp2_set(&z1,&A->x1.x1);
+    Fp2_set(&z2,&A->x1.x0);
+    Fp2_set(&z3,&A->x0.x2);
+    Fp2_set(&z4,&A->x0.x1);
+    Fp2_set(&z5,&A->x1.x2);
+    
+    Fp4_sqr_lazy_montgomery(&t0,&t1,&z0,&z1);
+    
+    Fp2_sub(&z0,&t0,&z0);
+    Fp2_add(&z0,&z0,&z0);
+    Fp2_add(&z0,&z0,&t0);
+    
+    Fp2_add(&z1,&t1,&z1);
+    Fp2_add(&z1,&z1,&z1);
+    Fp2_add(&z1,&z1,&t1);
+    
+    Fp4_sqr_lazy_montgomery(&t0,&t1,&z2,&z3);
+    Fp4_sqr_lazy_montgomery(&t2,&t3,&z4,&z5);
+    
+    Fp2_sub(&z4,&t0,&z4);
+    Fp2_add(&z4,&z4,&z4);
+    Fp2_add(&z4,&z4,&t0);
+    
+    Fp2_add(&z5,&t1,&z5);
+    Fp2_add(&z5,&z5,&z5);
+    Fp2_add(&z5,&z5,&t1);
+    
+    Fp2_mul_basis(&t0,&t3);
+    Fp2_add(&z2,&t0,&z2);
+    Fp2_add(&z2,&z2,&z2);
+    Fp2_add(&z2,&z2,&t0);
+    
+    Fp2_sub(&z3,&t2,&z3);
+    Fp2_add(&z3,&z3,&z3);
+    Fp2_add(&z3,&z3,&t2);
+    //set
+    Fp2_set(&ANS->x0.x0,&z0);
+    Fp2_set(&ANS->x1.x1,&z1);
+    Fp2_set(&ANS->x1.x0,&z2);
+    Fp2_set(&ANS->x0.x2,&z3);
+    Fp2_set(&ANS->x0.x1,&z4);
+    Fp2_set(&ANS->x1.x2,&z5);
+}
 void Fp4_sqr_lazy(Fp2 *t0,Fp2 *t1,Fp2 *g0,Fp2 *g1){
     static Fp2 buf0,buf1;
     
@@ -685,6 +929,18 @@ void Fp4_sqr_lazy(Fp2 *t0,Fp2 *t1,Fp2 *g0,Fp2 *g1){
     Fp2_mul_basis(t0,&buf1);
     Fp2_add(t0,t0,&buf0);
     Fp2_sqr_lazy(t1,t1);
+    Fp2_sub(t1,t1,&buf0);
+    Fp2_sub(t1,t1,&buf1);
+}
+void Fp4_sqr_lazy_montgomery(Fp2 *t0,Fp2 *t1,Fp2 *g0,Fp2 *g1){
+    static Fp2 buf0,buf1;
+    
+    Fp2_sqr_lazy_montgomery(&buf0,g0);
+    Fp2_sqr_lazy_montgomery(&buf1,g1);
+    Fp2_add_lazy(t1,g0,g1);
+    Fp2_mul_basis(t0,&buf1);
+    Fp2_add(t0,t0,&buf0);
+    Fp2_sqr_lazy_montgomery(t1,t1);
     Fp2_sub(t1,t1,&buf0);
     Fp2_sub(t1,t1,&buf1);
 }
@@ -760,7 +1016,19 @@ void Fp12_inv_lazy(Fp12 *ANS,Fp12 *A){
     Fp6_mul_lazy(&ANS->x0,&tmp1_Fp6,&tmp3_Fp6);
     Fp6_mul_lazy(&ANS->x1,&tmp2_Fp6,&tmp3_Fp6);
 }
-
+void Fp12_inv_lazy_montgomery(Fp12 *ANS,Fp12 *A){
+    static Fp6 tmp1_Fp6,tmp2_Fp6,tmp3_Fp6,tmp4_Fp6;
+    Fp6_set(&tmp1_Fp6,&A->x0);
+    Fp6_set_neg(&tmp2_Fp6,&A->x1);
+    
+    Fp6_mul_lazy_montgomery(&tmp3_Fp6,&tmp1_Fp6,&A->x0);
+    Fp6_mul_lazy_montgomery(&tmp4_Fp6,&tmp2_Fp6,&A->x1);
+    Fp6_mul_basis(&tmp4_Fp6,&tmp4_Fp6);
+    Fp6_add(&tmp3_Fp6,&tmp3_Fp6,&tmp4_Fp6);
+    Fp6_inv_lazy_montgomery(&tmp3_Fp6,&tmp3_Fp6);
+    Fp6_mul_lazy_montgomery(&ANS->x0,&tmp1_Fp6,&tmp3_Fp6);
+    Fp6_mul_lazy_montgomery(&ANS->x1,&tmp2_Fp6,&tmp3_Fp6);
+}
 int  Fp12_legendre(Fp12 *A){
     mpz_t exp;
     mpz_init(exp);
@@ -795,9 +1063,9 @@ void Fp12_sqrt(Fp12 *ANS,Fp12 *A){
     mpz_init(q);
     mpz_init(z);
     mpz_init(result);
-    gmp_randstate_t state;
-    gmp_randinit_default (state);
-    gmp_randseed_ui(state,(unsigned long)time(NULL));
+    //gmp_randstate_t state;
+    //gmp_randinit_default (state);
+    //gmp_randseed_ui(state,(unsigned long)time(NULL));
     
     Fp12_set_random(&n,state);
     while(Fp12_legendre(&n)!=-1){
@@ -1053,6 +1321,96 @@ void Fp12_frobenius_map_p10(Fp12 *ANS,Fp12 *A){
     Fp2_set_neg(&ANS->x1.x1,&A->x1.x1);
     Fp2_mul_mpn(&ANS->x1.x2,&A->x1.x2,frobenius_constant[f_p10][5].x0.x0);
 }
+void Fp12_frobenius_map_p1_lazy_montgomery(Fp12 *ANS,Fp12 *A){
+    static mp_limb_t buf[FPLIMB];
+    static Fp2 buf2;
+    //TODO:global
+    static Fp tmp1_Fp;
+    //x0
+    Fp_set(&ANS->x0.x0.x0,&A->x0.x0.x0);
+    Fp_set_neg(&ANS->x0.x0.x1,&A->x0.x0.x1);
+    Fp_set(&tmp1_Fp,&A->x0.x1.x0);
+    Fp_set(&ANS->x0.x1.x0,&A->x0.x1.x1);
+    Fp_set(&ANS->x0.x1.x1,&tmp1_Fp);
+    mpn_to_montgomery(buf,frobenius_constant[f_p1][1].x1.x0);
+    Fp2_mul_mpn_montgomery(&ANS->x0.x1,&ANS->x0.x1,buf);
+    Fp_set(&ANS->x0.x2.x0,&A->x0.x2.x0);
+    Fp_set_neg(&ANS->x0.x2.x1,&A->x0.x2.x1);
+    mpn_to_montgomery(buf,frobenius_constant[f_p1][2].x0.x0);
+    Fp2_mul_mpn_montgomery(&ANS->x0.x2,&ANS->x0.x2,buf);
+    //x1
+    Fp_set(&ANS->x1.x0.x0,&A->x1.x0.x0);
+    Fp_set_neg(&ANS->x1.x0.x1,&A->x1.x0.x1);
+    Fp2_to_montgomery(&buf2,&frobenius_constant[f_p1][3]);
+    Fp2_mul_lazy_montgomery(&ANS->x1.x0,&ANS->x1.x0,&buf2);
+    Fp_set(&ANS->x1.x1.x0,&A->x1.x1.x0);
+    Fp_set_neg(&ANS->x1.x1.x1,&A->x1.x1.x1);
+    mpn_to_montgomery(buf,frobenius_constant[f_p1][4].x0.x0);
+    Fp2_mul_mpn_montgomery(&ANS->x1.x1,&ANS->x1.x1,buf);
+    Fp_add(&tmp1_Fp,&ANS->x1.x1.x0,&ANS->x1.x1.x1);
+    Fp_sub(&ANS->x1.x1.x0,&ANS->x1.x1.x0,&ANS->x1.x1.x1);
+    Fp_set(&ANS->x1.x1.x1,&tmp1_Fp);
+    
+    Fp_set(&ANS->x1.x2.x0,&A->x1.x2.x0);
+    Fp_set_neg(&ANS->x1.x2.x1,&A->x1.x2.x1);
+    Fp2_to_montgomery(&buf2,&frobenius_constant[f_p1][5]);
+    Fp2_mul_lazy_montgomery(&ANS->x1.x2,&ANS->x1.x2,&buf2);
+}
+void Fp12_frobenius_map_p2_montgomery(Fp12 *ANS,Fp12 *A){
+    static mp_limb_t buf[FPLIMB];
+    //TODO:global
+
+    //x0
+    Fp2_set(&ANS->x0.x0,&A->x0.x0);
+    mpn_to_montgomery(buf,frobenius_constant[f_p2][1].x0.x0);
+    Fp2_mul_mpn_montgomery(&ANS->x0.x1,&A->x0.x1,buf);
+    mpn_to_montgomery(buf,frobenius_constant[f_p2][2].x0.x0);
+    Fp2_mul_mpn_montgomery(&ANS->x0.x2,&A->x0.x2,buf);
+    //x1
+    mpn_to_montgomery(buf,frobenius_constant[f_p2][3].x0.x0);
+    Fp2_mul_mpn_montgomery(&ANS->x1.x0,&A->x1.x0,buf);
+    Fp2_set_neg(&ANS->x1.x1,&A->x1.x1);
+    mpn_to_montgomery(buf,frobenius_constant[f_p2][5].x0.x0);
+    Fp2_mul_mpn_montgomery(&ANS->x1.x2,&A->x1.x2,buf);
+}
+void Fp12_frobenius_map_p3_lazy_montgomery(Fp12 *ANS,Fp12 *A){
+    static mp_limb_t buf[FPLIMB];
+    static Fp2 buf2;
+    //TODO:global
+    static Fp tmp1_Fp;
+    //x0
+    Fp_set(&ANS->x0.x0.x0,&A->x0.x0.x0);
+    Fp_set_neg(&ANS->x0.x0.x1,&A->x0.x0.x1);
+    Fp_set(&tmp1_Fp,&A->x0.x1.x0);
+    Fp_set(&ANS->x0.x1.x0,&A->x0.x1.x1);
+    Fp_set(&ANS->x0.x1.x1,&tmp1_Fp);
+    Fp_set_neg(&ANS->x0.x2.x0,&A->x0.x2.x0);
+    Fp_set(&ANS->x0.x2.x1,&A->x0.x2.x1);
+    //x1
+    Fp_set(&ANS->x1.x0.x0,&A->x1.x0.x0);
+    Fp_set_neg(&ANS->x1.x0.x1,&A->x1.x0.x1);
+    Fp2_to_montgomery(&buf2,&frobenius_constant[f_p3][3]);
+    Fp2_mul_lazy_montgomery(&ANS->x1.x0,&ANS->x1.x0,&buf2);
+    Fp_set(&ANS->x1.x1.x0,&A->x1.x1.x0);
+    Fp_set_neg(&ANS->x1.x1.x1,&A->x1.x1.x1);
+    mpn_to_montgomery(buf,frobenius_constant[f_p3][4].x0.x0);
+    Fp2_mul_mpn_montgomery(&ANS->x1.x1,&ANS->x1.x1,buf);
+    Fp_add(&tmp1_Fp,&ANS->x1.x1.x0,&ANS->x1.x1.x1);
+    Fp_sub(&ANS->x1.x1.x0,&ANS->x1.x1.x0,&ANS->x1.x1.x1);
+    Fp_set(&ANS->x1.x1.x1,&tmp1_Fp);
+    Fp_set(&ANS->x1.x2.x0,&A->x1.x2.x0);
+    Fp_set_neg(&ANS->x1.x2.x1,&A->x1.x2.x1);
+    Fp2_to_montgomery(&buf2,&frobenius_constant[f_p3][5]);
+    Fp2_mul_lazy_montgomery(&ANS->x1.x2,&ANS->x1.x2,&buf2);
+}
+
+void Fp12_frobenius_map_p6_montgomery(Fp12 *ANS,Fp12 *A){
+    //x0
+    Fp6_set(&ANS->x0,&A->x0);
+    //x1
+    Fp6_set_neg(&ANS->x1,&A->x1);
+}
+
 int Fp12_montgomery_trick(Fp12 *A_inv,Fp12 *A,int n){
     int i;
     Fp12 ANS[n],ALL_inv;
@@ -1076,5 +1434,23 @@ int Fp12_montgomery_trick(Fp12 *A_inv,Fp12 *A,int n){
 	Fp12_println("=",&check);
     }
     */
+    return 0;
+}
+int Fp12_montgomery_trick_montgomery(Fp12 *A_inv,Fp12 *A,int n){
+    int i;
+    Fp12 ANS[n],ALL_inv;
+	Fp12_set(&ANS[0],&A[0]);
+	Fp12 check;
+	
+	for(i=1;i<n;i++){
+	Fp12_mul_lazy_montgomery(&ANS[i],&ANS[i-1],&A[i]);
+	}
+	Fp12_inv_lazy_montgomery(&ALL_inv,&ANS[n-1]);	
+	for(i=n-1;i>0;i--){
+    Fp12_mul_lazy_montgomery(&A_inv[i],&ALL_inv,&ANS[i-1]);	
+    Fp12_mul_lazy_montgomery(&ALL_inv,&ALL_inv,&A[i]);
+    }
+    
+    Fp12_set(&A_inv[0],&ALL_inv);
     return 0;
 }

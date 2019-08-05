@@ -132,6 +132,12 @@ void EFp_to_EFpJ(EFpJ *ANS,EFp *A){
     Fp_set_ui(&ANS->z,1);
     ANS->infinity=A->infinity;
 }
+void EFp_to_EFpJ_montgomery(EFpJ *ANS,EFp *A){
+    Fp_set(&ANS->x,&A->x);
+    Fp_set(&ANS->y,&A->y);
+    mpn_copyd(ANS->z.x0,RmodP,FPLIMB);
+    ANS->infinity=A->infinity;
+}
 void EFpJT_to_EFpJ(EFpJ *ANS,EFpJT *A){
     Fp_set(&ANS->x,&A->x);
     Fp_set(&ANS->y,&A->y);
@@ -160,6 +166,16 @@ void EFp_Jacobian(EFp *ANS,EFpJ *A){
     Fp_mul(&ANS->y,&A->y,&Zt);
     ANS->infinity=A->infinity;
 }
+void EFp_Jacobian_montgomery(EFp *ANS,EFpJ *A){
+    static Fp Zi,Zt;
+    Fp_inv_montgomery(&Zi,&A->z);
+    Fp_mulmod_montgomery(&Zt,&Zi,&A->z);
+    Fp_mulmod_montgomery(&Zt,&Zi,&Zi);
+    Fp_mulmod_montgomery(&ANS->x,&A->x,&Zt);
+    Fp_mulmod_montgomery(&Zt,&Zt,&Zi);
+    Fp_mulmod_montgomery(&ANS->y,&A->y,&Zt);
+    ANS->infinity=A->infinity;
+}
 void EFp_mix(EFpJ *ANS,EFpJ *A,Fp *Zi){
     static Fp Zt;
     Fp_mul(&Zt,Zi,Zi);
@@ -167,6 +183,26 @@ void EFp_mix(EFpJ *ANS,EFpJ *A,Fp *Zi){
     Fp_mul(&Zt,&Zt,Zi);
     Fp_mul(&ANS->y,&A->y,&Zt);
     Fp_set_ui(&ANS->z,1);
+    ANS->infinity=A->infinity;
+}
+void EFp_mix_montgomery(EFpJ *ANS,EFpJ *A,Fp *Zi){
+    static Fp Zt;
+    Fp_mulmod_montgomery(&Zt,Zi,Zi);
+    Fp_mulmod_montgomery(&ANS->x,&A->x,&Zt);
+    Fp_mulmod_montgomery(&Zt,&Zt,Zi);
+    Fp_mulmod_montgomery(&ANS->y,&A->y,&Zt);
+    //Fp_set_ui(&ANS->z,1);
+    mpn_copyd(ANS->z.x0,RmodP,FPLIMB);
+    ANS->infinity=A->infinity;
+}
+void EFp_to_montgomery(EFp *ANS,EFp *A){
+    Fp_to_montgomery(&ANS->x,&A->x);
+    Fp_to_montgomery(&ANS->y,&A->y);
+    ANS->infinity=A->infinity;
+}
+void EFp_mod_montgomery(EFp *ANS,EFp *A){
+    Fp_mod_montgomery(&ANS->x,&A->x);
+    Fp_mod_montgomery(&ANS->y,&A->y);
     ANS->infinity=A->infinity;
 }
 void EFp_set_ui(EFp *ANS,unsigned long int UI){
@@ -212,8 +248,6 @@ void EFp_rational_point(EFp *P){
     Fp_init(&tmp1);
     Fp_init(&tmp2);
     Fp_init(&tmp_x);
-    //gmp_randinit_default (state);
-    //gmp_randseed_ui(state,(unsigned long)time(NULL));
 	
     while(1){
         Fp_set_random(&P->x,state);
@@ -438,7 +472,7 @@ void EFp_ECD_Jacobian_lazy(EFpJ *ANS,EFpJ *P){
     
     Fp_add_lazy(tmp1,FPLIMB,tmp1,FPLIMB,tmp1,FPLIMB);
     Fp_add_lazy(s,FPLIMB,tmp1,FPLIMB,tmp1,FPLIMB);
-
+    
 
     //m
     Fp_add_lazy(tmp1,FPLIMB,Pt.x.x0,FPLIMB,Pt.x.x0,FPLIMB);
@@ -474,6 +508,52 @@ void EFp_ECD_Jacobian_lazy(EFpJ *ANS,EFpJ *P){
     Fp_add_lazy(tmp1,FPLIMB,Pt.y.x0,FPLIMB,Pt.y.x0,FPLIMB);
     Fp_mul_lazy(bufL,tmp1,Pt.z.x0);
     Fp_mod(&ANS->z,bufL,FPLIMB2);
+}
+void EFp_ECD_Jacobian_lazy_montgomery(EFpJ *ANS,EFpJ *P){
+    static Fp s,m,T;
+
+    static Fp buf,tmp1;
+    static Fp tmpY2;
+    static EFpJ Pt;
+    if(Fp_cmp_zero(&P->y)==0){
+        ANS->infinity=1;
+        return;
+    }
+    
+    EFpJ_set(&Pt,P);
+    
+    //s
+    Fp_mulmod_montgomery(&tmpY2,&Pt.y,&Pt.y);
+
+    Fp_mulmod_montgomery(&tmp1,&tmpY2,&Pt.x);
+    Fp_add(&tmp1,&tmp1,&tmp1);
+    Fp_add(&s,&tmp1,&tmp1);
+    //m
+    Fp_add_lazy(tmp1.x0,FPLIMB,Pt.x.x0,FPLIMB,Pt.x.x0,FPLIMB);
+    Fp_add_lazy(tmp1.x0,FPLIMB,tmp1.x0,FPLIMB,Pt.x.x0,FPLIMB);
+    Fp_mulmod_montgomery(&m,&tmp1,&Pt.x);
+
+    //T
+    Fp_mulmod_montgomery(&T,&m,&m);
+    Fp_add(&tmp1,&s,&s);
+    Fp_sub(&T,&T,&tmp1);
+
+    //ANS->x
+    Fp_set(&ANS->x,&T);
+
+    //ANS->y
+    Fp_sub_lazy(tmp1.x0,FPLIMB,s.x0,FPLIMB,T.x0,FPLIMB);
+    Fp_mulmod_montgomery(&buf,&tmp1,&m);
+
+    Fp_mulmod_montgomery(&tmp1,&tmpY2,&tmpY2);
+    Fp_add(&tmp1,&tmp1,&tmp1);
+    Fp_add(&tmp1,&tmp1,&tmp1);
+    Fp_add(&tmp1,&tmp1,&tmp1);
+    Fp_sub(&ANS->y,&buf,&tmp1);
+    
+    //ANS->z
+    Fp_add_lazy(tmp1.x0,FPLIMB,Pt.y.x0,FPLIMB,Pt.y.x0,FPLIMB);
+    Fp_mulmod_montgomery(&ANS->z,&tmp1,&Pt.z);
 }
 void EFp_ECA(EFp *ANS,EFp *P1,EFp *P2){
     static EFp tmp1_EFp,tmp2_EFp;
@@ -885,7 +965,84 @@ void EFp_ECA_Jacobian_lazy(EFpJ *ANS,EFpJ *P1,EFpJ *P2){
     Fp_mul_lazy(bufL,tmp1,H);
     Fp_mod(&ANS->z,bufL,FPLIMB2);
 }
+void EFp_ECA_Jacobian_lazy_montgomery(EFpJ *ANS,EFpJ *P1,EFpJ *P2){
+    static EFpJ Pt1,Pt2;
+    static Fp U1,U2,S1,S2,H,r;
 
+    static Fp buf,tmp1,tmp2;
+    static Fp tmpZ1,tmpZ2,tmpH2,tmpH3,tmpU1H2;
+    
+    if(P1->infinity==1){
+        EFpJ_set(ANS,P2);
+        return;
+    }else if(P2->infinity==1){
+        EFpJ_set(ANS,P1);
+        return;
+    }else if(Fp_cmp(&P1->x,&P2->x)==0){
+        if(Fp_cmp(&P1->y,&P2->y)!=0){
+            ANS->infinity=1;
+            return;
+        }else{
+            EFp_ECD_Jacobian_lazy(ANS,P1);
+            return;
+        }
+    }
+    
+    EFpJ_set(&Pt1,P1);
+    EFpJ_set(&Pt2,P2);
+
+    //U1
+    Fp_mulmod_montgomery(&tmpZ2,&Pt2.z,&Pt2.z);
+    Fp_mulmod_montgomery(&U1,&tmpZ2,&Pt1.x);
+    //Fp_printf("U1=",&U1);printf("\n");
+
+    //U2
+    Fp_mulmod_montgomery(&tmpZ1,&Pt1.z,&Pt1.z);
+    Fp_mulmod_montgomery(&U2,&tmpZ1,&Pt2.x);
+    //Fp_printf("U2=",&U2);printf("\n");
+    
+    //S1
+    Fp_mulmod_montgomery(&tmp1,&tmpZ2,&Pt2.z);
+    Fp_mulmod_montgomery(&S1,&tmp1,&Pt1.y);
+    //Fp_printf("S1=",&S1);printf("\n");
+
+    //S2
+    Fp_mulmod_montgomery(&tmp1,&tmpZ1,&Pt1.z);
+    Fp_mulmod_montgomery(&S2,&tmp1,&Pt2.y);
+    //Fp_printf("S2=",&S2);printf("\n");
+    
+    //H
+    //Fp_printf("U1=",&U1);printf("\n");
+    Fp_sub(&H,&U2,&U1);
+    //Fp_printf("H=",&H);printf("\n");
+
+    //r
+    Fp_sub(&r,&S2,&S1);
+    //Fp_printf("r=",&r);printf("\n");
+
+    //ANS->x
+    Fp_mulmod_montgomery(&tmp1,&r,&r);
+    
+    Fp_mulmod_montgomery(&tmpH2,&H,&H);
+    Fp_mulmod_montgomery(&tmpH3,&tmpH2,&H);
+    Fp_sub(&tmp2,&tmp1,&tmpH3);
+
+    Fp_mulmod_montgomery(&tmpU1H2,&tmpH2,&U1);
+    Fp_add(&tmp1,&tmpU1H2,&tmpU1H2);
+    Fp_sub(&ANS->x,&tmp2,&tmp1);
+
+    //ANS->y
+    Fp_sub_lazy(tmp1.x0,FPLIMB,tmpU1H2.x0,FPLIMB,ANS->x.x0,FPLIMB);
+    Fp_mulmod_montgomery(&tmp1,&tmp1,&r);
+
+    Fp_mulmod_montgomery(&tmp2,&tmpH3,&S1);
+    Fp_sub(&ANS->y,&tmp1,&tmp2);
+    
+    //ANS->z
+    Fp_mulmod_montgomery(&tmp1,&Pt1.z,&Pt2.z);
+    Fp_mulmod_montgomery(&ANS->z,&tmp1,&H);
+    //getchar();
+}
 void EFp_ECA_Mixture_lazy(EFpJ *ANS,EFpJ *P1,EFpJ *P2){
     static EFpJ Pt1,Pt2;
     static mp_limb_t Z1Z1[FPLIMB],HH[FPLIMB],I[FPLIMB],J[FPLIMB],V[FPLIMB];
@@ -920,6 +1077,15 @@ void EFp_ECA_Mixture_lazy(EFpJ *ANS,EFpJ *P1,EFpJ *P2){
     Fp_printf("Y2=",&Pt2.y);printf("\n");
     Fp_printf("Z2=",&Pt2.z);printf("\n");
 */
+/*
+    printf("Mixture lazy\n");
+    gmp_printf("Pt1.x=%Nu\n",Pt1.x.x0,FPLIMB);
+    gmp_printf("Pt1.y=%Nu\n",Pt1.y.x0,FPLIMB);
+    gmp_printf("Pt1.z=%Nu\n",Pt1.z.x0,FPLIMB);
+    gmp_printf("Pt2.x=%Nu\n",Pt2.x.x0,FPLIMB);
+    gmp_printf("Pt2.y=%Nu\n",Pt2.y.x0,FPLIMB);
+    gmp_printf("Pt2.z=%Nu\n",Pt2.z.x0,FPLIMB);
+    */
     //Z1Z1
     Fp_mul_lazy(bufL,Pt1.z.x0,Pt1.z.x0);
     mpn_mod(Z1Z1,bufL,FPLIMB2);
@@ -987,20 +1153,101 @@ void EFp_ECA_Mixture_lazy(EFpJ *ANS,EFpJ *P1,EFpJ *P2){
     Fp_sub_lazy_mod(&ANS->y,tmpL1,tmpL2);
     
     //Z3
-    /*
-    Fp_add_lazy(tmp1,FPLIMB,Pt1.z.x0,FPLIMB,H,FPLIMB);
-    Fp_mul_lazy(tmpL1,tmp1,tmp1);
-    mpn_mod(tmp2,tmpL1,FPLIMB2);
-    Fp_sub_lazy(buf,FPLIMB,tmp2,FPLIMB,Z1Z1,FPLIMB);
-    Fp_sub_lazy(buf,FPLIMB,buf,FPLIMB,HH,FPLIMB);
-    Fp_mod(&ANS->z,buf,FPLIMB);
-    */
-    
-    //ANS->z
     Fp_mul_lazy(bufL,Pt1.z.x0,H);
     Fp_mod(&ANS->z,bufL,FPLIMB2);
+    //getchar();
 
 }
+
+void EFp_ECA_Mixture_lazy_montgomery(EFpJ *ANS,EFpJ *P1,EFpJ *P2){
+    static EFpJ Pt1,Pt2;
+    static Fp Z1Z1,HH,I,J,V;
+    static Fp U1,U2,S1,S2,H,r;
+    static Fp buf,tmp1,tmp2;
+    
+    if(P1->infinity==1){
+        EFpJ_set(ANS,P2);
+        return;
+    }else if(P2->infinity==1){
+        EFpJ_set(ANS,P1);
+        return;
+    }else if(Fp_cmp(&P1->x,&P2->x)==0){
+        if(Fp_cmp(&P1->y,&P2->y)!=0){
+            ANS->infinity=1;
+            return;
+        }else{
+            EFp_ECD_Jacobian_lazy(ANS,P1);
+            return;
+        }
+    }
+    
+    EFpJ_set(&Pt1,P1);
+    EFpJ_set(&Pt2,P2);
+    
+    
+    
+    //Fp_printf("Pt1.x=",&Pt1.x);printf("\n");
+    //Fp_printf("Pt1.y=",&Pt1.y);printf("\n");
+    //Fp_printf("Pt1.z=",&Pt1.z);printf("\n");
+    //Fp_printf("Pt2.x=",&Pt2.x);printf("\n");
+    //Fp_printf("Pt2.y=",&Pt2.y);printf("\n");
+    //Fp_printf("Pt2.z=",&Pt2.z);printf("\n");
+    
+    //Fp_printf_montgomery("Pt1.x=",&Pt1.x);printf("\n");
+    //Fp_printf_montgomery("Pt1.y=",&Pt1.y);printf("\n");
+    //Fp_printf_montgomery("Pt1.z=",&Pt1.z);printf("\n");
+    //Fp_printf_montgomery("Pt2.x=",&Pt2.x);printf("\n");
+    //Fp_printf_montgomery("Pt2.y=",&Pt2.y);printf("\n");
+    //Fp_printf_montgomery("Pt2.z=",&Pt2.z);printf("\n");
+    
+    
+    //Z1Z1
+    Fp_mulmod_montgomery(&Z1Z1,&Pt1.z,&Pt1.z);
+    
+    //U2
+    Fp_mulmod_montgomery(&U2,&Pt2.x,&Z1Z1);
+    
+    //S2
+    Fp_mulmod_montgomery(&tmp1,&Z1Z1,&Pt1.z);
+    Fp_mulmod_montgomery(&S2,&tmp1,&Pt2.y);
+    
+    //H
+    Fp_sub(&H,&U2,&Pt1.x);
+    
+    //HH
+    Fp_mulmod_montgomery(&HH,&H,&H);
+    
+    //I
+    Fp_add(&I,&HH,&HH);
+    Fp_add(&I,&I,&I);
+    
+    //J
+    Fp_mulmod_montgomery(&J,&HH,&H);
+    
+    //r
+    Fp_sub(&r,&S2,&Pt1.y);
+    
+    //V
+    Fp_mulmod_montgomery(&V,&Pt1.x,&HH);
+    
+    //X3
+    Fp_mulmod_montgomery(&tmp1,&r,&r);
+    Fp_add(&tmp2,&V,&V);
+    Fp_sub(&buf,&tmp1,&J);
+    Fp_sub(&ANS->x,&buf,&tmp2);
+    
+    //Y3
+    Fp_sub_lazy(tmp1.x0,FPLIMB,V.x0,FPLIMB,ANS->x.x0,FPLIMB);
+    Fp_mulmod_montgomery(&tmp2,&tmp1,&r);
+    Fp_mulmod_montgomery(&tmp1,&Pt1.y,&J);
+    Fp_sub(&ANS->y,&tmp2,&tmp1);
+    
+    
+    //ANS->z
+    Fp_mulmod_montgomery(&ANS->z,&Pt1.z,&H);
+
+}
+
 void EFp_ECA_Jacobian_table(EFpJ *ANS,EFpJ *P1,EFpJT *P2){
     static EFpJ Pt1;
     static EFpJT Pt2;
@@ -1021,7 +1268,7 @@ void EFp_ECA_Jacobian_table(EFpJ *ANS,EFpJ *P1,EFpJT *P2){
             ANS->infinity=1;
             return;
         }else{
-            EFp_ECD_Jacobian_lazy(ANS,P1);
+            EFp_ECD_Jacobian_lazy_montgomery(ANS,P1);
             return;
         }
     }
@@ -1208,4 +1455,11 @@ void EFpJ_skew_frobenius_map_p2(EFpJ *ANS,EFpJ *A){
     Fp_set_neg(&ANS->y,&A->y);
     Fp_set(&ANS->z,&A->z);
 }
-
+void EFpJ_skew_frobenius_map_p2_montgomery(EFpJ *ANS,EFpJ *A){
+    static Fp buf;
+    //TODO:global
+    mpn_to_montgomery(buf.x0,epsilon1);
+    Fp_mulmod_montgomery(&ANS->x,&A->x,&buf);
+    Fp_set_neg(&ANS->y,&A->y);
+    Fp_set(&ANS->z,&A->z);
+}

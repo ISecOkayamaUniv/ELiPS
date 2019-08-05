@@ -20,7 +20,13 @@ void Fp2_println(char *str,Fp2 *A){
     Fp_printf("",&A->x1);
     gmp_printf(")\n");
 }
-
+void Fp2_printf_montgomery(char *str,Fp2 *A){
+    gmp_printf("%s(",str);
+    Fp_printf_montgomery("",&A->x0);
+    gmp_printf(",");
+    Fp_printf_montgomery("",&A->x1);
+    gmp_printf(")");
+}
 void Fp2_set(Fp2 *ANS,Fp2 *A){
     Fp_set(&ANS->x0,&A->x0);
     Fp_set(&ANS->x1,&A->x1);
@@ -34,17 +40,24 @@ void Fp2_set_ui_ui(Fp2 *ANS,unsigned long int UI){
     Fp_set_ui(&ANS->x0,UI);
     Fp_set_ui(&ANS->x1,UI);
 }  
-
+//TODO:set_0
 void Fp2_set_mpn(Fp2 *ANS,mp_limb_t *A){
     Fp_set_mpn(&ANS->x0,A);
-    Fp_set_mpn(&ANS->x1,A);
+    Fp_set_ui(&ANS->x1,0);
 }
 
 void Fp2_set_neg(Fp2 *ANS,Fp2 *A){
     Fp_set_neg(&ANS->x0,&A->x0);
     Fp_set_neg(&ANS->x1,&A->x1);
 }
-
+void Fp2_to_montgomery(Fp2 *ANS,Fp2 *A){
+    Fp_to_montgomery(&ANS->x0,&A->x0);
+    Fp_to_montgomery(&ANS->x1,&A->x1);
+}
+void Fp2_mod_montgomery(Fp2 *ANS,Fp2 *A){
+    Fp_mod_montgomery(&ANS->x0,&A->x0);
+    Fp_mod_montgomery(&ANS->x1,&A->x1);
+}
 void Fp2_lshift(Fp2 *ANS,Fp2 *A,unsigned long int UI){
     Fp_lshift(&ANS->x0,&A->x0,UI);
     Fp_lshift(&ANS->x1,&A->x1,UI);
@@ -85,12 +98,38 @@ void Fp2_mul_lazy(Fp2 *ANS,Fp2 *A,Fp2 *B){
     Fp_add_lazy(tmp4,FPLIMB,B->x0.x0,FPLIMB,B->x1.x0,FPLIMB);
 
     //x0
+    //Fp out;
+    //Fp_mod(&out,tmpL1,FPLIMB2);
+    //Fp_printf("tmp1=",&out);printf("\n");
+    //Fp_mod(&out,tmpL2,FPLIMB2);
+    //Fp_printf("tmp2=",&out);printf("\n");
     Fp_sub_lazy_mod(&ANS->x0,tmpL1,tmpL2);
 
     //x1
     Fp_mul_lazy(buf1L,tmp3,tmp4);
     Fp_sub_lazy(buf2L,FPLIMB2,buf1L,FPLIMB2,tmpL1,FPLIMB2);
     Fp_sub_lazy_mod(&ANS->x1,buf2L,tmpL2);
+}
+void Fp2_mul_lazy_montgomery(Fp2 *ANS,Fp2 *A,Fp2 *B){
+    static Fp buf1,buf2,tmp1,tmp2;
+    static Fp buf,tmp3,tmp4;
+    
+    //set
+    Fp_mulmod_montgomery(&tmp1,&A->x0,&B->x0);//a*c
+    Fp_mulmod_montgomery(&tmp2,&A->x1,&B->x1);//b*d
+	
+    Fp_add_lazy(tmp3.x0,FPLIMB,A->x0.x0,FPLIMB,A->x1.x0,FPLIMB);
+    Fp_add_lazy(tmp4.x0,FPLIMB,B->x0.x0,FPLIMB,B->x1.x0,FPLIMB);
+
+    //x0
+    //Fp_printf_montgomery("tmp1=",&tmp1);printf("\n");
+    //Fp_printf_montgomery("tmp2=",&tmp2);printf("\n");
+    Fp_sub(&ANS->x0,&tmp1,&tmp2);
+
+    //x1
+    Fp_mulmod_montgomery(&buf1,&tmp3,&tmp4);
+    Fp_sub(&buf2,&buf1,&tmp1);
+    Fp_sub(&ANS->x1,&buf2,&tmp2);
 }
 void Fp2_mul_ui(Fp2 *ANS,Fp2 *A,unsigned long int UI){
     Fp_mul_ui(&ANS->x0,&A->x0,UI);
@@ -99,6 +138,10 @@ void Fp2_mul_ui(Fp2 *ANS,Fp2 *A,unsigned long int UI){
 void Fp2_mul_mpn(Fp2 *ANS,Fp2 *A,mp_limb_t *B){
     Fp_mul_mpn(&ANS->x0,&A->x0,B);
     Fp_mul_mpn(&ANS->x1,&A->x1,B);
+}
+void Fp2_mul_mpn_montgomery(Fp2 *ANS,Fp2 *A,mp_limb_t *B){
+    mpn_mulmod_montgomery(ANS->x0.x0,FPLIMB,A->x0.x0,FPLIMB,B,FPLIMB);
+    mpn_mulmod_montgomery(ANS->x1.x0,FPLIMB,A->x1.x0,FPLIMB,B,FPLIMB);
 }
 void Fp2_mul_basis(Fp2 *ANS,Fp2 *A){
     static Fp tmp1_Fp;
@@ -185,6 +228,19 @@ void Fp2_sqr_lazy(Fp2 *ANS,Fp2 *A){
     Fp_mul_lazy(bufL,tmp1,tmp2);
     Fp_mod(&ANS->x0,bufL,FPLIMB2);
 }
+void Fp2_sqr_lazy_montgomery(Fp2 *ANS,Fp2 *A){
+    static Fp tmp1,tmp2,tmp3,buf;
+
+    Fp_add_lazy(tmp1.x0,FPLIMB,A->x0.x0,FPLIMB,A->x1.x0,FPLIMB);
+    Fp_sub_lazy(tmp2.x0,FPLIMB,A->x0.x0,FPLIMB,A->x1.x0,FPLIMB);
+
+    //x1
+    Fp_mulmod_montgomery(&tmp3,&A->x0,&A->x1);
+    Fp_add(&ANS->x1,&tmp3,&tmp3);
+
+    //x0
+    Fp_mulmod_montgomery(&ANS->x0,&tmp1,&tmp2);
+}
 void Fp2_add(Fp2 *ANS,Fp2 *A,Fp2 *B){
     Fp_add(&ANS->x0,&A->x0,&B->x0);
     Fp_add(&ANS->x1,&A->x1,&B->x1);
@@ -262,6 +318,20 @@ void Fp2_inv_lazy(Fp2 *ANS,Fp2 *A){
     Fp_mul(&ANS->x0,&tmp1_Fp,&tmp3);
     Fp_mul(&ANS->x1,&tmp2_Fp,&tmp3);
 }
+void Fp2_inv_lazy_montgomery(Fp2 *ANS,Fp2 *A){
+	static Fp tmp1_Fp,tmp2_Fp;
+	static Fp tmp3;
+	static Fp tmp1,tmp2;
+    Fp_set(&tmp1_Fp,&A->x0);
+    Fp_set_neg(&tmp2_Fp,&A->x1);
+    
+    Fp_mulmod_montgomery(&tmp1,&tmp1_Fp,&tmp1_Fp);
+    Fp_mulmod_montgomery(&tmp2,&tmp2_Fp,&A->x1);
+    Fp_sub(&tmp3,&tmp1,&tmp2);
+    Fp_inv_montgomery(&tmp3,&tmp3);
+    Fp_mulmod_montgomery(&ANS->x0,&tmp1_Fp,&tmp3);
+    Fp_mulmod_montgomery(&ANS->x1,&tmp2_Fp,&tmp3);
+}
 int  Fp2_legendre(Fp2 *A){
     Fp2 tmp;
     Fp2_init(&tmp);
@@ -317,9 +387,9 @@ void Fp2_sqrt(Fp2 *ANS,Fp2 *A){
     mpz_init(q);
     mpz_init(z);
     mpz_init(result);
-    gmp_randstate_t state;
-	gmp_randinit_default(state);
-	gmp_randseed_ui(state,(unsigned long)time(NULL));
+    //gmp_randstate_t state;
+	//gmp_randinit_default(state);
+	//gmp_randseed_ui(state,(unsigned long)time(NULL));
     
     Fp2_set_random(&n,state);
     while(Fp2_legendre(&n)!=-1){
@@ -434,6 +504,31 @@ int Fp2_montgomery_trick(Fp2 *A_inv,Fp2 *A,int n){
 	for(i=n-1;i>0;i--){
     Fp2_mul_lazy(&A_inv[i],&ALL_inv,&ANS[i-1]);	
     Fp2_mul_lazy(&ALL_inv,&ALL_inv,&A[i]);
+    }
+    
+    Fp2_set(&A_inv[0],&ALL_inv);
+    /*
+    for(i=0;i<n;i++){
+    Fp2_mul(&check,&A[i],&A_inv[i]);
+    printf("check:%d",i);	
+	Fp2_println("=",&check);
+    }
+    */
+    return 0;
+}
+int Fp2_montgomery_trick_montgomery(Fp2 *A_inv,Fp2 *A,int n){
+    int i;
+    Fp2 ANS[n],ALL_inv;
+	Fp2_set(&ANS[0],&A[0]);
+	Fp2 check;
+	
+	for(i=1;i<n;i++){
+	Fp2_mul_lazy_montgomery(&ANS[i],&ANS[i-1],&A[i]);
+	}
+	Fp2_inv_lazy_montgomery(&ALL_inv,&ANS[n-1]);	
+	for(i=n-1;i>0;i--){
+    Fp2_mul_lazy_montgomery(&A_inv[i],&ALL_inv,&ANS[i-1]);	
+    Fp2_mul_lazy_montgomery(&ALL_inv,&ALL_inv,&A[i]);
     }
     
     Fp2_set(&A_inv[0],&ALL_inv);
