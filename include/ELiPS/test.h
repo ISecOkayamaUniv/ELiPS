@@ -3,8 +3,6 @@
 
 #include <ELiPS/time.h>
 #include <ELiPS/bls12_test.h>
-#include <ELiPS/lazy_test.h>
-#include <ELiPS/Jacobian_test.h>
 
 extern int test_Field(int fp,int fp2,int fp6,int fp12,int sqr);
 extern int test_EFp(int ecd,int eca,int scm);

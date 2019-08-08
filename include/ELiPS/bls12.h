@@ -3,6 +3,5 @@
 
 #include "ELiPS/bls12_init.h"
 #include "ELiPS/test.h"
-#include "ELiPS/fast_test.h"
 
 #endif
