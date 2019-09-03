@@ -9,6 +9,8 @@ float timedifference_usec(struct timeval tv_start, struct timeval tv_end){
     return (tv_end.tv_sec - tv_start.tv_sec) + (tv_end.tv_usec - tv_start.tv_usec);
 }
 
+/*
 float timedifference_nsec(struct timespec tv_start, struct timespec tv_end){
     return (tv_end.tv_sec - tv_start.tv_sec) + (tv_end.tv_nsec - tv_start.tv_nsec);
 }
+*/

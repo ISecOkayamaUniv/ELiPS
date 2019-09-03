@@ -500,7 +500,7 @@ return 0;
 void test_Fp(int fp){
     int i,j,n=10000;
     float add_time=0,dbl_time=0,mul_time=0,sqr_time=0,mod_time=0,mod_mont_time=0;
-    struct timespec tv_a,tv_b;
+    //struct timespec tv_a,tv_b;
     struct timeval tv_A,tv_B;
     printf("====================================================================================\n");
     printf("Field Fp test\n");
@@ -520,17 +520,28 @@ for(i=0;i<fp;i++){
 
     mpn_mul_n(At,A,A,FPLIMB);
     mpn_mul_n(Bt,B,B,FPLIMB);
-
+	
+	//TODO:Raspberrypi error
+	/*
     clock_gettime(CLOCK_REALTIME, &tv_a);
     for(j=0;j<n;j++)    mpn_add_n(test_mul,At,At,FPLIMB2);
     clock_gettime(CLOCK_REALTIME, &tv_b);
     add_time+=timedifference_nsec(tv_a,tv_b);
-
+	
     clock_gettime(CLOCK_REALTIME, &tv_a);
     for(j=0;j<n;j++)    mpn_lshift(test_mul,At,FPLIMB2,1);
     clock_gettime(CLOCK_REALTIME, &tv_b);
     dbl_time+=timedifference_nsec(tv_a,tv_b);
+	*/
+    gettimeofday(&tv_A,NULL);
+    for(j=0;j<n;j++)    mpn_add_n(test_mul,At,At,FPLIMB2);
+    gettimeofday(&tv_B,NULL);
+    add_time+=timedifference_msec(tv_A,tv_B);
 
+    gettimeofday(&tv_A,NULL);
+    for(j=0;j<n;j++)    mpn_lshift(test_mul,At,FPLIMB2,1);
+    gettimeofday(&tv_B,NULL);
+    dbl_time+=timedifference_msec(tv_A,tv_B);
 
     gettimeofday(&tv_A,NULL);
     for(j=0;j<n;j++)    mpn_sqr(test_mul,A,FPLIMB);
