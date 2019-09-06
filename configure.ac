@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([elips], [1.0.8])
+AC_INIT([elips], [1.0.9])
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([src/mpn.c])
 AC_CONFIG_HEADERS([config.h])

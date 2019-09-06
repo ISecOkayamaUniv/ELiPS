@@ -113,6 +113,7 @@ void BLS12_test_plain_ate_pairing(){
 int BLS12_test_opt_ate_pairing(int pairing){
     int i,n=0;
     float opt_time=0,opt_compress_time=0,opt_compress_lazy_time=0,opt_lazy_time=0,opt_compress_lazy_montgomery_time=0;
+    cost tmp,opt_cost,opt_compress_cost,opt_compress_lazy_cost,opt_lazy_cost,opt_compress_lazy_montgomery_cost;
     struct timeval tv_A,tv_B;
     printf("====================================================================================\n");
     printf("BLS12_Opt-ate pairing\n\n");
@@ -135,7 +136,14 @@ int BLS12_test_opt_ate_pairing(int pairing){
     Fp12_init(&test3);
     Fp12_init(&test4);
     Fp12_init(&test5);
-
+    
+    cost_init(&tmp);
+    cost_init(&opt_cost);
+    cost_init(&opt_compress_cost);
+    cost_init(&opt_lazy_cost);
+    cost_init(&opt_compress_lazy_cost);
+    cost_init(&opt_compress_lazy_montgomery_cost);
+    
     mpz_t s12,s1,s2;
     mpz_init(s12);
     mpz_init(s1);
@@ -175,35 +183,52 @@ MILLER_OPT=0;
 FINALEXP_OPT=0;
 MILLER_OPT_MONTGOMERY=0;
 FINALEXP_OPT_MONTGOMERY=0;
+cost_init(&MILLER_OPT_MONTGOMERY_COST);
+cost_init(&FINALEXP_OPT_MONTGOMERY_COST);
 for(i=0;i<pairing;i++){
 
     BLS12_EFp12_generate_G1(&P);
     EFp12_generate_G2(&Q);
 
+    cost_zero();
     gettimeofday(&tv_A,NULL);
     BLS12_Opt_ate_pairing(&test1,&P,&Q);
     gettimeofday(&tv_B,NULL);
     opt_time+=timedifference_msec(tv_A,tv_B);
+    cost_check(&tmp);
+    cost_addition(&opt_cost,&tmp);
     
+    cost_zero();
     gettimeofday(&tv_A,NULL);
     BLS12_Opt_ate_pairing_lazy(&test2,&P,&Q);
     gettimeofday(&tv_B,NULL);
     opt_lazy_time+=timedifference_msec(tv_A,tv_B);
+    cost_check(&tmp);
+    cost_addition(&opt_lazy_cost,&tmp);
 
+    cost_zero();
     gettimeofday(&tv_A,NULL);
     BLS12_Opt_ate_pairing_compress(&test3,&P,&Q);
     gettimeofday(&tv_B,NULL);
     opt_compress_time+=timedifference_msec(tv_A,tv_B);
+    cost_check(&tmp);
+    cost_addition(&opt_compress_cost,&tmp);
 
+    cost_zero();
     gettimeofday(&tv_A,NULL);
     BLS12_Opt_ate_pairing_compress_lazy(&test4,&P,&Q);
     gettimeofday(&tv_B,NULL);
     opt_compress_lazy_time+=timedifference_msec(tv_A,tv_B);
+    cost_check(&tmp);
+    cost_addition(&opt_compress_lazy_cost,&tmp);
     
+    cost_zero();
     gettimeofday(&tv_A,NULL);
     BLS12_Opt_ate_pairing_compress_lazy_montgomery(&test5,&P,&Q);
     gettimeofday(&tv_B,NULL);
     opt_compress_lazy_montgomery_time+=timedifference_msec(tv_A,tv_B);
+    cost_check(&tmp);
+    cost_addition(&opt_compress_lazy_montgomery_cost,&tmp);
     
     if(Fp12_cmp(&test1,&test2)!=0 || Fp12_cmp(&test1,&test3)!=0 || Fp12_cmp(&test1,&test4)!=0){
         printf("failed!\n\n");
@@ -213,6 +238,7 @@ for(i=0;i<pairing;i++){
     	return 1;
     }
 }
+    cost_substruction(&FINALEXP_OPT_MONTGOMERY_COST,&opt_compress_lazy_montgomery_cost,&MILLER_OPT_MONTGOMERY_COST);
 
     printf("BLS12 opt ate.                                    : %.4f[ms]\n",opt_time/pairing);
     printf("BLS12 opt ate lazy.                               : %.4f[ms]\n",opt_lazy_time/pairing);
@@ -224,6 +250,18 @@ for(i=0;i<pairing;i++){
     printf("BLS12 opt ate compress lazy(MILLER_OPTATE_MONT).  : %.4f[ms]\n",MILLER_OPT_MONTGOMERY/pairing);
     printf("BLS12 opt ate compress lazy(FINALEXP_OPT_MONT).   : %.4f[ms]\n",FINALEXP_OPT_MONTGOMERY/pairing);
 
+    #ifdef DEBUG_COST_A
+    printf("*********BLS12 opt ate Fp COST.********         \n");
+    cost_printf("BLS12 opt ate",&opt_cost,pairing);
+    cost_printf("BLS12 opt ate compress",&opt_compress_cost,pairing);
+    cost_printf("BLS12 opt ate lazy",&opt_lazy_cost,pairing);
+    cost_printf("BLS12 opt ate compress lazy",&opt_compress_lazy_cost,pairing);
+    cost_printf("BLS12 opt ate compress lazy montgomery",&opt_compress_lazy_montgomery_cost,pairing);
+    cost_printf("BLS12 opt ate compress lazy(MILLER_OPTATE_MONT)",&MILLER_OPT_MONTGOMERY_COST,pairing);
+    cost_printf("BLS12 opt ate compress lazy(FINALEXP_OPT_MONT)",&FINALEXP_OPT_MONTGOMERY_COST,pairing);
+    printf("***************************************         \n");
+    #endif
+    
     mpz_clear(s12);
     mpz_clear(s1);
     mpz_clear(s2);
@@ -514,6 +552,7 @@ for(i=0;i<scm;i++){
 int BLS12_test_G3_EXP(int exp){
     int i,n=0;
     float exp_time=0,exp_2split_time=0,exp_2split_JSF_time=0,exp_4split_time=0,exp_lazy_time=0,exp_gs_time=0,exp_gs_lazy_time=0,exp_5naf_gs_lazy_time=0,exp_5naf_gs_lazy_montgomery_time=0;
+    cost tmp,exp_cost,exp_2split_cost,exp_2split_JSF_cost,exp_4split_cost,exp_lazy_cost,exp_gs_cost,exp_gs_lazy_cost,exp_5naf_gs_lazy_cost,exp_5naf_gs_lazy_montgomery_cost;
     struct timeval tv_A,tv_B;
     printf("================================================================================\n");
     printf("G3 Exp.\n\n");
@@ -534,6 +573,9 @@ int BLS12_test_G3_EXP(int exp){
     mpz_t scalar;
     mpz_init(scalar);
     
+    cost_init(&tmp);
+    cost_init(&exp_cost);
+    
     gmp_randinit_default (state);
     gmp_randseed_ui(state,(unsigned long)time(NULL));
     
@@ -544,11 +586,13 @@ for(i=0;i<exp;i++){
     EFp12_generate_G2(&Q);
     BLS12_Opt_ate_pairing(&A_Fp12,&P,&Q);
 
-    
+    cost_zero();
     gettimeofday(&tv_A,NULL);
     Fp12_G3_EXP_plain(&test1,&A_Fp12,scalar);
     gettimeofday(&tv_B,NULL);
     exp_time+=timedifference_msec(tv_A,tv_B);
+    cost_check(&tmp);
+    cost_addition(&exp_cost,&tmp);
 
     gettimeofday(&tv_A,NULL);
     Fp12_G3_EXP_2split(&test2,&A_Fp12,scalar);
@@ -614,6 +658,12 @@ for(i=0;i<exp;i++){
     printf("BLS12 G3 exp GS lazy.                   : %.4f[ms]\n",exp_gs_lazy_time/exp);
     printf("BLS12 G3 exp 5naf GS lazy.              : %.4f[ms]\n",exp_5naf_gs_lazy_time/exp);
     printf("BLS12 G3 exp 5naf GS lazy montgomery.   : %.4f[ms]\n",exp_5naf_gs_lazy_montgomery_time/exp);
+    
+    #ifdef DEBUG_COST_A
+    printf("*********BLS12 G3 exp Fp COST.********         \n");
+    cost_printf("BLS12 G3 exp",&exp_cost,exp);
+    printf("***************************************         \n");
+    #endif
 
     mpz_clear(scalar);
 

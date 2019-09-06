@@ -7,7 +7,7 @@ int BLS12_X_binary[BLS12_X_length+1];
 int BLS12_X2_binary[BLS12_X2_length+1];
 
 
-int add,mul;
+int cost_add,cost_add_ui,cost_sub,cost_sub_ui,cost_mul,cost_mul_ui,cost_sqr,cost_inv,cost_mod;
 
 
 mp_limb_t buf[FPLIMB],tmp_mul[FPLIMB2],tmp1[FPLIMB],tmp2[FPLIMB];
@@ -42,6 +42,7 @@ struct timeval tv_start,tv_end;
 float MILLER_TATE,MILLER_PLAINATE,MILLER_OPT,MILLER_XATE;
 float FINALEXP_PLAIN,FINALEXP_OPT,FINALEXP_OPT_EASY,FINALEXP_OPT_HARD;
 float MILLER_OPT_MONTGOMERY,FINALEXP_OPT_MONTGOMERY;
+cost MILLER_OPT_MONTGOMERY_COST,FINALEXP_OPT_MONTGOMERY_COST;
 
 float G1SCM_PLAIN,G1SCM_2SPLIT,G1SCM_2SPLIT_JSF;
 float G2SCM_PLAIN,G2SCM_2SPLIT,G2SCM_2SPLIT_JSF,G2SCM_4SPLIT;

@@ -120,10 +120,7 @@ test.lo: test.c ../include/ELiPS/test.h ../include/ELiPS/time.h \
   ../include/ELiPS/EFp12.h ../include/ELiPS/EFp6.h \
   ../include/ELiPS/bls12_final_exp.h ../include/ELiPS/G1_SCM.h \
   ../include/ELiPS/JSF.h ../include/ELiPS/G2_SCM.h \
-  ../include/ELiPS/G3_exp.h /usr/local/include/ELiPS/lazy_test.h \
-  ../include/ELiPS/bn12_pairing.h ../include/ELiPS/bn12_miller.h \
-  ../include/ELiPS/bn12_final_exp.h \
-  /usr/local/include/ELiPS/Jacobian_test.h
+  ../include/ELiPS/G3_exp.h
 
 ../include/ELiPS/test.h:
 
@@ -392,13 +389,3 @@ test.lo: test.c ../include/ELiPS/test.h ../include/ELiPS/time.h \
 ../include/ELiPS/G2_SCM.h:
 
 ../include/ELiPS/G3_exp.h:
-
-/usr/local/include/ELiPS/lazy_test.h:
-
-../include/ELiPS/bn12_pairing.h:
-
-../include/ELiPS/bn12_miller.h:
-
-../include/ELiPS/bn12_final_exp.h:
-
-/usr/local/include/ELiPS/Jacobian_test.h:

@@ -12,7 +12,14 @@
 #include <stdarg.h>
 #include <assert.h>
 
+/*************OPTION*************/
+//bit
 #define X64
+
+//debug
+//#define DEBUG_COST_A
+
+/************************************/
 
 #ifdef X64
 #define FPLIMB_BITS 512
@@ -21,7 +28,7 @@
 #endif
 
 #ifdef X32
-#define FPLIMB_BITS 256
+#define FPLIMB_BITS 480
 #define FPLIMB 15
 #define FPLIMB2 30
 #endif
@@ -36,10 +43,10 @@
 //#define BLS12_X_length 76
 //#define BLS12_X2_length 75
 
-#define BLS12_G1_SCM BLS12_EFp12_G1_SCM_2split_JSF_Jacobian_lazy
-#define BLS12_G2_SCM BLS12_EFp12_G2_SCM_4split_Jacobian_lazy
-#define BLS12_G3_EXP BLS12_Fp12_G3_EXP_4split_GS_lazy
-#define BLS12_PAIRING BLS12_Opt_ate_pairing_compress_lazy
+#define BLS12_G1_SCM BLS12_EFp12_G1_SCM_2split_7NAF_interleaving_Mixture_lazy
+#define BLS12_G2_SCM BLS12_EFp12_G2_SCM_4split_5NAF_interleaving_Mixture_lazy_montgomery
+#define BLS12_G3_EXP BLS12_Fp12_G3_EXP_4split_5NAF_interleaving_GS_lazy_montgomery
+#define BLS12_PAIRING BLS12_Opt_ate_pairing_compress_lazy_montgomery
 
 
 extern int BN12_X_binary[BN12_X_length+1];
@@ -49,7 +56,19 @@ extern int BN12_X6_2_binary[BN12_X6_2_length+1];
 extern int BLS12_X_binary[BLS12_X_length+1];
 extern int BLS12_X2_binary[BLS12_X2_length+1];
 
-extern int add,mul;
+extern int cost_add,cost_add_ui,cost_sub,cost_sub_ui,cost_mul,cost_mul_ui,cost_sqr,cost_inv,cost_mod;
+
+typedef struct{
+	int add;
+    int add_ui;
+    int sub;
+    int sub_ui;
+    int mul;
+    int mul_ui;
+    int sqr;
+    int inv;
+    int mod;
+}cost;
 /*============================================================================*/
 /* Field                                                                      */
 /*============================================================================*/
@@ -198,6 +217,7 @@ extern struct timeval tv_start,tv_end;
 extern float MILLER_TATE,MILLER_PLAINATE,MILLER_OPT,MILLER_XATE;
 extern float FINALEXP_PLAIN,FINALEXP_OPT,FINALEXP_OPT_EASY,FINALEXP_OPT_HARD;
 extern float MILLER_OPT_MONTGOMERY,FINALEXP_OPT_MONTGOMERY;
+extern cost MILLER_OPT_MONTGOMERY_COST,FINALEXP_OPT_MONTGOMERY_COST;
 
 
 extern float G1SCM_PLAIN,G1SCM_2SPLIT,G1SCM_2SPLIT_JSF;

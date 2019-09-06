@@ -48,11 +48,20 @@ void BLS12_Opt_ate_pairing_compress_lazy(Fp12 *ANS,EFp12 *P,EFp12 *Q){
     FINALEXP_OPT+=timedifference_msec(tv_start,tv_end);
 }
 void BLS12_Opt_ate_pairing_compress_lazy_montgomery(Fp12 *ANS,EFp12 *P,EFp12 *Q){
+    #ifdef DEBUG_COST_A
+    cost tmp;
+    #endif
+
     //Miller's Algo.
     gettimeofday(&tv_start,NULL);
     BLS12_Miller_algo_for_opt_ate_lazy_montgomery(ANS,P,Q);
     gettimeofday(&tv_end,NULL);
     MILLER_OPT_MONTGOMERY+=timedifference_msec(tv_start,tv_end);
+    
+    #ifdef DEBUG_COST_A
+    cost_check(&tmp);
+    cost_addition(&MILLER_OPT_MONTGOMERY_COST,&tmp);
+    #endif
    
     //Final Exp.
     gettimeofday(&tv_start,NULL);

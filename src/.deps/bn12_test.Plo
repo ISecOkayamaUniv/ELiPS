@@ -122,9 +122,7 @@ bn12_test.lo: bn12_test.c ../include/ELiPS/bn12_test.h \
   ../include/ELiPS/bls12_test.h ../include/ELiPS/bls12_pairing.h \
   ../include/ELiPS/bls12_miller.h ../include/ELiPS/bls12_final_exp.h \
   ../include/ELiPS/G1_SCM.h ../include/ELiPS/JSF.h \
-  ../include/ELiPS/G2_SCM.h ../include/ELiPS/G3_exp.h \
-  /usr/local/include/ELiPS/lazy_test.h \
-  /usr/local/include/ELiPS/Jacobian_test.h
+  ../include/ELiPS/G2_SCM.h ../include/ELiPS/G3_exp.h
 
 ../include/ELiPS/bn12_test.h:
 
@@ -401,7 +399,3 @@ bn12_test.lo: bn12_test.c ../include/ELiPS/bn12_test.h \
 ../include/ELiPS/G2_SCM.h:
 
 ../include/ELiPS/G3_exp.h:
-
-/usr/local/include/ELiPS/lazy_test.h:
-
-/usr/local/include/ELiPS/Jacobian_test.h:
