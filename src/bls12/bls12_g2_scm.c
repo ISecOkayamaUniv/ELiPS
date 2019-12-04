@@ -1357,7 +1357,7 @@ void bls12_g2_scm_4split_5naf_interleaving_mixture_lazy_montgomery(efp12_t *ANS,
     }
     
         
-    efp2_jacobian_montgomery(&next_twisted_Q,&next_twistedJ_Q);
+    efp2_jacobian_to_affine_montgomery(&next_twisted_Q,&next_twistedJ_Q);
     efp2_mod_montgomery(&next_twisted_Q,&next_twisted_Q);
     efp2_to_efp12(ANS,&next_twisted_Q);
     ANS->infinity=next_twisted_Q.infinity;

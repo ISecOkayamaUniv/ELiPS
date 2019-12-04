@@ -4,7 +4,7 @@
 #include <ELiPS/time.h>
 #include <ELiPS/bls12_test.h>
 
-extern int test_Field(int fp,int fp2,int fp6,int fp12,int sqr);
+extern int test_field(int fp,int fp2,int fp6,int fp12,int sqr);
 extern int test_efp(int ecd,int eca,int scm);
 extern int test_efp2(int ecd,int eca,int scm);
 extern int test_efp12(int ecd,int eca,int scm);

@@ -30,6 +30,19 @@ void efp2_printf(char *str,efp2_t *P){
         printf("0");
     }
 }
+void efp2_printf_montgomery(char *str,efp2_t *P){
+    printf("%s",str);
+    if(P->infinity==0){
+        printf("(");
+        fp2_printf_montgomery("",&P->x);
+        printf(",");
+        fp2_printf_montgomery("",&P->y);
+        printf(")");
+    }else{
+        printf("0");
+    }
+}
+
 void efp2_println(char *str,efp2_t *P){
     printf("%s",str);
     if(P->infinity==0){
@@ -56,6 +69,20 @@ void efp2_jacobian_printf(char *str,efp2_jacobian_t *P){
         printf("0");
     }
 }
+void efp2_projective_printf(char *str,efp2_projective_t *P){
+    printf("%s",str);
+    if(P->infinity==0){
+        printf("(");
+        fp2_printf("",&P->x);
+        printf(",");
+        fp2_printf("",&P->y);
+        printf(",");
+        fp2_printf("",&P->z);
+        printf(")");
+    }else{
+        printf("0");
+    }
+}
 void efp2_jacobian_printf_montgomery(char *str,efp2_jacobian_t *P){
     printf("%s",str);
     if(P->infinity==0){
@@ -65,6 +92,48 @@ void efp2_jacobian_printf_montgomery(char *str,efp2_jacobian_t *P){
         fp2_printf_montgomery("",&P->y);
         printf(",");
         fp2_printf_montgomery("",&P->z);
+        printf(")");
+    }else{
+        printf("0");
+    }
+}
+void efp2_projective_printf_montgomery(char *str,efp2_projective_t *P){
+    printf("%s",str);
+    if(P->infinity==0){
+        printf("(");
+        fp2_printf_montgomery("",&P->x);
+        printf(",");
+        fp2_printf_montgomery("",&P->y);
+        printf(",");
+        fp2_printf_montgomery("",&P->z);
+        printf(")");
+    }else{
+        printf("0");
+    }
+}
+void efp2_projective_printf_affine(char *str,efp2_projective_t *P){
+    static efp2_t out;
+    efp2_projective_to_affine(&out,P);
+    printf("%s",str);
+    if(P->infinity==0){
+        printf("(");
+        fp2_printf("",&out.x);
+        printf(",");
+        fp2_printf("",&out.y);
+        printf(")");
+    }else{
+        printf("0");
+    }
+}
+void efp2_projective_printf_affine_montgomery(char *str,efp2_projective_t *P){
+    static efp2_t out;
+    efp2_projective_to_affine_montgomery(&out,P);
+    printf("%s",str);
+    if(P->infinity==0){
+        printf("(");
+        fp2_printf_montgomery("",&out.x);
+        printf(",");
+        fp2_printf_montgomery("",&out.y);
         printf(")");
     }else{
         printf("0");
@@ -99,6 +168,12 @@ void efp2_affine_to_projective(efp2_projective_t *ANS,efp2_t *A){
     fp2_set_ui(&ANS->z,1);
     ANS->infinity=A->infinity;
 }
+void efp2_affine_to_projective_montgomery(efp2_projective_t *ANS,efp2_t *A){
+    fp2_set(&ANS->x,&A->x);
+    fp2_set(&ANS->y,&A->y);
+    fp2_set_mpn(&ANS->z,RmodP);
+    ANS->infinity=A->infinity;
+}
 void efp2_affine_to_jacobian_montgomery(efp2_jacobian_t *ANS,efp2_t *A){
     fp2_set(&ANS->x,&A->x);
     fp2_set(&ANS->y,&A->y);
@@ -118,18 +193,26 @@ void efp2_jacobian_to_affine(efp2_t *ANS,efp2_jacobian_t *A){
 void efp2_projective_to_affine(efp2_t *ANS,efp2_projective_t *A){
     static fp2_t Zi;
     //TODO:mul->mul_lazy
-    fp2_inv(&Zi,&A->z);
-    fp2_mul(&ANS->x,&A->x,&Zi);
-    fp2_mul(&ANS->y,&A->y,&Zi);
+    fp2_inv_lazy(&Zi,&A->z);
+    fp2_mul_lazy(&ANS->x,&A->x,&Zi);
+    fp2_mul_lazy(&ANS->y,&A->y,&Zi);
     ANS->infinity=A->infinity;
 }
-void efp2_jacobian_montgomery(efp2_t *ANS,efp2_jacobian_t *A){
+void efp2_jacobian_to_affine_montgomery(efp2_t *ANS,efp2_jacobian_t *A){
     static fp2_t Zi,Zt;
     fp2_inv_lazy_montgomery(&Zi,&A->z);
     fp2_mul_lazy_montgomery(&Zt,&Zi,&Zi);
     fp2_mul_lazy_montgomery(&ANS->x,&A->x,&Zt);
     fp2_mul_lazy_montgomery(&Zt,&Zt,&Zi);
     fp2_mul_lazy_montgomery(&ANS->y,&A->y,&Zt);
+    ANS->infinity=A->infinity;
+}
+void efp2_projective_to_affine_montgomery(efp2_t *ANS,efp2_projective_t *A){
+    static fp2_t Zi;
+    //TODO:mul->mul_lazy
+    fp2_inv_lazy_montgomery(&Zi,&A->z);
+    fp2_mul_lazy_montgomery(&ANS->x,&A->x,&Zi);
+    fp2_mul_lazy_montgomery(&ANS->y,&A->y,&Zi);
     ANS->infinity=A->infinity;
 }
 void efp2_mix(efp2_jacobian_t *ANS,efp2_jacobian_t *A,fp2_t *Zi){
@@ -162,9 +245,22 @@ void efp2_to_montgomery(efp2_t *ANS,efp2_t *A){
     fp2_to_montgomery(&ANS->y,&A->y);
     ANS->infinity=A->infinity;
 }
+
+void efp2_projective_to_montgomery(efp2_projective_t *ANS,efp2_projective_t *A){
+    fp2_to_montgomery(&ANS->x,&A->x);
+    fp2_to_montgomery(&ANS->y,&A->y);
+    fp2_to_montgomery(&ANS->z,&A->z);
+    ANS->infinity=A->infinity;
+}
 void efp2_mod_montgomery(efp2_t *ANS,efp2_t *A){
     fp2_mod_montgomery(&ANS->x,&A->x);
     fp2_mod_montgomery(&ANS->y,&A->y);
+    ANS->infinity=A->infinity;
+}
+void efp2_projective_mod_montgomery(efp2_projective_t *ANS,efp2_projective_t *A){
+    fp2_mod_montgomery(&ANS->x,&A->x);
+    fp2_mod_montgomery(&ANS->y,&A->y);
+    fp2_mod_montgomery(&ANS->z,&A->z);
     ANS->infinity=A->infinity;
 }
 void efp2_set_mpn(efp2_t *ANS,mp_limb_t *A){

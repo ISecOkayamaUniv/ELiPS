@@ -1,7 +1,7 @@
 #include <ELiPS/test.h>
 /*----------------------------------------------------------------------------*/
 //test
-int test_Field(int fp_n,int fp2_n,int fp6_n,int fp12_n,int sqr){
+int test_field(int fp_n,int fp2_n,int fp6_n,int fp12_n,int sqr){
     int i,j,n=0;
     float add_time=0,add_lazy_time=0;
     float shift2_time=0,shift4_time=0,shift8_time=0;
@@ -61,6 +61,7 @@ int test_Field(int fp_n,int fp2_n,int fp6_n,int fp12_n,int sqr){
     gmp_randinit_default (state);
     gmp_randseed_ui(state,(unsigned long)time(NULL));
     
+if(fp_n>0){
 printf("------------------------------------------------------------------------------------\n");
     printf("fp_add test\n");
 add_time=0,add_lazy_time=0;
@@ -118,6 +119,7 @@ for(i=0;i<fp_n;i++){
 	    return 1;
     }
 }
+
     printf("fp mul.      : %.6f[ms]\n",mul_time/fp_n);
     printf("fp mul lazy. : %.6f[ms]\n",mul_lazy_time/fp_n);
     
@@ -166,6 +168,8 @@ for(i=0;i<fp_n;i++){
 }
     printf("fp inv.      : %.6f[ms]\n",inv_time/fp_n);
     
+} if(fp2_n>0){
+   
 printf("------------------------------------------------------------------------------------\n");
     printf("fp2_add test\n");
 add_time=0,add_lazy_time=0;
@@ -301,6 +305,8 @@ for(i=0;i<fp2_n;i++){
     printf("fp2 inv.      : %.6f[ms]\n",inv_time/fp2_n);
     printf("fp2 inv_lazy. : %.6f[ms]\n",inv_lazy_time/fp2_n);
 
+} if(fp6_n>0){
+
 printf("------------------------------------------------------------------------------------\n");
     printf("fp6_mul test\n");
 mul_time=0,mul_lazy_time=0;
@@ -366,6 +372,8 @@ for(i=0;i<fp6_n;i++){
 }
     printf("fp6 sqr.      : %.4f[ms]\n",sqr_time/fp6_n);
     printf("fp6 sqr lazy. : %.4f[ms]\n",sqr_lazy_time/fp6_n);
+
+} if(fp12_n>0){
 
 printf("------------------------------------------------------------------------------------\n");
     printf("fp12_mul test\n");
@@ -460,6 +468,8 @@ for(i=0;i<fp12_n;i++){
     printf("fp12 sqr_cyclotomic.      : %.4f[ms]\n",sqr_time/fp12_n);
     printf("fp12 sqr_cyclotomic lazy. : %.4f[ms]\n",sqr_lazy_time/fp12_n);
 
+} if(sqr>0){
+
 printf("------------------------------------------------------------------------------------\n");
     printf("fp12_sqr_compressed test\n");
 n=10;
@@ -525,7 +535,7 @@ for(i=0;i<sqr;i++){
     printf("Sqr Karabina lazy.          : %.4f[ms]\n",(com_lazy_time+rec_lazy_time)/sqr);
     printf("Sqr GS.                     : %.4f[ms]\n",gs_time/sqr);
     printf("Sqr GS lazy.                : %.4f[ms]\n",gs_lazy_time/sqr);
-
+}
 return 0;
 }
 
@@ -624,14 +634,15 @@ for(i=0;i<mod;i++){
     mpn_mod(Bf.x0,B,FPLIMB);
 
     gettimeofday(&tv_A,NULL);
-    mpn_mul_n(Ct,A,B,FPLIMB);
+    mpn_mul_n(Ct,Af.x0,Bf.x0,FPLIMB);
     fp_mod(&test1,Ct,FPLIMB2);
     gettimeofday(&tv_B,NULL);
     mod_time+=timedifference_msec(tv_A,tv_B);
     
     fp_to_montgomery(&Af,&Af);
     fp_to_montgomery(&Bf,&Bf);
-    
+
+        
     gettimeofday(&tv_A,NULL);
     fp_mulmod_montgomery(&Cf,&Af,&Bf);
     gettimeofday(&tv_B,NULL);
@@ -1053,7 +1064,7 @@ for(i=0;i<ecd;i++){
     efp2_ecd_jacobian_lazy_montgomery(&testZ5,&B_efp2_jacobianm);
     gettimeofday(&tv_B,NULL);
     ecd_jacobian_lazy_montgomery_time+=timedifference_msec(tv_A,tv_B);
-    efp2_jacobian_montgomery(&test5,&testZ5);
+    efp2_jacobian_to_affine_montgomery(&test5,&testZ5);
     efp2_mod_montgomery(&test5,&test5);
         
     if(efp2_cmp(&test0,&test1)!=0 || efp2_cmp(&test1,&test2)!=0 || efp2_cmp(&test1,&test3)!=0 || efp2_cmp(&test1,&test4)!=0 || efp2_cmp(&test1,&test5)!=0){
@@ -1133,14 +1144,14 @@ for(i=0;i<eca;i++){
     efp2_eca_jacobian_lazy_montgomery(&testZ5,&B_efp2_jacobianm,&A_efp2_jacobianm);
     gettimeofday(&tv_B,NULL);
     eca_jacobian_lazy_montgomery_time+=timedifference_msec(tv_A,tv_B);
-    efp2_jacobian_montgomery(&test5,&testZ5);
+    efp2_jacobian_to_affine_montgomery(&test5,&testZ5);
     efp2_mod_montgomery(&test5,&test5);
     
     gettimeofday(&tv_A,NULL);
     efp2_eca_mixture_lazy_montgomery(&testZ6,&B_efp2_jacobianm,&A_efp2_jacobianm);
     gettimeofday(&tv_B,NULL);
     eca_mixture_lazy_montgomery_time+=timedifference_msec(tv_A,tv_B);
-    efp2_jacobian_montgomery(&test6,&testZ6);
+    efp2_jacobian_to_affine_montgomery(&test6,&testZ6);
     efp2_mod_montgomery(&test6,&test6);
     
     if(efp2_cmp(&test0,&test1)!=0 || efp2_cmp(&test1,&test2)!=0 || efp2_cmp(&test1,&test3)!=0 || efp2_cmp(&test1,&test4)!=0 || efp2_cmp(&test1,&test5)!=0 || efp2_cmp(&test1,&test6)!=0){
@@ -1427,7 +1438,7 @@ printf("========================================================================
     printf("Test time\n");
 	
 	point = bls12_test_rational_point();
-	Field = test_Field(100,100,100,10,10);
+	Field = test_field(100,100,100,10,10);
 	efp = test_efp(100,100,10);
 	efp2 = test_efp2(10,10,10);
 	efp12 = test_efp12(10,10,10);

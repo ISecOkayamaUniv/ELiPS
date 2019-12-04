@@ -8,6 +8,18 @@ void scalar_clear(mpz_t a){
 	mpz_clear(a);
 }
 
+void scalar_add(mpz_t ans, mpz_t a, mpz_t b){
+    mpz_add(ans,a,b);
+}
+
+void scalar_sub(mpz_t ans, mpz_t a, mpz_t b){
+    mpz_sub(ans,a,b);
+}
+
+void scalar_mul(mpz_t ans, mpz_t a, mpz_t b){
+    mpz_mul(ans,a,b);
+}
+
 void scalar_random_prime(mpz_t a){
     mpz_urandomm(a,state,prime_z);
 }

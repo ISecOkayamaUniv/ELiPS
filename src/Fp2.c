@@ -66,6 +66,15 @@ void fp2_lshift2(fp2_t *ANS,fp2_t *A){
     fp_lshift2(&ANS->x0,&A->x0);
     fp_lshift2(&ANS->x1,&A->x1);
 }
+void fp2_hlv(fp2_t *ANS,fp2_t *A)
+{
+	fp_hlv(&ANS->x0, &A->x0);
+	fp_hlv(&ANS->x1, &A->x1);
+}
+void fp2_dbl(fp2_t *ANS, fp2_t *A)
+{
+	fp2_add(ANS, A, A);
+}
 
 void fp2_set_random(fp2_t *ANS,gmp_randstate_t state){
     fp_set_random(&ANS->x0,state);
@@ -110,6 +119,7 @@ void fp2_mul_lazy(fp2_t *ANS,fp2_t *A,fp2_t *B){
     fp_sub_lazy(buf2L,FPLIMB2,buf1L,FPLIMB2,tmpL1,FPLIMB2);
     fp_sub_lazy_mod(&ANS->x1,buf2L,tmpL2);
 }
+/*
 void fp2_mul_lazy_montgomery(fp2_t *ANS,fp2_t *A,fp2_t *B){
     static fp_t buf1,buf2,tmp1,tmp2;
     static fp_t buf,tmp3,tmp4;
@@ -130,6 +140,31 @@ void fp2_mul_lazy_montgomery(fp2_t *ANS,fp2_t *A,fp2_t *B){
     fp_mulmod_montgomery(&buf1,&tmp3,&tmp4);
     fp_sub(&buf2,&buf1,&tmp1);
     fp_sub(&ANS->x1,&buf2,&tmp2);
+}
+*/
+void fp2_mul_lazy_montgomery(fp2_t *ANS,fp2_t *A,fp2_t *B){
+    static mp_limb_t buf1[FPLIMB2],buf2[FPLIMB2];
+    static mp_limb_t tmp1[FPLIMB2],tmp2[FPLIMB2],tmptmp[FPLIMB2];
+    static mp_limb_t tmp3[FPLIMB],tmp4[FPLIMB];
+
+    //set
+    fp_mul_lazy(tmp1,A->x0.x0,B->x0.x0);//a*c
+    fp_mul_lazy(tmp2,A->x1.x0,B->x1.x0);//b*d
+
+    fp_add_lazy(tmp3,FPLIMB,A->x0.x0,FPLIMB,A->x1.x0,FPLIMB);
+    fp_add_lazy(tmp4,FPLIMB,B->x0.x0,FPLIMB,B->x1.x0,FPLIMB);
+
+    //x0
+    //fp_printf_montgomery("tmp1=",&tmp1);printf("\n");
+    //fp_printf_montgomery("tmp2=",&tmp2);printf("\n");
+    fp_sub_lazy(tmptmp,FPLIMB2,tmp1,FPLIMB2,tmp2,FPLIMB2);
+    mpn_mod_montgomery(ANS->x0.x0,FPLIMB,tmptmp,FPLIMB2);
+
+    //x1
+    fp_mul_lazy(buf1,tmp3,tmp4);
+    fp_sub_lazy(buf2,FPLIMB2,buf1,FPLIMB2,tmp1,FPLIMB2);
+    fp_sub_lazy(tmptmp,FPLIMB2,buf2,FPLIMB2,tmp2,FPLIMB2);
+    mpn_mod_montgomery(ANS->x1.x0,FPLIMB,tmptmp,FPLIMB2);
 }
 void fp2_mul_ui(fp2_t *ANS,fp2_t *A,unsigned long int UI){
     fp_mul_ui(&ANS->x0,&A->x0,UI);
@@ -221,8 +256,8 @@ void fp2_sqr_lazy(fp2_t *ANS,fp2_t *A){
 
     //x1
     fp_mul_lazy(tmpL3,A->x0.x0,A->x1.x0);
-    fp_add_lazy(bufL,FPLIMB2,tmpL3,FPLIMB2,tmpL3,FPLIMB2);
-    fp_mod(&ANS->x1,bufL,FPLIMB2);
+    fp_mod(&ANS->x1,tmpL3,FPLIMB2);
+    fp_add(&ANS->x1,&ANS->x1,&ANS->x1);
 
     //x0
     fp_mul_lazy(bufL,tmp1,tmp2);

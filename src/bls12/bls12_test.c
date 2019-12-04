@@ -97,8 +97,8 @@ void bls12_test_plain_ate_pairing(){
 
 int bls12_test_opt_ate_pairing(int pairing){
     int i,n=0;
-    float opt_time=0,opt_compress_time=0,opt_compress_lazy_time=0,opt_lazy_time=0,opt_compress_lazy_montgomery_time=0;
-    cost tmp,opt_cost,opt_compress_cost,opt_compress_lazy_cost,opt_lazy_cost,opt_compress_lazy_montgomery_cost;
+    float opt_time=0,opt_compress_time=0,opt_compress_lazy_time=0,opt_projective_compress_lazy_time=0,opt_lazy_time=0,opt_compress_lazy_montgomery_time=0,opt_projective_compress_lazy_montgomery_time=0;
+    cost tmp,opt_cost,opt_compress_cost,opt_compress_lazy_cost,opt_projective_compress_lazy_cost,opt_lazy_cost,opt_compress_lazy_montgomery_cost,opt_projective_compress_lazy_montgomery_cost;
     struct timeval tv_A,tv_B;
     printf("====================================================================================\n");
     printf("bls12_Opt-ate pairing\n\n");
@@ -111,7 +111,7 @@ int bls12_test_opt_ate_pairing(int pairing){
     efp12_init(&s1Q);
     efp12_init(&s2Q);
 
-    fp12_t Z,testA,testB,testC,test1,test2,test3,test4,test5;
+    fp12_t Z,testA,testB,testC,test1,test2,test3,test4,test5,test6,test7;
     fp12_init(&Z);
     fp12_init(&testA);
     fp12_init(&testB);
@@ -121,13 +121,17 @@ int bls12_test_opt_ate_pairing(int pairing){
     fp12_init(&test3);
     fp12_init(&test4);
     fp12_init(&test5);
+    fp12_init(&test6);
+    fp12_init(&test7);
     
     cost_init(&tmp);
     cost_init(&opt_cost);
     cost_init(&opt_compress_cost);
     cost_init(&opt_lazy_cost);
     cost_init(&opt_compress_lazy_cost);
+    cost_init(&opt_projective_compress_lazy_cost);
     cost_init(&opt_compress_lazy_montgomery_cost);
+    cost_init(&opt_projective_compress_lazy_montgomery_cost);
     
     mpz_t s12,s1,s2;
     mpz_init(s12);
@@ -136,6 +140,7 @@ int bls12_test_opt_ate_pairing(int pairing){
 
     gmp_randinit_default (state);
     gmp_randseed_ui(state,(unsigned long)time(NULL));
+    gmp_randseed_ui(state,1);
 
     mpz_urandomm(s1,state,order_z);
     mpz_urandomm(s2,state,order_z);
@@ -151,28 +156,34 @@ int bls12_test_opt_ate_pairing(int pairing){
     efp12_scm(&s2Q,&Q,s2);
 
     
-    bls12_optate_pairing(&Z,&P,&Q);
+    bls12_optate_pairing_basic(&Z,&P,&Q);
     fp12_pow(&testA,&Z,s12);
-    bls12_optate_pairing(&testB,&s1P,&s2Q);    
-    bls12_optate_pairing(&testC,&s2P,&s1Q);
+    bls12_optate_pairing_basic(&testB,&s1P,&s2Q);    
+    bls12_optate_pairing_basic(&testC,&s2P,&s1Q);
     
     printf("bilinear test\n");
     if(fp12_cmp(&testA,&testB)!=0 || fp12_cmp(&testA,&testC)!=0){
         printf("bilinear failed!!\n\n");
 	return 1;
     }
+    printf("bilinear succeced!!\n\n");
 
-
-MILLER_OPT=0;
-FINALEXP_OPT=0;
-MILLER_OPT_MONTGOMERY=0;
-FINALEXP_OPT_MONTGOMERY=0;
-cost_init(&MILLER_OPT_MONTGOMERY_COST);
-cost_init(&FINALEXP_OPT_MONTGOMERY_COST);
+    MILLER_OPT = 0;
+    FINALEXP_OPT = 0;
+    MILLER_OPT_MONTGOMERY = 0;
+    FINALEXP_OPT_MONTGOMERY = 0;
+    cost_init(&MILLER_OPT_COST);
+    cost_init(&FINALEXP_OPT_COST);
+    cost_init(&MILLER_OPT_PROJECTIVE_COST);
+    cost_init(&FINALEXP_OPT_PROJECTIVE_COST);
+    cost_init(&MILLER_OPT_MONTGOMERY_COST);
+    cost_init(&FINALEXP_OPT_MONTGOMERY_COST);
+    cost_init(&MILLER_OPT_PROJECTIVE_MONTGOMERY_COST);
+    cost_init(&FINALEXP_OPT_PROJECTIVE_MONTGOMERY_COST);
+    bls12_generate_g2(&Q);
 for(i=0;i<pairing;i++){
 
     bls12_generate_g1(&P);
-    bls12_generate_g2(&Q);
 
     cost_zero();
     gettimeofday(&tv_A,NULL);
@@ -208,41 +219,82 @@ for(i=0;i<pairing;i++){
     
     cost_zero();
     gettimeofday(&tv_A,NULL);
-    bls12_optate_pairing_compress_lazy_montgomery(&test5,&P,&Q);
+    bls12_optate_pairing_projective_compress_lazy(&test5,&P,&Q);
+    gettimeofday(&tv_B,NULL);
+    opt_projective_compress_lazy_time+=timedifference_msec(tv_A,tv_B);
+    cost_check(&tmp);
+    cost_addition(&opt_projective_compress_lazy_cost,&tmp);
+    
+    cost_zero();
+    gettimeofday(&tv_A,NULL);
+    bls12_optate_pairing_compress_lazy_montgomery(&test6,&P,&Q);
     gettimeofday(&tv_B,NULL);
     opt_compress_lazy_montgomery_time+=timedifference_msec(tv_A,tv_B);
     cost_check(&tmp);
     cost_addition(&opt_compress_lazy_montgomery_cost,&tmp);
     
-    if(fp12_cmp(&test1,&test2)!=0 || fp12_cmp(&test1,&test3)!=0 || fp12_cmp(&test1,&test4)!=0){
+    cost_zero();
+    gettimeofday(&tv_A,NULL);
+    bls12_optate_pairing_projective_compress_lazy_montgomery(&test7,&P,&Q);
+    gettimeofday(&tv_B,NULL);
+    opt_projective_compress_lazy_montgomery_time+=timedifference_msec(tv_A,tv_B);
+    cost_check(&tmp);
+    cost_addition(&opt_projective_compress_lazy_montgomery_cost,&tmp);
+    
+    if(fp12_cmp(&test1,&test2)!=0 || fp12_cmp(&test1,&test3)!=0 || fp12_cmp(&test1,&test4)!=0 || fp12_cmp(&test1,&test5)!=0 || fp12_cmp(&test1,&test6)!=0 || fp12_cmp(&test1,&test7)!=0){
         printf("failed!\n\n");
 	    fp12_printf("",&test1);
     	fp12_printf("\n",&test2);
+    	fp12_printf("\n",&test3);
+    	fp12_printf("\n",&test4);
+    	fp12_printf("\n",&test5);
+    	fp12_printf("\n",&test6);
+    	fp12_printf("\n",&test7);
     	printf("\n\n");
     	return 1;
     }
 }
-    cost_substruction(&FINALEXP_OPT_MONTGOMERY_COST,&opt_compress_lazy_montgomery_cost,&MILLER_OPT_MONTGOMERY_COST);
+    cost_substruction(&FINALEXP_OPT_COST, &opt_compress_lazy_cost, &MILLER_OPT_COST);
+    cost_substruction(&FINALEXP_OPT_PROJECTIVE_COST, &opt_projective_compress_lazy_cost, &MILLER_OPT_PROJECTIVE_COST);
+    cost_substruction(&FINALEXP_OPT_MONTGOMERY_COST, &opt_compress_lazy_montgomery_cost, &MILLER_OPT_MONTGOMERY_COST);
+    cost_substruction(&FINALEXP_OPT_PROJECTIVE_MONTGOMERY_COST, &opt_projective_compress_lazy_montgomery_cost, &MILLER_OPT_PROJECTIVE_MONTGOMERY_COST);
 
-    printf("bls12 opt ate.                                    : %.4f[ms]\n",opt_time/pairing);
-    printf("bls12 opt ate lazy.                               : %.4f[ms]\n",opt_lazy_time/pairing);
-    printf("bls12 opt ate compress.                           : %.4f[ms]\n",opt_compress_time/pairing);
-    printf("bls12 opt ate compress lazy.                      : %.4f[ms]\n",opt_compress_lazy_time/pairing);
-    printf("bls12 opt ate compress lazy(MILLER_OPTATE).       : %.4f[ms]\n",MILLER_OPT/pairing);
-    printf("bls12 opt ate compress lazy(FINALEXP_OPT).        : %.4f[ms]\n",FINALEXP_OPT/pairing);
-    printf("bls12 opt ate compress lazy montgomery.           : %.4f[ms]\n",opt_compress_lazy_montgomery_time/pairing);
-    printf("bls12 opt ate compress lazy(MILLER_OPTATE_MONT).  : %.4f[ms]\n",MILLER_OPT_MONTGOMERY/pairing);
-    printf("bls12 opt ate compress lazy(FINALEXP_OPT_MONT).   : %.4f[ms]\n",FINALEXP_OPT_MONTGOMERY/pairing);
+    printf("bls12 opt ate.                                        : %.4f[ms]\n",opt_time/pairing);
+    printf("bls12 opt ate lazy.                                   : %.4f[ms]\n",opt_lazy_time/pairing);
+    printf("bls12 opt ate compress.                               : %.4f[ms]\n",opt_compress_time/pairing);
+    printf("bls12 opt ate compress lazy.                          : %.4f[ms]\n",opt_compress_lazy_time/pairing);
+    printf("bls12 opt ate compress lazy(MILLER_OPTATE).           : %.4f[ms]\n",MILLER_OPT/pairing);
+    printf("bls12 opt ate compress lazy(FINALEXP_OPT).            : %.4f[ms]\n",FINALEXP_OPT/pairing);
+    printf("bls12 opt ate projective compress lazy.               : %.4f[ms]\n",opt_projective_compress_lazy_time/pairing);
+    printf("bls12 opt ate projective compress lazy(MILLER_OPT).   : %.4f[ms]\n",MILLER_OPT_PROJECTIVE/pairing);
+    printf("bls12 opt ate projective compress lazy(FINALEXP_OPT). : %.4f[ms]\n",FINALEXP_OPT_PROJECTIVE/pairing);
+    printf("bls12 opt ate compress lazy montgomery.               : %.4f[ms]\n",opt_compress_lazy_montgomery_time/pairing);
+    printf("bls12 opt ate compress lazy(MILLER_OPTATE_MONT).      : %.4f[ms]\n",MILLER_OPT_MONTGOMERY/pairing);
+    printf("bls12 opt ate compress lazy(FINALEXP_OPT_MONT).       : %.4f[ms]\n",FINALEXP_OPT_MONTGOMERY/pairing);
+    printf("bls12 opt ate projective compress lazy montgomery.               : %.4f[ms]\n",opt_projective_compress_lazy_montgomery_time/pairing);
+    printf("bls12 opt ate projective compress lazy(MILLER_OPTATE_MONT).      : %.4f[ms]\n",MILLER_OPT_PROJECTIVE_MONTGOMERY/pairing);
+    printf("bls12 opt ate projective compress lazy(FINALEXP_OPT_MONT).       : %.4f[ms]\n",FINALEXP_OPT_PROJECTIVE_MONTGOMERY/pairing);
 
     #ifdef DEBUG_COST_A
     printf("*********bls12 opt ate fp COST.********         \n");
-    cost_printf("bls12 opt ate",&opt_cost,pairing);
-    cost_printf("bls12 opt ate compress",&opt_compress_cost,pairing);
-    cost_printf("bls12 opt ate lazy",&opt_lazy_cost,pairing);
-    cost_printf("bls12 opt ate compress lazy",&opt_compress_lazy_cost,pairing);
-    cost_printf("bls12 opt ate compress lazy montgomery",&opt_compress_lazy_montgomery_cost,pairing);
-    cost_printf("bls12 opt ate compress lazy(MILLER_OPTATE_MONT)",&MILLER_OPT_MONTGOMERY_COST,pairing);
-    cost_printf("bls12 opt ate compress lazy(FINALEXP_OPT_MONT)",&FINALEXP_OPT_MONTGOMERY_COST,pairing);
+    cost_printf("bls12 opt ate", &opt_cost, pairing);
+    cost_printf("bls12 opt ate compress", &opt_compress_cost, pairing);
+    cost_printf("bls12 opt ate lazy", &opt_lazy_cost, pairing);
+    cost_printf("bls12 opt ate compress lazy", &opt_compress_lazy_cost, pairing);
+    cost_printf("bls12 opt ate compress lazy(MILLER_OPT)", &MILLER_OPT_COST, pairing);
+    cost_printf("bls12 opt ate compress lazy(FINALEXP_OPT)", &FINALEXP_OPT_COST, pairing);
+    
+    cost_printf("bls12 opt ate projective compress lazy", &opt_projective_compress_lazy_cost, pairing);
+    cost_printf("bls12 opt ate projective compress lazy(MILLER_OPT_PROJECTIVE)", &MILLER_OPT_PROJECTIVE_COST, pairing);
+    cost_printf("bls12 opt ate projective compress lazy(FINALEXP_OPT_PROJECTIVE)", &FINALEXP_OPT_PROJECTIVE_COST, pairing);
+    
+    cost_printf("bls12 opt ate compress lazy montgomery", &opt_compress_lazy_montgomery_cost, pairing);
+    cost_printf("bls12 opt ate compress lazy(MILLER_OPT_MONT)", &MILLER_OPT_MONTGOMERY_COST, pairing);
+    cost_printf("bls12 opt ate compress lazy(FINALEXP_OPT_MONT)", &FINALEXP_OPT_MONTGOMERY_COST, pairing);
+    
+    cost_printf("bls12 opt ate projective compress lazy montgomery", &opt_projective_compress_lazy_montgomery_cost, pairing);
+    cost_printf("bls12 opt ate projective compress lazy(MILLER_OPT_MONT)", &MILLER_OPT_PROJECTIVE_MONTGOMERY_COST, pairing);
+    cost_printf("bls12 opt ate projective compress lazy(FINALEXP_OPT_MONT)", &FINALEXP_OPT_PROJECTIVE_MONTGOMERY_COST, pairing);
     printf("***************************************         \n");
     #endif
     

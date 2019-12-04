@@ -77,6 +77,8 @@ extern void fp_lshift(fp_t *ANS,fp_t *A,unsigned long int UI);
  */
 extern void fp_lshift2(fp_t *ANS,fp_t *A);
 
+extern void fp_hlv(fp_t *ANS,fp_t *A);
+
 /**
  * @brief Set a random number to a fp_t type struct
  *

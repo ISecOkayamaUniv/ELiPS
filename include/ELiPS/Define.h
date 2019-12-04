@@ -17,7 +17,7 @@
 #define X64
 
 //debug
-#define DEBUG_COST_A
+//#define DEBUG_COST_A
 
 /************************************/
 
@@ -104,7 +104,7 @@ typedef struct{
 }fp12_t;
 
 //tmp finite field
-extern mp_limb_t buf[FPLIMB],tmp_mul[FPLIMB2],tmp1[FPLIMB],tmp2[FPLIMB];
+extern mp_limb_t buf[FPLIMB];
 
 /*============================================================================*/
 /* Elliptic Curve                                                             */
@@ -200,7 +200,7 @@ extern mp_limb_t curve_b[FPLIMB];
 extern mp_limb_t R[FPLIMB],Ri[FPLIMB],R1[FPLIMB],RR[FPLIMB],Ni[FPLIMB];
 extern int m;
 
-extern mp_limb_t u;
+extern mp_limb_t u[FPLIMB+1];
 extern mp_limb_t N[FPLIMB2],R2[FPLIMB],R3[FPLIMB],RmodP[FPLIMB];
 /*============================================================================*/
 /* Test functions                                                             */
@@ -208,7 +208,13 @@ extern mp_limb_t N[FPLIMB2],R2[FPLIMB],R3[FPLIMB],RmodP[FPLIMB];
 extern struct timeval tv_start,tv_end;
 extern float MILLER_OPT;
 extern float FINALEXP_OPT,FINALEXP_OPT_EASY,FINALEXP_OPT_HARD;
+extern float MILLER_OPT_PROJECTIVE,FINALEXP_OPT_PROJECTIVE;
 extern float MILLER_OPT_MONTGOMERY,FINALEXP_OPT_MONTGOMERY;
+extern float MILLER_OPT_PROJECTIVE_MONTGOMERY,FINALEXP_OPT_PROJECTIVE_MONTGOMERY;
+
+extern cost MILLER_OPT_COST,FINALEXP_OPT_COST;
+extern cost MILLER_OPT_PROJECTIVE_COST,FINALEXP_OPT_PROJECTIVE_COST;
 extern cost MILLER_OPT_MONTGOMERY_COST,FINALEXP_OPT_MONTGOMERY_COST;
+extern cost MILLER_OPT_PROJECTIVE_MONTGOMERY_COST,FINALEXP_OPT_PROJECTIVE_MONTGOMERY_COST;
 
 #endif

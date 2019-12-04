@@ -25,6 +25,10 @@ extern void efp2_projective_init(efp2_projective_t *P);
  * @param[in]P --a pointer to be printed.
  */
 extern void efp2_printf(char *str,efp2_t *P);
+extern void efp2_projective_printf(char *str,efp2_projective_t *P);
+extern void efp2_printf_montgomery(char *str,efp2_t *P);
+extern void efp2_projective_printf_affine(char *str,efp2_projective_t *P);
+extern void efp2_projective_printf_affine_montgomery(char *str,efp2_projective_t *P);
 
 /**
  * @brief Print a efp2_t type struct
@@ -42,7 +46,7 @@ extern void efp2_println(char *str,efp2_t *P);
  */
 extern void efp2_jacobian_printf(char *str,efp2_jacobian_t *P);
 extern void efp2_jacobian_printf_montgomery(char *str,efp2_jacobian_t *P);
-
+extern void efp2_projective_printf_montgomery(char *str,efp2_projective_t *P);
 /**
  * @brief Set a efp2_t type struct to a efp2_t type struct
  *
@@ -81,6 +85,7 @@ extern void efp2_affine_to_jacobian(efp2_jacobian_t *ANS,efp2_t *A);
  * @param[in]A --a pointer to set.
  */
 extern void efp2_affine_to_projective(efp2_projective_t *ANS,efp2_t *A);
+extern void efp2_affine_to_projective_montgomery(efp2_projective_t *ANS,efp2_t *A);
 
 extern void efp2_affine_to_jacobian_montgomery(efp2_jacobian_t *ANS,efp2_t *A);
 
@@ -101,11 +106,14 @@ extern void efp2_projective_to_affine(efp2_t *ANS,efp2_projective_t *A);
 
 extern void efp2_mix(efp2_jacobian_t *ANS,efp2_jacobian_t *A,fp2_t *Zi);
 
-extern void efp2_jacobian_montgomery(efp2_t *ANS,efp2_jacobian_t *A);
+extern void efp2_jacobian_to_affine_montgomery(efp2_t *ANS,efp2_jacobian_t *A);
+extern void efp2_projective_to_affine_montgomery(efp2_t *ANS,efp2_projective_t *A);
 
 extern void efp2_mix_montgomery(efp2_jacobian_t *ANS,efp2_jacobian_t *A,fp2_t *Zi);
 extern void efp2_to_montgomery(efp2_t *ANS,efp2_t *A);
+extern void efp2_projective_to_montgomery(efp2_projective_t *ANS,efp2_projective_t *A);
 extern void efp2_mod_montgomery(efp2_t *ANS,efp2_t *A);
+extern void efp2_projective_mod_montgomery(efp2_projective_t *ANS,efp2_projective_t *A);
 /**
  * @brief Set an unsigned int to a efp2_t type struct
  *

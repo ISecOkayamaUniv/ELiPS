@@ -39,6 +39,13 @@ void fp_lshift2(fp_t *ANS,fp_t *A){
     mpn_lshift(buf,A->x0,FPLIMB,1);
 	if(mpn_cmp(buf,prime,FPLIMB)>=0)mpn_sub_n(ANS->x0,buf,prime,FPLIMB);
 }
+void fp_hlv(fp_t *ANS,fp_t *A)
+{
+	static mp_limb_t buf[FPLIMB];
+	if(A->x0[0] & 1) mpn_add_n(buf,A->x0,prime,FPLIMB);
+	else mpn_copyd(buf,A->x0,FPLIMB);
+	mpn_rshift(ANS->x0,buf,FPLIMB,1);
+}
 void fp_set_random(fp_t *ANS,gmp_randstate_t state){
     mpz_t tmp;
     mpz_init(tmp);
@@ -61,7 +68,7 @@ void pre_montgomery(){
     mpz_ui_pow_ui(NN,2,FPLIMB_BITS);
     mpz_invert(N2,prime_z,NN);
     mpz_sub(N2,NN,N2);
-    mpn_set_mpz(&u,N2);
+    mpn_set_mpz(u,N2);
     mpn_zero(N,FPLIMB2);
     for(int i=0;i<FPLIMB;i++){
         N[i]=prime[i];
@@ -90,7 +97,7 @@ void fp_mulmod_montgomery(fp_t *ANS,fp_t *A,fp_t *B){
     mpn_mul_n(T,A->x0,B->x0,FPLIMB);
     index=0;
     for (i = 0; i < FPLIMB; i++,index++) {
-		r = (mp_limb_t)(T[index] * u);
+		r = (mp_limb_t)(T[index] * u[0]);
 		T[index] = mpn_addmul_1(T+index,prime,FPLIMB,r);
 	}
 	carry = mpn_add_n(ANS->x0, T+FPLIMB, T, FPLIMB);
@@ -114,7 +121,7 @@ void mpn_mulmod_montgomery(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_siz
     mpn_mul(T,A,A_size,B,B_size);
     index=0;
     for (i = 0; i < FPLIMB; i++,index++) {
-		r = (mp_limb_t)(T[index] * u);
+		r = (mp_limb_t)(T[index] * u[0]);
 		T[index] = mpn_addmul_1(T+index,prime,FPLIMB,r);
 	}
 	carry = mpn_add_n(ANS, T+FPLIMB, T, FPLIMB);
@@ -134,7 +141,7 @@ void fp_mod_montgomery(fp_t *ANS,fp_t *A){
     mpn_copyd(T,A->x0,FPLIMB);
     index=0;
     for (i = 0; i < FPLIMB; i++,index++) {
-		r = (mp_limb_t)(T[index] * u);
+		r = (mp_limb_t)(T[index] * u[0]);
 		T[index] = mpn_addmul_1(T+index,prime,FPLIMB,r);
 	}
 	carry = mpn_add_n(ANS->x0, T+FPLIMB, T, FPLIMB);
@@ -155,7 +162,7 @@ void mpn_mod_montgomery(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t
     mpn_copyd(T,A,A_size);
     index=0;
     for (i = 0; i < FPLIMB; i++,index++) {
-		r = (mp_limb_t)(T[index] * u);
+		r = (mp_limb_t)(T[index] * u[0]);
 		T[index] = mpn_addmul_1(T+index,prime,FPLIMB,r);
 	}
 	carry = mpn_add_n(ANS, T+FPLIMB, T, FPLIMB);

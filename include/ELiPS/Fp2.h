@@ -85,6 +85,8 @@ extern void fp2_lshift(fp2_t *ANS,fp2_t *A,unsigned long int UI);
  * @param[in]UI --an unsigned long int to shift.
  */
 extern void fp2_lshift2(fp2_t *ANS,fp2_t *A);
+extern void fp2_hlv(fp2_t *ANS,fp2_t *A);
+extern void fp2_dbl(fp2_t *ANS, fp2_t *A);
 
 /**
  * @brief Set a random number to a fp2_t type struct
