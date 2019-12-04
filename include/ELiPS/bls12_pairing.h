@@ -6,50 +6,50 @@
 #include <ELiPS/time.h>
 
 /**
- * @brief Calculation ate pairing on prime field for BLS12
+ * @brief Calculation ate pairing on prime field for bls12
  *
- * @param[out]ANS --a pointer of answer in Fp12.
- * @param[in]P --a pointer in EFp12 on G1.
- * @param[in]Q --a pointer in EFp12 on G2.
+ * @param[out]ANS --a pointer of answer in fp12_t.
+ * @param[in]P --a pointer in efp12_t on G1.
+ * @param[in]Q --a pointer in efp12_t on G2.
  */
-extern void BLS12_Plain_ate_pairing(Fp12 *ANS,EFp12 *P,EFp12 *Q);
+extern void bls12_ate_pairing(fp12_t *ANS,efp12_t *P,efp12_t *Q);
 
 /**
- * @brief Calculation Optimal-ate pairing on prime field for BLS12
+ * @brief Calculation Optimal-ate pairing on prime field for bls12
  *
- * @param[out]ANS --a pointer of answer in Fp12.
- * @param[in]P --a pointer in EFp12 on G1.
- * @param[in]Q --a pointer in EFp12 on G2.
+ * @param[out]ANS --a pointer of answer in fp12_t.
+ * @param[in]P --a pointer in efp12_t on G1.
+ * @param[in]Q --a pointer in efp12_t on G2.
  */
-extern void BLS12_Opt_ate_pairing(Fp12 *ANS,EFp12 *P,EFp12 *Q);
+extern void bls12_optate_pairing_basic(fp12_t *ANS,efp12_t *P,efp12_t *Q);
 
 /**
- * @brief Calculation Optimal-ate pairing on prime field for BLS12
+ * @brief Calculation Optimal-ate pairing on prime field for bls12
  *
- * @param[out]ANS --a pointer of answer in Fp12.
- * @param[in]P --a pointer in EFp12 on G1.
- * @param[in]Q --a pointer in EFp12 on G2.
+ * @param[out]ANS --a pointer of answer in fp12_t.
+ * @param[in]P --a pointer in efp12_t on G1.
+ * @param[in]Q --a pointer in efp12_t on G2.
  */
-extern void BLS12_Opt_ate_pairing_compress(Fp12 *ANS,EFp12 *P,EFp12 *Q);
+extern void bls12_optate_pairing_compress(fp12_t *ANS,efp12_t *P,efp12_t *Q);
 
 /**
- * @brief Calculation Optimal-ate pairing on prime field for BLS12 (Lazy Reduction)
+ * @brief Calculation Optimal-ate pairing on prime field for bls12 (Lazy Reduction)
  *
- * @param[out]ANS --a pointer of answer in Fp12.
- * @param[in]P --a pointer in EFp12 on G1.
- * @param[in]Q --a pointer in EFp12 on G2.
+ * @param[out]ANS --a pointer of answer in fp12_t.
+ * @param[in]P --a pointer in efp12_t on G1.
+ * @param[in]Q --a pointer in efp12_t on G2.
  */
-extern void BLS12_Opt_ate_pairing_lazy(Fp12 *ANS,EFp12 *P,EFp12 *Q);
+extern void bls12_optate_pairing_lazy(fp12_t *ANS,efp12_t *P,efp12_t *Q);
 
 /**
- * @brief Calculation Optimal-ate pairing on prime field for BLS12
+ * @brief Calculation Optimal-ate pairing on prime field for bls12
  *
- * @param[out]ANS --a pointer of answer in Fp12.
- * @param[in]P --a pointer in EFp12 on G1.
- * @param[in]Q --a pointer in EFp12 on G2.
+ * @param[out]ANS --a pointer of answer in fp12_t.
+ * @param[in]P --a pointer in efp12_t on G1.
+ * @param[in]Q --a pointer in efp12_t on G2.
  */
-extern void BLS12_Opt_ate_pairing_compress_lazy(Fp12 *ANS,EFp12 *P,EFp12 *Q);
-extern void BLS12_Opt_ate_pairing_compress_lazy_montgomery(Fp12 *ANS,EFp12 *P,EFp12 *Q);
+extern void bls12_optate_pairing_compress_lazy(fp12_t *ANS,efp12_t *P,efp12_t *Q);
+extern void bls12_optate_pairing_compress_lazy_montgomery(fp12_t *ANS,efp12_t *P,efp12_t *Q);
 
 
 #endif

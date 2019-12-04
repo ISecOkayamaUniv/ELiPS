@@ -1,45 +1,45 @@
-#include <ELiPS/Fp.h>
+#include <ELiPS/fp.h>
 
-void Fp_init(Fp *A){
+void fp_init(fp_t *A){
     mpn_zero(A->x0,FPLIMB);
 }
 
-void Fp_printf(char *str,Fp *A){
+void fp_printf(char *str,fp_t *A){
     gmp_printf("%s%Nu",str,A->x0,FPLIMB);
 }
-void Fp_println(char *str,Fp *A){
+void fp_println(char *str,fp_t *A){
     gmp_printf("%s%Nu\n",str,A->x0,FPLIMB);
 }
-void Fp_printf_montgomery(char *str,Fp *A){
-    static Fp out;
-    Fp_mod_montgomery(&out,A);
+void fp_printf_montgomery(char *str,fp_t *A){
+    static fp_t out;
+    fp_mod_montgomery(&out,A);
     gmp_printf("%s%Nu",str,out.x0,FPLIMB);
 }
-void Fp_set(Fp *ANS,Fp *A){
+void fp_set(fp_t *ANS,fp_t *A){
     mpn_copyd(ANS->x0,A->x0,FPLIMB);
 }
 
-void Fp_set_ui(Fp *ANS,unsigned long int UI){
+void fp_set_ui(fp_t *ANS,unsigned long int UI){
     mpn_set_ui(ANS->x0,FPLIMB,UI);
 }
-void Fp_set_mpn(Fp *ANS,mp_limb_t *A){
+void fp_set_mpn(fp_t *ANS,mp_limb_t *A){
     mpn_copyd(ANS->x0,A,FPLIMB);
 }
 
-void Fp_set_neg(Fp *ANS,Fp *A){
+void fp_set_neg(fp_t *ANS,fp_t *A){
     mpn_sub_n(ANS->x0,prime,A->x0,FPLIMB);
-    Fp_mod(ANS,ANS->x0,FPLIMB);
+    fp_mod(ANS,ANS->x0,FPLIMB);
 }
-void Fp_lshift(Fp *ANS,Fp *A,unsigned long int UI){
+void fp_lshift(fp_t *ANS,fp_t *A,unsigned long int UI){
     mpn_lshift(ANS->x0,A->x0,FPLIMB,UI);
-    Fp_mod(ANS,ANS->x0,FPLIMB);
+    fp_mod(ANS,ANS->x0,FPLIMB);
 }
-void Fp_lshift2(Fp *ANS,Fp *A){
+void fp_lshift2(fp_t *ANS,fp_t *A){
     static mp_limb_t buf[FPLIMB];    
     mpn_lshift(buf,A->x0,FPLIMB,1);
 	if(mpn_cmp(buf,prime,FPLIMB)>=0)mpn_sub_n(ANS->x0,buf,prime,FPLIMB);
 }
-void Fp_set_random(Fp *ANS,gmp_randstate_t state){
+void fp_set_random(fp_t *ANS,gmp_randstate_t state){
     mpz_t tmp;
     mpz_init(tmp);
     
@@ -47,7 +47,7 @@ void Fp_set_random(Fp *ANS,gmp_randstate_t state){
     mpn_set_mpz(ANS->x0,tmp);
     
     //mpn_random(buf,FPLIMB);
-    //Fp_mod(ANS,buf,FPLIMB);
+    //fp_mod(ANS,buf,FPLIMB);
     
     mpz_clear(tmp);
 }
@@ -75,7 +75,7 @@ void pre_montgomery(){
     mpz_clear(N2);
     mpz_clear(NN);
 }
-void Fp_mulmod_montgomery(Fp *ANS,Fp *A,Fp *B){
+void fp_mulmod_montgomery(fp_t *ANS,fp_t *A,fp_t *B){
     #ifdef DEBUG_COST_A
     cost_mul++;
     #endif
@@ -122,7 +122,7 @@ void mpn_mulmod_montgomery(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_siz
 		carry = mpn_sub_n(ANS,ANS,prime,FPLIMB);
 	}
 }
-void Fp_mod_montgomery(Fp *ANS,Fp *A){
+void fp_mod_montgomery(fp_t *ANS,fp_t *A){
 	unsigned long int carry;
 	mp_limb_t r;
     static mp_limb_t T[FPLIMB2];
@@ -163,7 +163,7 @@ void mpn_mod_montgomery(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t
 		carry = mpn_sub_n(ANS,ANS,prime,FPLIMB);
 	}
 }
-void Fp_to_montgomery(Fp *ANS, Fp *A){
+void fp_to_montgomery(fp_t *ANS, fp_t *A){
 	static int i;
 	static mp_limb_t tmp[FPLIMB2];
     mpn_zero(tmp,FPLIMB2);
@@ -178,18 +178,18 @@ void mpn_to_montgomery(mp_limb_t *ANS, mp_limb_t *A){
     mpn_mod(ANS,tmp,FPLIMB2);
 }
 
-void Fp_mod(Fp *ans,mp_limb_t *a,mp_size_t size_a){
+void fp_mod(fp_t *ans,mp_limb_t *a,mp_size_t size_a){
 	mp_limb_t dumy[size_a];
 	mpn_tdiv_qr(dumy,ans->x0,0,a,size_a,prime,FPLIMB);
 }
 
-void Fp_mod_ui(Fp *ans,mp_limb_t *a,mp_size_t size_a,unsigned long int UI){
+void fp_mod_ui(fp_t *ans,mp_limb_t *a,mp_size_t size_a,unsigned long int UI){
 	mp_limb_t dumy[size_a];
 
 	mpn_set_ui(buf,FPLIMB,UI);
 	mpn_tdiv_qr(dumy,ans->x0,0,a,size_a,buf,1);
 }
-void Fp_mul(Fp *ANS,Fp *A,Fp *B){
+void fp_mul(fp_t *ANS,fp_t *A,fp_t *B){
     #ifdef DEBUG_COST_A
     cost_mul++;
     #endif
@@ -197,17 +197,17 @@ void Fp_mul(Fp *ANS,Fp *A,Fp *B){
     if(mpn_zero_p(A->x0,FPLIMB)==1||mpn_zero_p(B->x0,FPLIMB)==1){
 	    mpn_set_ui(ANS->x0,FPLIMB,0);
     }else if(mpn_cmp_ui(A->x0,FPLIMB,1)==0){
-        if(mpn_cmp(B->x0,prime,FPLIMB)>0)Fp_mod(ANS,B->x0,FPLIMB);
-	    else Fp_set(ANS,B);
+        if(mpn_cmp(B->x0,prime,FPLIMB)>0)fp_mod(ANS,B->x0,FPLIMB);
+	    else fp_set(ANS,B);
     }else if(mpn_cmp_ui(B->x0,FPLIMB,1)==0){
-        if(mpn_cmp(A->x0,prime,FPLIMB)>0)Fp_mod(ANS,A->x0,FPLIMB);
-	    else Fp_set(ANS,A);
+        if(mpn_cmp(A->x0,prime,FPLIMB)>0)fp_mod(ANS,A->x0,FPLIMB);
+	    else fp_set(ANS,A);
     }else{
         mpn_mul_n(tmp_mul,A->x0,B->x0,FPLIMB);
-        Fp_mod(ANS,tmp_mul,FPLIMB2);
+        fp_mod(ANS,tmp_mul,FPLIMB2);
     }
 }
-void Fp_mul_lazy(mp_limb_t *ANS,mp_limb_t *A,mp_limb_t *B){
+void fp_mul_lazy(mp_limb_t *ANS,mp_limb_t *A,mp_limb_t *B){
     #ifdef DEBUG_COST_A
     cost_mul++;
     #endif
@@ -223,7 +223,7 @@ void Fp_mul_lazy(mp_limb_t *ANS,mp_limb_t *A,mp_limb_t *B){
         mpn_mul_n(ANS,A,B,FPLIMB);
     }
 }
-void Fp_mul_final(Fp *ANS,Fp *A,Fp *B){
+void fp_mul_final(fp_t *ANS,fp_t *A,fp_t *B){
     #ifdef DEBUG_COST_A
     cost_mul++;
     #endif
@@ -231,23 +231,23 @@ void Fp_mul_final(Fp *ANS,Fp *A,Fp *B){
     if(mpn_zero_p(A->x0,FPLIMB)==1||mpn_zero_p(B->x0,FPLIMB)==1){
 	mpn_set_ui(ANS->x0,FPLIMB,0);
     }else if(mpn_cmp_ui(A->x0,FPLIMB,1)==0){
-	Fp_mod(ANS,B->x0,FPLIMB);
+	fp_mod(ANS,B->x0,FPLIMB);
     }else if(mpn_cmp_ui(B->x0,FPLIMB,1)==0){
-	Fp_mod(ANS,A->x0,FPLIMB);
+	fp_mod(ANS,A->x0,FPLIMB);
     }else{
         mpn_mul_n(tmp_mul,A->x0,B->x0,FPLIMB);
-        Fp_mod(ANS,tmp_mul,FPLIMB2);
+        fp_mod(ANS,tmp_mul,FPLIMB2);
     }
 }
-void Fp_mul_ui(Fp *ANS,Fp *A,unsigned long int UI){
+void fp_mul_ui(fp_t *ANS,fp_t *A,unsigned long int UI){
     #ifdef DEBUG_COST_A
     cost_mul_ui++;
     #endif
     static mp_limb_t tmp_mul[FPLIMB2];
     mpn_mul_ui(tmp_mul,A->x0,FPLIMB,UI);
-    Fp_mod(ANS,tmp_mul,FPLIMB2);
+    fp_mod(ANS,tmp_mul,FPLIMB2);
 }
-void Fp_mul_mpn(Fp *ANS,Fp *A,mp_limb_t *B){
+void fp_mul_mpn(fp_t *ANS,fp_t *A,mp_limb_t *B){
     #ifdef DEBUG_COST_A
     cost_mul++;
     #endif
@@ -257,13 +257,13 @@ void Fp_mul_mpn(Fp *ANS,Fp *A,mp_limb_t *B){
     }else if(mpn_cmp_ui(A->x0,FPLIMB,1)==0){
 	mpn_copyd(ANS->x0,B,FPLIMB);
     }else if(mpn_cmp_ui(B,FPLIMB,1)==0){
-        Fp_set(ANS,A);
+        fp_set(ANS,A);
     }else{
         mpn_mul_n(tmp_mul,A->x0,B,FPLIMB);
-        Fp_mod(ANS,tmp_mul,FPLIMB2);
+        fp_mod(ANS,tmp_mul,FPLIMB2);
     }
 }
-void Fp_sqr(Fp *ANS,Fp *A){
+void fp_sqr(fp_t *ANS,fp_t *A){
     #ifdef DEBUG_COST_A
     cost_sqr++;
     #endif
@@ -274,10 +274,10 @@ void Fp_sqr(Fp *ANS,Fp *A){
 	mpn_set_ui(ANS->x0,FPLIMB,1);
     }else{
         mpn_sqr(tmp_sqr,A->x0,FPLIMB);
-        Fp_mod(ANS,tmp_sqr,FPLIMB2);
+        fp_mod(ANS,tmp_sqr,FPLIMB2);
     }
 }
-void Fp_sqr_lazy(mp_limb_t *ANS,mp_limb_t *A){
+void fp_sqr_lazy(mp_limb_t *ANS,mp_limb_t *A){
     #ifdef DEBUG_COST_A
     cost_sqr++;
     #endif
@@ -289,21 +289,21 @@ void Fp_sqr_lazy(mp_limb_t *ANS,mp_limb_t *A){
         mpn_sqr(ANS,A,FPLIMB);
     }
 }
-void Fp_add(Fp *ANS,Fp *A,Fp *B){
+void fp_add(fp_t *ANS,fp_t *A,fp_t *B){
     #ifdef DEBUG_COST_A
     cost_add++;
     #endif
     static mp_limb_t buf[FPLIMB];
     if(mpn_zero_p(A->x0,FPLIMB)==1){
-	Fp_set(ANS,B);
+	fp_set(ANS,B);
     }else if(mpn_zero_p(B->x0,FPLIMB)==1){
-	Fp_set(ANS,A);
+	fp_set(ANS,A);
     }else{
 	mpn_add_n(ANS->x0,A->x0,B->x0,FPLIMB);
 	if(mpn_cmp(ANS->x0,prime,FPLIMB)>=0)mpn_sub_n(ANS->x0,ANS->x0,prime,FPLIMB);
     }
 }
-void Fp_add_lazy(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size,mp_limb_t *B,mp_size_t B_size){
+void fp_add_lazy(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size,mp_limb_t *B,mp_size_t B_size){
     #ifdef DEBUG_COST_A
     cost_add++;
     #endif
@@ -315,7 +315,7 @@ void Fp_add_lazy(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size
 	mpn_add_n(ANS,A,B,ANS_size);
     }
 }
-void Fp_add_lazy_mod(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size,mp_limb_t *B,mp_size_t B_size){
+void fp_add_lazy_mod(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size,mp_limb_t *B,mp_size_t B_size){
     #ifdef DEBUG_COST_A
     cost_add++;
     #endif
@@ -329,37 +329,37 @@ void Fp_add_lazy_mod(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_
 	if(mpn_cmp(ANS,prime,FPLIMB)>=0)mpn_sub_n(ANS,ANS,prime,FPLIMB);
     }
 }
-void Fp_add_final(Fp *ANS,Fp *A,Fp *B){
+void fp_add_final(fp_t *ANS,fp_t *A,fp_t *B){
     #ifdef DEBUG_COST_A
     cost_add++;
     #endif
     static mp_limb_t buf[FPLIMB];
     if(mpn_zero_p(A->x0,FPLIMB)==1){
-	Fp_mod(ANS,B->x0,FPLIMB);
+	fp_mod(ANS,B->x0,FPLIMB);
     }else if(mpn_zero_p(B->x0,FPLIMB)==1){
-	Fp_mod(ANS,A->x0,FPLIMB);
+	fp_mod(ANS,A->x0,FPLIMB);
     }else{
 	mpn_add_n(buf,A->x0,B->x0,FPLIMB);
-	Fp_mod(ANS,buf,FPLIMB);
+	fp_mod(ANS,buf,FPLIMB);
     }
 
 }
-void Fp_add_ui(Fp *ANS,Fp *A,unsigned long int UI){
+void fp_add_ui(fp_t *ANS,fp_t *A,unsigned long int UI){
     #ifdef DEBUG_COST_A
     cost_add_ui++;
     #endif
     static mp_limb_t buf[FPLIMB];
     if(mpn_zero_p(A->x0,FPLIMB)==1){
-	Fp_set_ui(ANS,UI);
+	fp_set_ui(ANS,UI);
     }else if(UI==0){
-	Fp_set(ANS,A);
+	fp_set(ANS,A);
     }else{
 	mpn_add_ui(buf,A->x0,FPLIMB,UI);
 	if(mpn_cmp(buf,prime,FPLIMB)>0)mpn_sub_n(ANS->x0,buf,prime,FPLIMB);
 	else mpn_copyd(ANS->x0,buf,FPLIMB);
     }
 }
-void Fp_add_mpn(Fp *ANS,Fp *A,mp_limb_t *B){
+void fp_add_mpn(fp_t *ANS,fp_t *A,mp_limb_t *B){
     #ifdef DEBUG_COST_A
     cost_add++;
     #endif
@@ -367,20 +367,20 @@ void Fp_add_mpn(Fp *ANS,Fp *A,mp_limb_t *B){
     if(mpn_zero_p(A->x0,FPLIMB)==1){
 	mpn_copyd(ANS->x0,B,FPLIMB);
     }else if(mpn_zero_p(B,FPLIMB)==1){
-	Fp_set(ANS,A);
+	fp_set(ANS,A);
     }else{
 	mpn_add_n(buf,A->x0,B,FPLIMB);
 	if(mpn_cmp(buf,prime,FPLIMB)>0)mpn_sub_n(ANS->x0,buf,prime,FPLIMB);
 	else mpn_copyd(ANS->x0,buf,FPLIMB);
     }
 }
-void Fp_sub(Fp *ANS,Fp *A,Fp *B){
+void fp_sub(fp_t *ANS,fp_t *A,fp_t *B){
     #ifdef DEBUG_COST_A
     cost_sub++;
     #endif
     static mp_limb_t buf[FPLIMB];
     if(mpn_zero_p(B->x0,FPLIMB)==1){
-	    Fp_set(ANS,A);
+	    fp_set(ANS,A);
     }else{
         if(mpn_cmp(A->x0,B->x0,FPLIMB)<0){
     	    mpn_sub_n(buf,A->x0,B->x0,FPLIMB);
@@ -390,7 +390,7 @@ void Fp_sub(Fp *ANS,Fp *A,Fp *B){
 	}
     }
 }
-void Fp_sub_lazy(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size,mp_limb_t *B,mp_size_t B_size){
+void fp_sub_lazy(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size,mp_limb_t *B,mp_size_t B_size){
     #ifdef DEBUG_COST_A
     cost_sub++;
     #endif
@@ -453,73 +453,73 @@ void Fp_sub_lazy(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size
 		}
     }
 }
-void Fp_sub_lazy_mod(Fp *ANS,mp_limb_t *A,mp_limb_t *B){
+void fp_sub_lazy_mod(fp_t *ANS,mp_limb_t *A,mp_limb_t *B){
     #ifdef DEBUG_COST_A
     cost_sub++;
     #endif
     //Only:A_size=B_size=FPLIMB2
     static mp_limb_t buf[FPLIMB2];
     if(mpn_zero_p(B,FPLIMB2)==1){
-	Fp_mod(ANS,A,FPLIMB2);
+	fp_mod(ANS,A,FPLIMB2);
     }else{
 	if(mpn_cmp(A,B,FPLIMB2)<0){
     	    mpn_sub_n(buf,B,A,FPLIMB2);
-	    	Fp_mod(ANS,buf,FPLIMB2);
+	    	fp_mod(ANS,buf,FPLIMB2);
     	    mpn_sub_n(ANS->x0,prime,ANS->x0,FPLIMB);
         }else{
 	    mpn_sub_n(buf,A,B,FPLIMB2);
-	    Fp_mod(ANS,buf,FPLIMB2);
+	    fp_mod(ANS,buf,FPLIMB2);
 	}
     }
 }
-void Fp_sub_final(Fp *ANS,Fp *A,Fp *B){
+void fp_sub_final(fp_t *ANS,fp_t *A,fp_t *B){
     #ifdef DEBUG_COST_A
     cost_sub++;
     #endif
     static mp_limb_t buf[FPLIMB];
     if(mpn_zero_p(B->x0,FPLIMB)==1){
-	Fp_mod(ANS,A->x0,FPLIMB);
+	fp_mod(ANS,A->x0,FPLIMB);
     }else{
         if(mpn_cmp(A->x0,B->x0,FPLIMB)<0){
     	    mpn_sub_n(buf,B->x0,A->x0,FPLIMB);
-	    Fp_mod(ANS,buf,FPLIMB);
+	    fp_mod(ANS,buf,FPLIMB);
     	    mpn_sub_n(ANS->x0,prime,ANS->x0,FPLIMB);
         }else{
 	    mpn_sub_n(buf,A->x0,B->x0,FPLIMB);
-	    Fp_mod(ANS,buf,FPLIMB);
+	    fp_mod(ANS,buf,FPLIMB);
 	}
     }
 }
-void Fp_sub_ui(Fp *ANS,Fp *A,unsigned long int UI){
+void fp_sub_ui(fp_t *ANS,fp_t *A,unsigned long int UI){
     #ifdef DEBUG_COST_A
     cost_sub_ui++;
     #endif
 	static mp_limb_t buf[FPLIMB];
     if(UI==0){
-	Fp_set(ANS,A);
+	fp_set(ANS,A);
     }else{
 	mpn_sub_ui(ANS->x0,A->x0,FPLIMB,UI);
     }
 }
-void Fp_sub_mpn(Fp *ANS,Fp *A,mp_limb_t *B){
+void fp_sub_mpn(fp_t *ANS,fp_t *A,mp_limb_t *B){
     #ifdef DEBUG_COST_A
     cost_sub++;
     #endif
     static mp_limb_t buf[FPLIMB];
     if(mpn_zero_p(B,FPLIMB)==1){
-	Fp_set(ANS,A);
+	fp_set(ANS,A);
     }else{
         if(mpn_cmp(A->x0,B,FPLIMB)<0){
     	    mpn_sub_n(buf,B,A->x0,FPLIMB);
     	    mpn_sub_n(buf,prime,buf,FPLIMB);
-	    Fp_mod(ANS,buf,FPLIMB);
+	    fp_mod(ANS,buf,FPLIMB);
         }else{
 	    mpn_sub_n(buf,A->x0,B,FPLIMB);
-	    Fp_mod(ANS,buf,FPLIMB);
+	    fp_mod(ANS,buf,FPLIMB);
 	}
     }
 }
-void Fp_inv(Fp *ANS,Fp *A){
+void fp_inv(fp_t *ANS,fp_t *A){
     #ifdef DEBUG_COST_A
     cost_inv++;
     #endif
@@ -542,32 +542,32 @@ void Fp_inv(Fp *ANS,Fp *A){
 	    mpn_copyd(tmp,sp,FPLIMB);
     }
     
-    Fp_mod(ANS,tmp,FPLIMB);
+    fp_mod(ANS,tmp,FPLIMB);
 }
-void Fp_inv_montgomery(Fp *ANS,Fp *A){
+void fp_inv_montgomery(fp_t *ANS,fp_t *A){
     #ifdef DEBUG_COST_A
     cost_mul++;
     #endif
-	Fp_inv(ANS,A);	
+	fp_inv(ANS,A);	
 	mpn_mulmod_montgomery(ANS->x0,FPLIMB,ANS->x0,FPLIMB,R3,FPLIMB);
 	//gmp_printf("R2=%Nu\n",R2,FPLIMB);
 }
 
-int  Fp_legendre(Fp *A){
+int  fp_legendre(fp_t *A){
 
     int i;
     mpz_t tmp1,tmp2;
-    Fp tmp1_Fp;
+    fp_t tmp1_fp;
     mpz_init(tmp1);
     mpz_init(tmp2);
-    Fp_init(&tmp1_Fp);
+    fp_init(&tmp1_fp);
     
     mpz_sub_ui(tmp1,prime_z,1);
     mpz_tdiv_q_ui(tmp2,tmp1,2);
-    Fp_pow(&tmp1_Fp,A,tmp2);
+    fp_pow(&tmp1_fp,A,tmp2);
 	
-    if(mpn_cmp_ui(tmp1_Fp.x0,FPLIMB,1)==0)		i=1;
-    else if(mpn_cmp_ui(tmp1_Fp.x0,FPLIMB,0)==0)	i=0;
+    if(mpn_cmp_ui(tmp1_fp.x0,FPLIMB,1)==0)		i=1;
+    else if(mpn_cmp_ui(tmp1_fp.x0,FPLIMB,0)==0)	i=0;
     else					i=-1;
     
     mpz_clear(tmp1);
@@ -576,17 +576,17 @@ int  Fp_legendre(Fp *A){
     return i;
 }
 
-int  Fp_isCNR(Fp *A){
-    Fp tmp;
-    Fp_init(&tmp);
+int  fp_isCNR(fp_t *A){
+    fp_t tmp;
+    fp_init(&tmp);
     mpz_t exp;
     mpz_init(exp);
     
     mpz_sub_ui(exp,prime_z,1);
     mpz_tdiv_q_ui(exp,exp,3);
-    Fp_pow(&tmp,A,exp);
+    fp_pow(&tmp,A,exp);
     
-    if(Fp_cmp_one(&tmp)==0){
+    if(fp_cmp_one(&tmp)==0){
         mpz_clear(exp);
         return 1;
     }else{
@@ -594,14 +594,14 @@ int  Fp_isCNR(Fp *A){
         return -1;
     }
 }
-void Fp_sqrt(Fp *ANS,Fp *A){
-    Fp x,y,t,k,n,tmp;
-    Fp_init(&x);
-    Fp_init(&y);
-    Fp_init(&t);
-    Fp_init(&k);
-    Fp_init(&n);
-    Fp_init(&tmp);
+void fp_sqrt(fp_t *ANS,fp_t *A){
+    fp_t x,y,t,k,n,tmp;
+    fp_init(&x);
+    fp_init(&y);
+    fp_init(&t);
+    fp_init(&k);
+    fp_init(&n);
+    fp_init(&tmp);
     unsigned long int e,m;
     mpz_t exp,q,z,result;
     mpz_init(exp);
@@ -611,10 +611,10 @@ void Fp_sqrt(Fp *ANS,Fp *A){
     gmp_randstate_t state1;
     gmp_randinit_default (state1);
     gmp_randseed_ui(state1,(unsigned long)time(NULL));
-    Fp_set_random(&n,state1);
+    fp_set_random(&n,state1);
     
-    while(Fp_legendre(&n)!=-1){
-        Fp_set_random(&n,state1);
+    while(fp_legendre(&n)!=-1){
+        fp_set_random(&n,state1);
     }
     mpz_sub_ui(q,prime_z,1);
     mpz_mod_ui(result,q,2);
@@ -624,73 +624,73 @@ void Fp_sqrt(Fp *ANS,Fp *A){
         mpz_mod_ui(result,q,2);
         e++;
     }
-    Fp_pow(&y,&n,q);
+    fp_pow(&y,&n,q);
     mpz_set_ui(z,e);
     mpz_sub_ui(exp,q,1);
     mpz_tdiv_q_ui(exp,exp,2);
-    Fp_pow(&x,A,exp);
-    Fp_mul(&tmp,&x,&x);
-    Fp_mul(&k,&tmp,A);
-    Fp_mul(&x,&x,A);
+    fp_pow(&x,A,exp);
+    fp_mul(&tmp,&x,&x);
+    fp_mul(&k,&tmp,A);
+    fp_mul(&x,&x,A);
     while(mpn_cmp_ui(k.x0,FPLIMB,1)!=0){
         m=1;
         mpz_ui_pow_ui(exp,2,m);
-        Fp_pow(&tmp,&k,exp);
+        fp_pow(&tmp,&k,exp);
         while(mpn_cmp_ui(tmp.x0,FPLIMB,1)!=0){
             m++;
             mpz_ui_pow_ui(exp,2,m);
-            Fp_pow(&tmp,&k,exp);
+            fp_pow(&tmp,&k,exp);
         }
         mpz_sub_ui(exp,z,m);
         mpz_sub_ui(exp,exp,1);
         mpz_ui_pow_ui(result,2,mpz_get_ui(exp));
-        Fp_pow(&t,&y,result);
-        Fp_mul(&y,&t,&t);
+        fp_pow(&t,&y,result);
+        fp_mul(&y,&t,&t);
         mpz_set_ui(z,m);
-        Fp_mul(&x,&x,&t);
-        Fp_mul(&k,&k,&y);
+        fp_mul(&x,&x,&t);
+        fp_mul(&k,&k,&y);
     }
-    Fp_set(ANS,&x);
+    fp_set(ANS,&x);
     
     mpz_clear(exp);
     mpz_clear(q);
     mpz_clear(z);
     mpz_clear(result);
 }
-void Fp_pow(Fp *ANS,Fp *A,mpz_t scalar){
+void fp_pow(fp_t *ANS,fp_t *A,mpz_t scalar){
     int i,length;
     length=(int)mpz_sizeinbase(scalar,2);
     char binary[length+1];
     mpz_get_str(binary,2,scalar);
-    Fp tmp;
-    Fp_init(&tmp);
+    fp_t tmp;
+    fp_init(&tmp);
     
-    Fp_set(&tmp,A);
+    fp_set(&tmp,A);
     
     for(i=1;i<length; i++){
-        Fp_mul(&tmp,&tmp,&tmp);
+        fp_mul(&tmp,&tmp,&tmp);
         if(binary[i]=='1'){
-            Fp_mul(&tmp,A,&tmp);
+            fp_mul(&tmp,A,&tmp);
         }
     }
-    Fp_set(ANS,&tmp);
+    fp_set(ANS,&tmp);
     
 }
-void Fp_pow_mpn(Fp *ans,Fp *a,mp_limb_t *r,mp_size_t n){
-    Fp Temp,tmp;
+void fp_pow_mpn(fp_t *ans,fp_t *a,mp_limb_t *r,mp_size_t n){
+    fp_t Temp,tmp;
     mp_limb_t bit[FPLIMB],bit_copy[FPLIMB];
     size_t bit_size;
     mp_size_t size;
     int i,cnt;
     size=FPLIMB;
 	
-    Fp_init(&Temp);
-    Fp_init(&tmp);
+    fp_init(&Temp);
+    fp_init(&tmp);
     mpn_init(bit,size);
     mpn_init(bit_copy,size);
 	
     if(mpn_zero_p(r,size)==1){
-    	Fp_set_ui(ans,1);
+    	fp_set_ui(ans,1);
     	return;
 }
     bit_size=mpn_sizeinbase(r,n,2);
@@ -699,18 +699,18 @@ void Fp_pow_mpn(Fp *ans,Fp *a,mp_limb_t *r,mp_size_t n){
     mpn_set_ui(bit,1,size);
     mpn_lshift_ext(bit,bit,size,bit_size);
 	
-    //SCM
+    //scm
     mpn_copyd(Temp.x0,a->x0,size);
     while(bit_size>0){
 	mpn_copyd(tmp.x0,Temp.x0,size);
-	Fp_mul(&Temp,&tmp,&tmp);
+	fp_mul(&Temp,&tmp,&tmp);
 	//bit
 	mpn_rshift(bit,bit,size,1);
 	mpn_and_n(bit_copy,r,bit,size);
 	//bit=1 -> 
 	if(mpn_zero_p(bit_copy,size)==0){
 		mpn_copyd(tmp.x0,Temp.x0,size);
-		Fp_mul(&Temp,&tmp,a);
+		fp_mul(&Temp,&tmp,a);
 	}
 	mpn_init(bit_copy,size);
 	bit_size--;
@@ -719,87 +719,87 @@ void Fp_pow_mpn(Fp *ans,Fp *a,mp_limb_t *r,mp_size_t n){
     mpn_copyd(ans->x0,Temp.x0,size);
 }
 
-int  Fp_cmp(Fp *A,Fp *B){
+int  fp_cmp(fp_t *A,fp_t *B){
     if(mpn_cmp(A->x0,B->x0,FPLIMB)==0){
         return 0;   
     }
     return 1;
 }
 
-int  Fp_cmp_ui(Fp *A,unsigned long int UI){
+int  fp_cmp_ui(fp_t *A,unsigned long int UI){
     if(mpn_cmp_ui(A->x0,FPLIMB,UI)==0){
         return 0;
     }
     return 1;
 }
 
-int  Fp_cmp_mpn(Fp *A,mp_limb_t *B){
+int  fp_cmp_mpn(fp_t *A,mp_limb_t *B){
     if(mpn_cmp(A->x0,B,FPLIMB)==0){
         return 0;
     }
     return 1;
 }
 
-int  Fp_cmp_zero(Fp *A){
+int  fp_cmp_zero(fp_t *A){
     if(mpn_cmp_ui(A->x0,FPLIMB,0)==0){
         return 0;
     }
     return 1;
 }
 
-int  Fp_cmp_one(Fp *A){
+int  fp_cmp_one(fp_t *A){
     if(mpn_cmp_ui(A->x0,FPLIMB,1)==0){
         return 0;
     }
     return 1;
 }
 
-int Fp_montgomery_trick(Fp *A_inv,Fp *A,int n){
+int fp_montgomery_trick(fp_t *A_inv,fp_t *A,int n){
     int i;
-    Fp ANS[n],ALL_inv;
-	Fp_set(&ANS[0],&A[0]);
-	Fp check;
+    fp_t ANS[n],ALL_inv;
+	fp_set(&ANS[0],&A[0]);
+	fp_t check;
 	
 	for(i=1;i<n;i++){
-	Fp_mul(&ANS[i],&ANS[i-1],&A[i]);
+	fp_mul(&ANS[i],&ANS[i-1],&A[i]);
 	}
-	Fp_inv(&ALL_inv,&ANS[n-1]);	
+	fp_inv(&ALL_inv,&ANS[n-1]);	
 	for(i=n-1;i>0;i--){
-    Fp_mul(&A_inv[i],&ALL_inv,&ANS[i-1]);	
-    Fp_mul(&ALL_inv,&ALL_inv,&A[i]);
+    fp_mul(&A_inv[i],&ALL_inv,&ANS[i-1]);	
+    fp_mul(&ALL_inv,&ALL_inv,&A[i]);
     }
     
-    Fp_set(&A_inv[0],&ALL_inv);
+    fp_set(&A_inv[0],&ALL_inv);
     /*
     for(i=0;i<n;i++){
-    Fp_mul(&check,&A[i],&A_inv[i]);
+    fp_mul(&check,&A[i],&A_inv[i]);
     printf("check:%d",i);	
-	Fp_println("=",&check);
+	fp_println("=",&check);
     }
     */
     return 0;
 }
-int Fp_montgomery_trick_montgomery(Fp *A_inv,Fp *A,int n){
+int fp_montgomery_trick_montgomery(fp_t *A_inv,fp_t *A,int n){
     int i;
-    Fp ANS[n],ALL_inv;
-	Fp_set(&ANS[0],&A[0]);
-	Fp check;
+    fp_t ANS[n],ALL_inv;
+	fp_set(&ANS[0],&A[0]);
+	fp_t check;
 	
 	for(i=1;i<n;i++){
-	Fp_mulmod_montgomery(&ANS[i],&ANS[i-1],&A[i]);
+	fp_mulmod_montgomery(&ANS[i],&ANS[i-1],&A[i]);
 	}
-	Fp_inv_montgomery(&ALL_inv,&ANS[n-1]);
+	fp_inv_montgomery(&ALL_inv,&ANS[n-1]);
 	for(i=n-1;i>0;i--){
-    Fp_mulmod_montgomery(&A_inv[i],&ALL_inv,&ANS[i-1]);	
-    Fp_mulmod_montgomery(&ALL_inv,&ALL_inv,&A[i]);
+    fp_mulmod_montgomery(&A_inv[i],&ALL_inv,&ANS[i-1]);	
+    fp_mulmod_montgomery(&ALL_inv,&ALL_inv,&A[i]);
     }
     
-    Fp_set(&A_inv[0],&ALL_inv);
+    fp_set(&A_inv[0],&ALL_inv);
     /*
     for(i=0;i<n;i++){
-    Fp_mul(&check,&A[i],&A_inv[i]);
+    fp_mul(&check,&A[i],&A_inv[i]);
     printf("check:%d",i);	
-	Fp_println("=",&check);
+	fp_println("=",&check);
     }
     */
     return 0;

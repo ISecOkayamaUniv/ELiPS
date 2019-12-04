@@ -1,4 +1,4 @@
-mpn.lo: mpn.c ../include/ELiPS/mpn.h ../include/ELiPS/Define.h \
+mpn.lo: mpn.c ../include/ELiPS/mpn.h ../include/ELiPS/define.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/_stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/sys/cdefs.h \
@@ -114,7 +114,7 @@ mpn.lo: mpn.c ../include/ELiPS/mpn.h ../include/ELiPS/Define.h \
 
 ../include/ELiPS/mpn.h:
 
-../include/ELiPS/Define.h:
+../include/ELiPS/define.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/stdio.h:
 

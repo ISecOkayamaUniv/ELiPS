@@ -1,4 +1,4 @@
-time.lo: time.c ../include/ELiPS/time.h ../include/ELiPS/Define.h \
+time.lo: time.c ../include/ELiPS/time.h ../include/ELiPS/define.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/_stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/sys/cdefs.h \
@@ -114,7 +114,7 @@ time.lo: time.c ../include/ELiPS/time.h ../include/ELiPS/Define.h \
 
 ../include/ELiPS/time.h:
 
-../include/ELiPS/Define.h:
+../include/ELiPS/define.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/stdio.h:
 

@@ -3,9 +3,9 @@
 
 #include <ELiPS/mpn.h>
 
-extern void BN12_generate_X();
-extern int  BN12_generate_prime();
-extern int  BN12_generate_order();
-extern void BN12_generate_trace();
-extern void BN12_weil();
+extern void bn12_generate_X();
+extern int  bn12_generate_prime();
+extern int  bn12_generate_order();
+extern void bn12_generate_trace();
+extern void bn12_weil();
 #endif

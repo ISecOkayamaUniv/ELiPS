@@ -2,9 +2,11 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([elips], [1.0.9])
-AM_INIT_AUTOMAKE
+AC_INIT([elips], [1.0.10])
+#AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([src/mpn.c])
+#		src/bls12/bls12_generate_curve.c])
+# AC_CONFIG_SRCDIR([src/bn12/bn12_generate_curve.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIRS([m4])
 #Initialize libtool with min ver 2.4
@@ -43,5 +45,7 @@ AC_CHECK_LIB(gmp, __gmpz_add)
 AC_CHECK_FUNCS([gettimeofday memmove memset strtol])
 
 AC_CONFIG_FILES([Makefile
-                 src/Makefile])
+                 src/Makefile
+                 src/bls12/Makefile
+                 src/bn12/Makefile])
 AC_OUTPUT

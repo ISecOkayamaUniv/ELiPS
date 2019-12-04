@@ -3,31 +3,31 @@
 
 #include <ELiPS/bls12_generate_curve.h>
 #include <ELiPS/bls12_generate_parameter.h>
-#include <ELiPS/EFp12.h>
+#include <ELiPS/efp12.h>
 
 
 /**
- * @brief Initializes a BLS curve.
+ * @brief Initializes a bls curve.
  *
  */
-extern void BLS12_init();
+extern void bls12_init();
 
 /**
- * @brief Initializes a BLS curve parameters.
+ * @brief Initializes a bls curve parameters.
  *
  */
-extern void BLS12_init_parameters();
+extern void bls12_init_parameters();
 
 /**
- * @brief Clear a BLS curve parameters.
+ * @brief Clear a bls curve parameters.
  *
  */
-extern void BLS12_clear();
+extern void bls12_clear();
 
 /**
- * @brief Print a BLS curve parameters.
+ * @brief Print a bls curve parameters.
  *
  */
-extern void BLS12_print_parameters();
+extern void bls12_print_parameters();
 
 #endif

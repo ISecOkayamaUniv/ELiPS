@@ -1,6 +1,6 @@
-Fp12.lo: Fp12.c ../include/ELiPS/Fp12.h ../include/ELiPS/Fp6.h \
-  ../include/ELiPS/Fp2.h ../include/ELiPS/Fp.h ../include/ELiPS/mpn.h \
-  ../include/ELiPS/Define.h \
+fp12.lo: fp12.c ../include/ELiPS/fp12.h ../include/ELiPS/fp6.h \
+  ../include/ELiPS/fp2.h ../include/ELiPS/fp.h ../include/ELiPS/mpn.h \
+  ../include/ELiPS/define.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/_stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/sys/cdefs.h \
@@ -114,17 +114,17 @@ Fp12.lo: Fp12.c ../include/ELiPS/Fp12.h ../include/ELiPS/Fp6.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include/stdarg.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/assert.h
 
-../include/ELiPS/Fp12.h:
+../include/ELiPS/fp12.h:
 
-../include/ELiPS/Fp6.h:
+../include/ELiPS/fp6.h:
 
-../include/ELiPS/Fp2.h:
+../include/ELiPS/fp2.h:
 
-../include/ELiPS/Fp.h:
+../include/ELiPS/fp.h:
 
 ../include/ELiPS/mpn.h:
 
-../include/ELiPS/Define.h:
+../include/ELiPS/define.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/stdio.h:
 

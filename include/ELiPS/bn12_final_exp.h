@@ -1,14 +1,14 @@
 #ifndef BN12_FINAL_EXP_H
 #define BN12_FINAL_EXP_H
 
-#include <ELiPS/Fp12.h>
+#include <ELiPS/fp12.h>
 #include <ELiPS/test.h>
 
 //final exp
-extern void BN12_Final_exp_plain(Fp12 *ANS,Fp12 *A);
-extern void BN12_Fp12_pow_X(Fp12 *ANS,Fp12 *A);
-extern void BN12_Fp12_pow_X_lazy(Fp12 *ANS,Fp12 *A);
-extern void BN12_Final_exp_optimal(Fp12 *ANS,Fp12 *A);
-extern void BN12_Final_exp_optimal_lazy(Fp12 *ANS,Fp12 *A);
+extern void bn12_final_exp_plain(fp12_t *ANS,fp12_t *A);
+extern void bn12_fp12_pow_X(fp12_t *ANS,fp12_t *A);
+extern void bn12_fp12_pow_X_lazy(fp12_t *ANS,fp12_t *A);
+extern void bn12_final_exp_optimal(fp12_t *ANS,fp12_t *A);
+extern void bn12_final_exp_optimal_lazy(fp12_t *ANS,fp12_t *A);
 
 #endif

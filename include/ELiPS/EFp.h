@@ -1,372 +1,325 @@
 #ifndef EFP_H
 #define EFP_H
 
-#include <ELiPS/Fp12.h>
+#include <ELiPS/fp12.h>
 /**
- * @brief Initializes a EFp type struct
+ * @brief Initializes a efp_t type struct
  *
  * @param[in]P --a pointer to be initialized.
  */
-extern void EFp_init(EFp *P);
+extern void efp_init(efp_t *P);
 
 /**
- * @brief Initializes a EFpJ type struct
+ * @brief Initializes a efp_jacobian_t type struct
  *
  * @param[in]P --a pointer to be initialized.
  */
-extern void EFpJ_init(EFpJ *P);
+extern void efp_jacobian_init(efp_jacobian_t *P);
 
 /**
- * @brief Initializes a EFpJ type struct
+ * @brief Initializes a efp_jacobian_t type struct
  *
  * @param[in]P --a pointer to be initialized.
  */
-extern void EFpP_init(EFpP *P);
+extern void efp_projective_init(efp_projective_t *P);
 
 /**
- * @brief Initializes a EFpJ type struct
- *
- * @param[in]P --a pointer to be initialized.
- */
-extern void EFpJT_init(EFpJT *P);
-
-/**
- * @brief Print a EFp type struct
+ * @brief Print a efp_t type struct
  *
  * @param[in]str --a pointer to be printed.
  * @param[in]P --a pointer to be printed.
  */
-extern void EFp_printf(char *str,EFp *P);
+extern void efp_printf(char *str,efp_t *P);
 
 /**
- * @brief Print a EFp type struct
+ * @brief Print a efp_t type struct
  *
  * @param[in]str --a pointer to be printed.
  * @param[in]P --a pointer to be printed.
  */
-extern void EFp_println(char *str,EFp *P);
+extern void efp_println(char *str,efp_t *P);
 
 /**
- * @brief Print a EFpJ type struct
+ * @brief Print a efp_jacobian_t type struct
  *
  * @param[in]str --a pointer to be printed.
  * @param[in]P --a pointer to be printed.
  */
-extern void EFpP_printf(char *str,EFpP *P);
+extern void efp_projective_printf(char *str,efp_projective_t *P);
 
 /**
- * @brief Print a EFpJ type struct
+ * @brief Print a efp_jacobian_t type struct
  *
  * @param[in]str --a pointer to be printed.
  * @param[in]P --a pointer to be printed.
  */
-extern void EFpJ_printf(char *str,EFpJ *P);
+extern void efp_jacobian_printf(char *str,efp_jacobian_t *P);
 
 /**
- * @brief Print a EFpJ type struct
- *
- * @param[in]str --a pointer to be printed.
- * @param[in]P --a pointer to be printed.
- */
-extern void EFpJT_printf(char *str,EFpJT *P);
-
-/**
- * @brief Set a EFp type struct to a EFp type struct
+ * @brief Set a efp_t type struct to a efp_t type struct
  *
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --a pointer to set.
  */
-extern void EFp_set(EFp *P,EFp *A);
+extern void efp_set(efp_t *P,efp_t *A);
 
 /**
- * @brief Set a EFpJ type struct to a EFpJ type struct
+ * @brief Set a efp_jacobian_t type struct to a efp_jacobian_t type struct
  *
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --a pointer to set.
  */
-extern void EFpP_set(EFpP *P,EFpP *A);
+extern void efp_projective_set(efp_projective_t *P,efp_projective_t *A);
 
 /**
- * @brief Set a EFpJ type struct to a EFpJ type struct
+ * @brief Set a efp_jacobian_t type struct to a efp_jacobian_t type struct
  *
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --a pointer to set.
  */
-extern void EFpJ_set(EFpJ *P,EFpJ *A);
-
+extern void efp_jacobian_set(efp_jacobian_t *P,efp_jacobian_t *A);
 /**
- * @brief Set a EFpJT type struct to a EFpJT type struct
+ * @brief Set Affine to jacobian
  *
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --a pointer to set.
  */
-extern void EFpJT_set(EFpJT *P,EFpJT *A);
-
+extern void efp_affine_to_projective(efp_projective_t *ANS,efp_t *A);
 /**
- * @brief Set a EFpJT type struct to a EFpJ type struct
+ * @brief Set Affine to jacobian
  *
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --a pointer to set.
  */
-extern void EFpJT_to_EFpJ(EFpJ *P,EFpJT *A);
+extern void efp_affine_to_jacobian(efp_jacobian_t *ANS,efp_t *A);
 
+extern void efp_affine_to_jacobian_montgomery(efp_jacobian_t *ANS,efp_t *A);
 /**
- * @brief Set a EFpJT type struct to a EFpJ type struct
+ * @brief Set jacobian to Affine
  *
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --a pointer to set.
  */
-extern void EFpJ_to_EFpJT(EFpJT *ANS,EFpJ *A);
+extern void efp_projective_to_affine(efp_t *ANS,efp_projective_t *A);
+
 /**
- * @brief Set Affine to Jacobian
+ * @brief Set jacobian to Affine
  *
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --a pointer to set.
  */
-extern void EFp_to_EFpP(EFpP *ANS,EFp *A);
-/**
- * @brief Set Affine to Jacobian
- *
- * @param[out]ANS --a pointer to be setted.
- * @param[in]A --a pointer to set.
- */
-extern void EFp_to_EFpJ(EFpJ *ANS,EFp *A);
+extern void efp_jacobian_to_affine(efp_t *ANS,efp_jacobian_t *A);
 
-extern void EFp_to_EFpJ_montgomery(EFpJ *ANS,EFp *A);
-/**
- * @brief Set Jacobian to Affine
- *
- * @param[out]ANS --a pointer to be setted.
- * @param[in]A --a pointer to set.
- */
-extern void EFp_Projective(EFp *ANS,EFpP *A);
+extern void efp_jacobian_montgomery(efp_t *ANS,efp_jacobian_t *A);
+
+extern void efp_mix(efp_jacobian_t *ANS,efp_jacobian_t *A,fp_t *Zi);
+extern void efp_mix_montgomery(efp_jacobian_t *ANS,efp_jacobian_t *A,fp_t *Zi);
+
+extern void efp_mod_montgomery(efp_t *ANS,efp_t *A);
+
+extern void efp_to_montgomery(efp_t *ANS,efp_t *A);
 
 /**
- * @brief Set Jacobian to Affine
- *
- * @param[out]ANS --a pointer to be setted.
- * @param[in]A --a pointer to set.
- */
-extern void EFp_Jacobian(EFp *ANS,EFpJ *A);
-
-extern void EFp_Jacobian_montgomery(EFp *ANS,EFpJ *A);
-
-extern void EFp_mix(EFpJ *ANS,EFpJ *A,Fp *Zi);
-extern void EFp_mix_montgomery(EFpJ *ANS,EFpJ *A,Fp *Zi);
-
-extern void EFp_mod_montgomery(EFp *ANS,EFp *A);
-
-extern void EFp_to_montgomery(EFp *ANS,EFp *A);
-
-/**
- * @brief Set an unsigned int to a EFp type struct
+ * @brief Set an unsigned int to a efp_t type struct
  *
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --an unsigned long int to set.
  */
-extern void EFp_set_ui(EFp *ANS,unsigned long int UI);
+extern void efp_set_ui(efp_t *ANS,unsigned long int UI);
 
 /**
- * @brief Set a mpn type struct to a EFp type struct
+ * @brief Set a mpn type struct to a efp_t type struct
  *
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --a pointer to set.
  */
-extern void EFp_set_mpn(EFp *ANS,mp_limb_t *A);
+extern void efp_set_mpn(efp_t *ANS,mp_limb_t *A);
 
 /**
- * @brief Negate EFp type struct on prime field
+ * @brief Negate efp_t type struct on prime field
  *
  * @param[out]ANS --a pointer of answer.
  * @param[in]A --a pointer to be negated.
  */
-extern void EFp_set_neg(EFp *ANS,EFp *A);
+extern void efp_set_neg(efp_t *ANS,efp_t *A);
 
 /**
- * @brief Negate EFp type struct on prime field
+ * @brief Negate efp_t type struct on prime field
  *
  * @param[out]ANS --a pointer of answer.
  * @param[in]A --a pointer to be negated.
  */
-extern void EFpP_set_neg(EFpP *ANS,EFpP *A);
+extern void efp_projective_set_neg(efp_projective_t *ANS,efp_projective_t *A);
 
 /**
- * @brief Negate EFp type struct on prime field
+ * @brief Negate efp_t type struct on prime field
  *
  * @param[out]ANS --a pointer of answer.
  * @param[in]A --a pointer to be negated.
  */
-extern void EFpJ_set_neg(EFpJ *ANS,EFpJ *A);
+extern void efp_jacobian_set_neg(efp_jacobian_t *ANS,efp_jacobian_t *A);
 
 /**
- * @brief Compare EFp type construct and EFp type construct
+ * @brief Compare efp_t type construct and efp_t type construct
  *
- * @param[in]A --a pointer in EFp.
- * @param[in]B --a pointer in EFp.
+ * @param[in]A --a pointer in efp_t.
+ * @param[in]B --a pointer in efp_t.
  * 
  * @return int --(A=B 0 or other 1)
  */
-extern int  EFp_cmp(EFp *A,EFp *B);
+extern int  efp_cmp(efp_t *A,efp_t *B);
 
 /**
  * @brief Generate random rational point.
  *
- * @param[out]P --a pointer in EFp.
+ * @param[out]P --a pointer in efp_t.
  */
-extern void EFp_rational_point(EFp *P);
+extern void efp_rational_point(efp_t *P);
 
 /**
- * @brief Doubling a EFp type struct
+ * @brief Doubling a efp_t type struct
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]P --a pointer in EFp.
+ * @param[in]P --a pointer in efp_t.
  */
-extern void EFp_ECD(EFp *ANS,EFp *P);
+extern void efp_ecd(efp_t *ANS,efp_t *P);
 
 /**
- * @brief Doubling a EFpJ type struct (Jacobian)
+ * @brief Doubling a efp_jacobian_t type struct (jacobian)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]P --a pointer in EFpJ.
+ * @param[in]P --a pointer in efp_jacobian_t.
  */
-extern void EFp_ECD_Jacobian(EFpJ *ANS,EFpJ *P);
+extern void efp_ecd_jacobian(efp_jacobian_t *ANS,efp_jacobian_t *P);
 
 /**
- * @brief Doubling a EFp type struct (Lazy Reduction)
+ * @brief Doubling a efp_t type struct (Lazy Reduction)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]P --a pointer in EFp.
+ * @param[in]P --a pointer in efp_t.
  */
-extern void EFp_ECD_lazy(EFp *ANS,EFp *P);
+extern void efp_ecd_lazy(efp_t *ANS,efp_t *P);
 
 /**
- * @brief Doubling a EFpJ type struct(Jacobian + Lazy Reduction)
+ * @brief Doubling a efp_jacobian_t type struct(jacobian + Lazy Reduction)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]P --a pointer in EFpJ.
+ * @param[in]P --a pointer in efp_jacobian_t.
  */
-extern void EFp_ECD_Projective_lazy(EFpP *ANS,EFpP *P);
+extern void efp_ecd_projective_lazy(efp_projective_t *ANS,efp_projective_t *P);
 
 /**
- * @brief Doubling a EFpJ type struct(Jacobian + Lazy Reduction)
+ * @brief Doubling a efp_jacobian_t type struct(jacobian + Lazy Reduction)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]P --a pointer in EFpJ.
+ * @param[in]P --a pointer in efp_jacobian_t.
  */
-extern void EFp_ECD_Jacobian_lazy(EFpJ *ANS,EFpJ *P);
+extern void efp_ecd_jacobian_lazy(efp_jacobian_t *ANS,efp_jacobian_t *P);
 
-extern void EFp_ECD_Jacobian_lazy_montgomery(EFpJ *ANS,EFpJ *P);
+extern void efp_ecd_jacobian_lazy_montgomery(efp_jacobian_t *ANS,efp_jacobian_t *P);
 /**
- * @brief Addition a EFp type struct and a EFp type struct
+ * @brief Addition a efp_t type struct and a efp_t type struct
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]P1 --a pointer in EFp.
- * @param[in]P2 --a pointer in EFp.
+ * @param[in]P1 --a pointer in efp_t.
+ * @param[in]P2 --a pointer in efp_t.
  */
-extern void EFp_ECA(EFp *ANS,EFp *P1,EFp *P2);
-
-/**
- * @brief Addition a EFp type struct and a EFp type struct (Jacobian)
- *
- * @param[out]ANS --a pointer of answer.
- * @param[in]P1 --a pointer in EFpJ.
- * @param[in]P2 --a pointer in EFpJ.
- */
-extern void EFp_ECA_Jacobian(EFpJ *ANS,EFpJ *P1,EFpJ *P2);
+extern void efp_eca(efp_t *ANS,efp_t *P1,efp_t *P2);
 
 /**
- * @brief Addition a EFp type struct and a EFp type struct (Mixture)
+ * @brief Addition a efp_t type struct and a efp_t type struct (jacobian)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]P1 --a pointer in EFpJ.
- * @param[in]P2 --a pointer in EFpJ.
+ * @param[in]P1 --a pointer in efp_jacobian_t.
+ * @param[in]P2 --a pointer in efp_jacobian_t.
  */
-extern void EFp_ECA_Mixture(EFpJ *ANS,EFpJ *P1,EFpJ *P2);
+extern void efp_eca_jacobian(efp_jacobian_t *ANS,efp_jacobian_t *P1,efp_jacobian_t *P2);
 
 /**
- * @brief Addition a EFp type struct and a EFp type struct (Lazy Reduction)
+ * @brief Addition a efp_t type struct and a efp_t type struct (mixture)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]P1 --a pointer in EFp.
- * @param[in]P2 --a pointer in EFp.
+ * @param[in]P1 --a pointer in efp_jacobian_t.
+ * @param[in]P2 --a pointer in efp_jacobian_t.
  */
-extern void EFp_ECA_lazy(EFp *ANS,EFp *P1,EFp *P2);
+extern void efp_eca_mixture(efp_jacobian_t *ANS,efp_jacobian_t *P1,efp_jacobian_t *P2);
 
 /**
- * @brief Addition a EFp type struct and a EFp type struct (Projective + Lazy Reduction)
+ * @brief Addition a efp_t type struct and a efp_t type struct (Lazy Reduction)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]P1 --a pointer in EFpJ.
- * @param[in]P2 --a pointer in EFpJ.
+ * @param[in]P1 --a pointer in efp_t.
+ * @param[in]P2 --a pointer in efp_t.
  */
-extern void EFp_ECA_Projective_lazy(EFpP *ANS,EFpP *P1,EFpP *P2);
+extern void efp_eca_lazy(efp_t *ANS,efp_t *P1,efp_t *P2);
 
 /**
- * @brief Addition a EFp type struct and a EFp type struct (Jacobian + Lazy Reduction)
+ * @brief Addition a efp_t type struct and a efp_t type struct (projective + Lazy Reduction)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]P1 --a pointer in EFpJ.
- * @param[in]P2 --a pointer in EFpJ.
+ * @param[in]P1 --a pointer in efp_jacobian_t.
+ * @param[in]P2 --a pointer in efp_jacobian_t.
  */
-extern void EFp_ECA_Jacobian_lazy(EFpJ *ANS,EFpJ *P1,EFpJ *P2);
-
-extern void EFp_ECA_Jacobian_lazy_montgomery(EFpJ *ANS,EFpJ *P1,EFpJ *P2);
-/**
- * @brief Addition a EFp type struct and a EFp type struct (Jacobian + Lazy Reduction)
- *
- * @param[out]ANS --a pointer of answer.
- * @param[in]P1 --a pointer in EFpJ.
- * @param[in]P2 --a pointer in EFpJ.
- */
-extern void EFp_ECA_Mixture_lazy(EFpJ *ANS,EFpJ *P1,EFpJ *P2);
-
-extern void EFp_ECA_Mixture_lazy_montgomery(EFpJ *ANS,EFpJ *P1,EFpJ *P2);
-/**
- * @brief Addition a EFp type struct and a EFp type struct (Jacobian + Lazy Reduction)
- *
- * @param[out]ANS --a pointer of answer.
- * @param[in]P1 --a pointer in EFpJ.
- * @param[in]P2 --a pointer in EFpJ.
- */
-extern void EFp_ECA_Jacobian_table(EFpJ *ANS,EFpJ *P1,EFpJT *P2);
+extern void efp_eca_projective_lazy(efp_projective_t *ANS,efp_projective_t *P1,efp_projective_t *P2);
 
 /**
- * @brief Scalar multiplication a EFp type struct
+ * @brief Addition a efp_t type struct and a efp_t type struct (jacobian + Lazy Reduction)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]P --a pointer in EFp.
+ * @param[in]P1 --a pointer in efp_jacobian_t.
+ * @param[in]P2 --a pointer in efp_jacobian_t.
+ */
+extern void efp_eca_jacobian_lazy(efp_jacobian_t *ANS,efp_jacobian_t *P1,efp_jacobian_t *P2);
+
+extern void efp_eca_jacobian_lazy_montgomery(efp_jacobian_t *ANS,efp_jacobian_t *P1,efp_jacobian_t *P2);
+/**
+ * @brief Addition a efp_t type struct and a efp_t type struct (jacobian + Lazy Reduction)
+ *
+ * @param[out]ANS --a pointer of answer.
+ * @param[in]P1 --a pointer in efp_jacobian_t.
+ * @param[in]P2 --a pointer in efp_jacobian_t.
+ */
+extern void efp_eca_mixture_lazy(efp_jacobian_t *ANS,efp_jacobian_t *P1,efp_jacobian_t *P2);
+
+extern void efp_eca_mixture_lazy_montgomery(efp_jacobian_t *ANS,efp_jacobian_t *P1,efp_jacobian_t *P2);
+
+/**
+ * @brief Scalar multiplication a efp_t type struct
+ *
+ * @param[out]ANS --a pointer of answer.
+ * @param[in]P --a pointer in efp_t.
  * @param[in]scalar --a pointer in mpz.
  */
-extern void EFp_SCM(EFp *ANS,EFp *P,mpz_t scalar);
+extern void efp_scm(efp_t *ANS,efp_t *P,mpz_t scalar);
 
 /**
- * @brief Scalar multiplication a EFpJ type struct (Jacobian)
+ * @brief Scalar multiplication a efp_jacobian_t type struct (jacobian)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]P --a pointer in EFpJ.
+ * @param[in]P --a pointer in efp_jacobian_t.
  * @param[in]scalar --a pointer in mpz.
  */
-extern void EFp_SCM_Jacobian(EFp *ANS,EFp *P,mpz_t scalar);
+extern void efp_scm_jacobian(efp_t *ANS,efp_t *P,mpz_t scalar);
 
 /**
- * @brief Scalar multiplication a EFp type struct (Lazy Reduction)
+ * @brief Scalar multiplication a efp_t type struct (Lazy Reduction)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]P --a pointer in EFp.
+ * @param[in]P --a pointer in efp_t.
  * @param[in]scalar --a pointer in mpz.
  */
-extern void EFp_SCM_lazy(EFp *ANS,EFp *P,mpz_t scalar);
+extern void efp_scm_lazy(efp_t *ANS,efp_t *P,mpz_t scalar);
 
 /**
- * @brief Scalar multiplication a EFpJ type struct (Jacobian + Lazy Reduction)
+ * @brief Scalar multiplication a efp_jacobian_t type struct (jacobian + Lazy Reduction)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]P --a pointer in EFpJ.
+ * @param[in]P --a pointer in efp_jacobian_t.
  * @param[in]scalar --a pointer in mpz.
  */
-extern void EFp_SCM_Jacobian_lazy(EFp *ANS,EFp *P,mpz_t scalar);
+extern void efp_scm_jacobian_lazy(efp_t *ANS,efp_t *P,mpz_t scalar);
 //skew_frobenius_map
-extern void EFp_skew_frobenius_map_p2(EFp *ANS,EFp *A);
-extern void EFpJ_skew_frobenius_map_p2(EFpJ *ANS,EFpJ *A);
-extern void EFpJ_skew_frobenius_map_p2_montgomery(EFpJ *ANS,EFpJ *A);
+extern void efp_skew_frobenius_map_p2(efp_t *ANS,efp_t *A);
+extern void efp_jacobian_skew_frobenius_map_p2(efp_jacobian_t *ANS,efp_jacobian_t *A);
+extern void efp_jacobian_skew_frobenius_map_p2_montgomery(efp_jacobian_t *ANS,efp_jacobian_t *A);
 #endif

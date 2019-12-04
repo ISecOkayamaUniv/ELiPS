@@ -1,10 +1,10 @@
-#include <ELiPS/Define.h>
+#include <ELiPS/define.h>
 
-int BN12_X_binary[BN12_X_length+1];
-int BN12_X6_2_binary[BN12_X6_2_length+1];
+int bn12_X_binary[bn12_X_length+1];
+int bn12_X6_2_binary[bn12_X6_2_length+1];
 
-int BLS12_X_binary[BLS12_X_length+1];
-int BLS12_X2_binary[BLS12_X2_length+1];
+int bls12_X_binary[bls12_X_length+1];
+int bls12_X2_binary[bls12_X2_length+1];
 
 
 int cost_add,cost_add_ui,cost_sub,cost_sub_ui,cost_mul,cost_mul_ui,cost_sqr,cost_inv,cost_mod;
@@ -20,14 +20,14 @@ gmp_randstate_t state;
 mpz_t X_z,prime_z,order_z,trace_z;
 mp_limb_t X,prime[FPLIMB],order[FPLIMB],trace[FPLIMB];
 mp_limb_t prime2[FPLIMB2];
-Fp2 Alpha_1,Alpha_1_inv;
+fp2_t Alpha_1,Alpha_1_inv;
 mp_limb_t epsilon1[FPLIMB],epsilon2[FPLIMB];
 mp_limb_t Two_inv[FPLIMB];
 mpz_t Two_inv_z;
 mpz_t root_2,root_X;
-mpz_t EFp_total,EFp12_total;
-Fp2 frobenius_constant[12][6];
-Fp2 skew_frobenius_constant[12][2];
+mpz_t efp_total,efp12_total;
+fp2_t frobenius_constant[12][6];
+fp2_t skew_frobenius_constant[12][2];
 mp_limb_t curve_b[FPLIMB];
 
 //montgomery

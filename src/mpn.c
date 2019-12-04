@@ -181,7 +181,7 @@ void mpn_pow(mp_limb_t *ans,mp_size_t ans_size,mp_limb_t *a,mp_size_t a_size,mp_
 	
 	mpn_set_ui(bit,n,1);
 	mpn_lshift_ext(bit,bit,n,bit_size);
-	//SCM
+	//scm
 	mpn_copyd(at,a,a_size);
 	mpn_copyd(Temp,at,ans_size);
 	while(bit_size>0){
@@ -230,7 +230,7 @@ void mpn_pow_ui(mp_limb_t *ans,mp_size_t ans_size,mp_limb_t *a,mp_size_t a_size,
 	mpn_set_ui(bit,1,1);
 	mpn_lshift_ext(bit,bit,1,bit_size);
 	
-	//SCM
+	//scm
 	mpn_copyd(at,a,a_size);
 	mpn_copyd(Temp,at,ans_size);
 	while(bit_size>0){

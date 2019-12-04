@@ -1,5 +1,5 @@
 JSF.lo: JSF.c ../include/ELiPS/JSF.h ../include/ELiPS/mpn.h \
-  ../include/ELiPS/Define.h \
+  ../include/ELiPS/define.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/_stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/sys/cdefs.h \
@@ -117,7 +117,7 @@ JSF.lo: JSF.c ../include/ELiPS/JSF.h ../include/ELiPS/mpn.h \
 
 ../include/ELiPS/mpn.h:
 
-../include/ELiPS/Define.h:
+../include/ELiPS/define.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/stdio.h:
 

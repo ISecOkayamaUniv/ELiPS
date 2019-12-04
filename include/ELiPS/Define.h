@@ -17,7 +17,7 @@
 #define X64
 
 //debug
-//#define DEBUG_COST_A
+#define DEBUG_COST_A
 
 /************************************/
 
@@ -33,28 +33,43 @@
 #define FPLIMB2 30
 #endif
 
-
-#define BN12_X_length 114
-#define BN12_X6_2_length 116
-
-#define BLS12_X_length 77
-#define BLS12_X2_length 76
-
-//#define BLS12_X_length 76
-//#define BLS12_X2_length 75
-
-#define BLS12_G1_SCM BLS12_EFp12_G1_SCM_2split_7NAF_interleaving_Mixture_lazy
-#define BLS12_G2_SCM BLS12_EFp12_G2_SCM_4split_5NAF_interleaving_Mixture_lazy_montgomery
-#define BLS12_G3_EXP BLS12_Fp12_G3_EXP_4split_5NAF_interleaving_GS_lazy_montgomery
-#define BLS12_PAIRING BLS12_Opt_ate_pairing_compress_lazy_montgomery
+#define scalar_t mpz_t
 
 
-extern int BN12_X_binary[BN12_X_length+1];
-extern int BN12_X6_2_binary[BN12_X6_2_length+1];
+#define bn12_X_length 114
+#define bn12_X6_2_length 116
 
+#define bls12_X_length 77
+#define bls12_X2_length 76
 
-extern int BLS12_X_binary[BLS12_X_length+1];
-extern int BLS12_X2_binary[BLS12_X2_length+1];
+//#define bls12_X_length 76
+//#define bls12_X2_length 75
+
+#define BLS12_G1_SCM bls12_g1_scm_2split_5naf_interleaving_mixture_lazy_montgomery
+#define BLS12_G2_SCM bls12_g2_scm_4split_5naf_interleaving_mixture_lazy_montgomery
+#define BLS12_G3_EXP bls12_g3_exp_4split_5naf_interleaving_GS_lazy_montgomery
+#define BLS12_OPTATE_PAIRING bls12_optate_pairing_compress_lazy_montgomery
+
+#define bls12_g1_scm bls12_g1_scm_2split_5naf_interleaving_mixture_lazy_montgomery
+#define bls12_g2_scm bls12_g2_scm_4split_5naf_interleaving_mixture_lazy_montgomery
+#define bls12_g3_exp bls12_g3_exp_4split_5naf_interleaving_GS_lazy_montgomery
+#define bls12_optate_pairing bls12_optate_pairing_compress_lazy_montgomery
+
+#define bn12_g1_scm bn12_g1_scm_2split
+#define bn12_g2_scm bn12_g2_scm_4split
+#define bn12_g3_exp bn12_g3_exp_4split
+#define bn12_optate_pairing bn12_optate_pairing
+
+//temporary
+#define bls12_g1_scm_plain bls12_g1_scm_basic
+#define bls12_g2_scm_plain bls12_g2_scm_basic
+#define bls12_g3_exp_plain bls12_g3_exp_basic
+
+extern int bn12_X_binary[bn12_X_length+1];
+extern int bn12_X6_2_binary[bn12_X6_2_length+1];
+
+extern int bls12_X_binary[bls12_X_length+1];
+extern int bls12_X2_binary[bls12_X2_length+1];
 
 extern int cost_add,cost_add_ui,cost_sub,cost_sub_ui,cost_mul,cost_mul_ui,cost_sqr,cost_inv,cost_mod;
 
@@ -69,120 +84,97 @@ typedef struct{
     int inv;
     int mod;
 }cost;
+
 /*============================================================================*/
 /* Field                                                                      */
 /*============================================================================*/
 
 typedef struct{
 	mp_limb_t x0[FPLIMB];
-}Fp;
+}fp_t;
 typedef struct{
-	Fp x0;
-	Fp x1;
-}Fp2;
+	fp_t x0;
+	fp_t x1;
+}fp2_t;
 typedef struct{
-    Fp2 x0,x1,x2;
-}Fp6;
+    fp2_t x0,x1,x2;
+}fp6_t;
 typedef struct{
-    Fp6 x0,x1;
-}Fp12;
+    fp6_t x0,x1;
+}fp12_t;
 
 //tmp finite field
 extern mp_limb_t buf[FPLIMB],tmp_mul[FPLIMB2],tmp1[FPLIMB],tmp2[FPLIMB];
-
 
 /*============================================================================*/
 /* Elliptic Curve                                                             */
 /*============================================================================*/
 typedef struct{
-	Fp x,y;
+	fp_t x,y;
 	int infinity;
-}EFp;
+}efp_t;
 
 typedef struct{
-    Fp2 x,y;
+    fp2_t x,y;
 	int infinity;
-}EFp2;
+}efp2_t;
 
 typedef struct{
-    Fp6 x,y;
+    fp6_t x,y;
 	int infinity;
-}EFp6;
+}efp6_t;
 
 typedef struct{
-    Fp12 x,y;
+    fp12_t x,y;
 	int infinity;
-}EFp12;
+}efp12_t;
 
 /*============================================================================*/
 /* Jacobian Elliptic Curve                                                   */
 /*============================================================================*/
 typedef struct{
-	Fp x,y,z;
+	fp_t x,y,z;
 	int infinity;
-}EFpP;
+}efp_projective_t;
 
 typedef struct{
-	Fp2 x,y,z;
+	fp2_t x,y,z;
 	int infinity;
-}EFpP2;
+}efp2_projective_t;
 
 typedef struct{
-	Fp6 x,y,z;
+	fp6_t x,y,z;
 	int infinity;
-}EFpP6;
+}efp6_projective_t;
 
 typedef struct{
-	Fp12 x,y,z;
+	fp12_t x,y,z;
 	int infinity;
-}EFpP12;
+}efp12_projective_t;
 
 /*============================================================================*/
 /* Jacobian Elliptic Curve                                                   */
 /*============================================================================*/
 typedef struct{
-	Fp x,y,z;
+	fp_t x,y,z;
 	int infinity;
-}EFpJ;
+}efp_jacobian_t;
 
 typedef struct{
-	Fp2 x,y,z;
+	fp2_t x,y,z;
 	int infinity;
-}EFpJ2;
+}efp2_jacobian_t;
 
 typedef struct{
-	Fp6 x,y,z;
+	fp6_t x,y,z;
 	int infinity;
-}EFpJ6;
+}efp6_jacobian_t;
 
 typedef struct{
-	Fp12 x,y,z;
+	fp12_t x,y,z;
 	int infinity;
-}EFpJ12;
+}efp12_jacobian_t;
 
-
-/*============================================================================*/
-/* Jacobian Elliptic Curve Temp                                             */
-/*============================================================================*/
-typedef struct{
-	Fp x,y,z,zz,zzz;
-	int infinity;
-}EFpJT;
-
-typedef struct{
-	Fp2 x,y,z,zz,zzz;
-	int infinity;
-}EFpJT2;
-
-typedef struct{
-	Fp6 x,y,z,zz,zzz;
-	int infinity;
-}EFpJT6;
-
-typedef struct{
-	Fp12 x,y,z,zz,zzz;
-	int infinity;
-}EFpJT12;
 
 /*============================================================================*/
 /* Pairing functions                                                          */
@@ -194,14 +186,14 @@ extern gmp_randstate_t state;
 extern mpz_t X_z,prime_z,order_z,trace_z;
 extern mp_limb_t X,prime[FPLIMB],order[FPLIMB],trace[FPLIMB];
 extern mp_limb_t prime2[FPLIMB2];
-extern Fp2 Alpha_1,Alpha_1_inv;
+extern fp2_t Alpha_1,Alpha_1_inv;
 extern mp_limb_t epsilon1[FPLIMB],epsilon2[FPLIMB];
 extern mp_limb_t Two_inv[FPLIMB];
 extern mpz_t Two_inv_z;
 extern mpz_t root_2,root_X;
-extern mpz_t EFp_total,EFp12_total;
-extern Fp2 frobenius_constant[12][6];
-extern Fp2 skew_frobenius_constant[12][2];
+extern mpz_t efp_total,efp12_total;
+extern fp2_t frobenius_constant[12][6];
+extern fp2_t skew_frobenius_constant[12][2];
 extern mp_limb_t curve_b[FPLIMB];
 
 //montgomery
@@ -214,13 +206,9 @@ extern mp_limb_t N[FPLIMB2],R2[FPLIMB],R3[FPLIMB],RmodP[FPLIMB];
 /* Test functions                                                             */
 /*============================================================================*/
 extern struct timeval tv_start,tv_end;
-extern float MILLER_TATE,MILLER_PLAINATE,MILLER_OPT,MILLER_XATE;
-extern float FINALEXP_PLAIN,FINALEXP_OPT,FINALEXP_OPT_EASY,FINALEXP_OPT_HARD;
+extern float MILLER_OPT;
+extern float FINALEXP_OPT,FINALEXP_OPT_EASY,FINALEXP_OPT_HARD;
 extern float MILLER_OPT_MONTGOMERY,FINALEXP_OPT_MONTGOMERY;
 extern cost MILLER_OPT_MONTGOMERY_COST,FINALEXP_OPT_MONTGOMERY_COST;
 
-
-extern float G1SCM_PLAIN,G1SCM_2SPLIT,G1SCM_2SPLIT_JSF;
-extern float G2SCM_PLAIN,G2SCM_2SPLIT,G2SCM_2SPLIT_JSF,G2SCM_4SPLIT;
-extern float G3EXP_PLAIN,G3EXP_2SPLIT,G3EXP_2SPLIT_JSF,G3EXP_4SPLIT;
 #endif

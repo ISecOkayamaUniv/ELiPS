@@ -1,401 +1,401 @@
 #ifndef FP2_H
 #define FP2_H
 
-#include <ELiPS/Fp.h>
+#include <ELiPS/fp.h>
 
 /**
- * @brief Initializes a Fp2 type struct
+ * @brief Initializes a fp2_t type struct
  *
  * @param[in]A --a pointer to be initialized.
  */
-extern void Fp2_init(Fp2 *A);
+extern void fp2_init(fp2_t *A);
 
 /**
- * @brief Print a Fp2 type struct
+ * @brief Print a fp2_t type struct
  *
  * @param[in]str --a pointer to be printed.
  * @param[in]A --a pointer to be printed.
  */
-extern void Fp2_printf(char *str,Fp2 *A);
-extern void Fp2_printf_montgomery(char *str,Fp2 *A);
+extern void fp2_printf(char *str,fp2_t *A);
+extern void fp2_printf_montgomery(char *str,fp2_t *A);
 /**
- * @brief Print a Fp2 type struct
+ * @brief Print a fp2_t type struct
  *
  * @param[in]str --a pointer to be printed.
  * @param[in]A --a pointer to be printed.
  */
-extern void Fp2_println(char *str,Fp2 *A);
+extern void fp2_println(char *str,fp2_t *A);
 
 /**
- * @brief Set a Fp2 type struct to a Fp2 type struct
+ * @brief Set a fp2_t type struct to a fp2_t type struct
  *
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --a pointer to set.
  */
-extern void Fp2_set(Fp2 *ANS,Fp2 *A);
+extern void fp2_set(fp2_t *ANS,fp2_t *A);
 
 /**
- * @brief Set an unsigned int to a Fp2 type struct (x0=UI,x1=0)
+ * @brief Set an unsigned int to a fp2_t type struct (x0=UI,x1=0)
  *
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --an unsigned long int to set.
  */
-extern void Fp2_set_ui(Fp2 *ANS,unsigned long int UI);
+extern void fp2_set_ui(fp2_t *ANS,unsigned long int UI);
 
 /**
- * @brief Set an unsigned int to a Fp2 type struct (x0=UI,x1=0)
+ * @brief Set an unsigned int to a fp2_t type struct (x0=UI,x1=0)
  *
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --an unsigned long int to set.
  */
-extern void Fp2_set_ui_ui(Fp2 *ANS,unsigned long int UI);
+extern void fp2_set_ui_ui(fp2_t *ANS,unsigned long int UI);
 
 /**
- * @brief Set a mpn type struct to a Fp2 type struct
+ * @brief Set a mpn type struct to a fp2_t type struct
  *
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --a pointer to set.
  */
-extern void Fp2_set_mpn(Fp2 *ANS,mp_limb_t *A);
+extern void fp2_set_mpn(fp2_t *ANS,mp_limb_t *A);
 
 /**
- * @brief Negate Fp2 type struct on prime field
+ * @brief Negate fp2_t type struct on prime field
  *
  * @param[out]ANS --a pointer of answer.
  * @param[in]A --a pointer to be negated.
  */
-extern void Fp2_set_neg(Fp2 *ANS,Fp2 *A);
+extern void fp2_set_neg(fp2_t *ANS,fp2_t *A);
 
-extern void Fp2_to_montgomery(Fp2 *ANS,Fp2 *A);
-extern void Fp2_mod_montgomery(Fp2 *ANS,Fp2 *A);
+extern void fp2_to_montgomery(fp2_t *ANS,fp2_t *A);
+extern void fp2_mod_montgomery(fp2_t *ANS,fp2_t *A);
 /**
- * @brief Left Shift Fp2 type struct on prime field
+ * @brief Left Shift fp2_t type struct on prime field
  *
  * @param[out]ANS --a pointer of answer.
  * @param[in]A --a pointer to be shiftted.
  * @param[in]UI --an unsigned long int to shift.
  */
-extern void Fp2_lshift(Fp2 *ANS,Fp2 *A,unsigned long int UI);
+extern void fp2_lshift(fp2_t *ANS,fp2_t *A,unsigned long int UI);
 
 /**
- * @brief Left Shift 2bit Fp2 type struct on prime field
+ * @brief Left Shift 2bit fp2_t type struct on prime field
  *
  * @param[out]ANS --a pointer of answer.
  * @param[in]A --a pointer to be shiftted.
  * @param[in]UI --an unsigned long int to shift.
  */
-extern void Fp2_lshift2(Fp2 *ANS,Fp2 *A);
+extern void fp2_lshift2(fp2_t *ANS,fp2_t *A);
 
 /**
- * @brief Set a random number to a Fp2 type struct
+ * @brief Set a random number to a fp2_t type struct
  *
  * @param[out]ANS --a pointer to be setted.
  * @param[in]A --a random seed.
  */
-extern void Fp2_set_random(Fp2 *ANS,gmp_randstate_t state);
+extern void fp2_set_random(fp2_t *ANS,gmp_randstate_t state);
 
 /**
- * @brief Multiplication a Fp2 type struct and a Fp2 type struct on prime field
+ * @brief Multiplication a fp2_t type struct and a fp2_t type struct on prime field
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]A --a pointer in Fp2.
- * @param[in]B --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
+ * @param[in]B --a pointer in fp2_t.
  */
-extern void Fp2_mul(Fp2 *ANS,Fp2 *A,Fp2 *B);
+extern void fp2_mul(fp2_t *ANS,fp2_t *A,fp2_t *B);
 
 /**
- * @brief Multiplication a Fp2 type struct and a Fp2 type struct on prime field (Lazy Reduction)
+ * @brief Multiplication a fp2_t type struct and a fp2_t type struct on prime field (Lazy Reduction)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]A --a pointer in Fp2.
- * @param[in]B --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
+ * @param[in]B --a pointer in fp2_t.
  */
-extern void Fp2_mul_lazy(Fp2 *ANS,Fp2 *A,Fp2 *B);
-extern void Fp2_mul_lazy_montgomery(Fp2 *ANS,Fp2 *A,Fp2 *B);
+extern void fp2_mul_lazy(fp2_t *ANS,fp2_t *A,fp2_t *B);
+extern void fp2_mul_lazy_montgomery(fp2_t *ANS,fp2_t *A,fp2_t *B);
 /**
- * @brief Multiplication a Fp2 type struct and an unsigned long int on prime field
+ * @brief Multiplication a fp2_t type struct and an unsigned long int on prime field
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]A --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
  * @param[in]B --an unsigned long int.
  */
-extern void Fp2_mul_ui(Fp2 *ANS,Fp2 *A,unsigned long int UI);
+extern void fp2_mul_ui(fp2_t *ANS,fp2_t *A,unsigned long int UI);
 
 /**
- * @brief Multiplication a Fp2 type struct and a mpn type struct on prime field
+ * @brief Multiplication a fp2_t type struct and a mpn type struct on prime field
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]A --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
  * @param[in]B --a pointer in mpn.
  */
-extern void Fp2_mul_mpn(Fp2 *ANS,Fp2 *A,mp_limb_t *B);
-extern void Fp2_mul_mpn_montgomery(Fp2 *ANS,Fp2 *A,mp_limb_t *B);
+extern void fp2_mul_mpn(fp2_t *ANS,fp2_t *A,mp_limb_t *B);
+extern void fp2_mul_mpn_montgomery(fp2_t *ANS,fp2_t *A,mp_limb_t *B);
 
 /**
- * @brief Multiplication a Fp2 type struct and alpha on prime field A*beta^2
+ * @brief Multiplication a fp2_t type struct and alpha on prime field A*beta^2
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]A --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
  */
-extern void Fp2_mul_basis(Fp2 *ANS,Fp2 *A);
+extern void fp2_mul_basis(fp2_t *ANS,fp2_t *A);
 
 /**
- * @brief Multiplication a Fp2 type struct and alpha on prime field A+B*beta^2
+ * @brief Multiplication a fp2_t type struct and alpha on prime field A+B*beta^2
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]A --a pointer in Fp2.
- * @param[in]B --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
+ * @param[in]B --a pointer in fp2_t.
  */
-extern void Fp2_add_basis(Fp2 *ANS,Fp2 *A,Fp2 *B);
+extern void fp2_add_basis(fp2_t *ANS,fp2_t *A,fp2_t *B);
 
 /**
- * @brief Multiplication a Fp2 type struct and alpha on prime field A-B*beta^2
+ * @brief Multiplication a fp2_t type struct and alpha on prime field A-B*beta^2
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]A --a pointer in Fp2.
- * @param[in]B --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
+ * @param[in]B --a pointer in fp2_t.
  */
-extern void Fp2_sub_basis(Fp2 *ANS,Fp2 *A,Fp2 *B);
+extern void fp2_sub_basis(fp2_t *ANS,fp2_t *A,fp2_t *B);
 
 /**
- * @brief Multiplication a Fp2 type struct and alpha on prime field (Lazy Reduction)
+ * @brief Multiplication a fp2_t type struct and alpha on prime field (Lazy Reduction)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]A --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
  */
-extern void Fp2_mul_basis_lazy(Fp2 *ANS,Fp2 *A);
+extern void fp2_mul_basis_lazy(fp2_t *ANS,fp2_t *A);
 
-extern void Fp2_inv_basis(Fp2 *ANS,Fp2 *A);
+extern void fp2_inv_basis(fp2_t *ANS,fp2_t *A);
 
 /**
- * @brief Squaring a Fp2 type struct and a Fp2 type struct on prime field
+ * @brief Squaring a fp2_t type struct and a fp2_t type struct on prime field
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]A --a pointer in Fp2.
- * @param[in]B --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
+ * @param[in]B --a pointer in fp2_t.
  */
-extern void Fp2_sqr(Fp2 *ANS,Fp2 *A);
+extern void fp2_sqr(fp2_t *ANS,fp2_t *A);
 
 /**
- * @brief Squaring a Fp2 type struct and a Fp2 type struct on prime field (Lazy Reduciton)
+ * @brief Squaring a fp2_t type struct and a fp2_t type struct on prime field (Lazy Reduciton)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]A --a pointer in Fp2.
- * @param[in]B --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
+ * @param[in]B --a pointer in fp2_t.
  */
-extern void Fp2_sqr_lazy(Fp2 *ANS,Fp2 *A);
-extern void Fp2_sqr_lazy_montgomery(Fp2 *ANS,Fp2 *A);
+extern void fp2_sqr_lazy(fp2_t *ANS,fp2_t *A);
+extern void fp2_sqr_lazy_montgomery(fp2_t *ANS,fp2_t *A);
 
 /**
- * @brief Addition a Fp2 type struct and a Fp2 type struct on prime field
+ * @brief Addition a fp2_t type struct and a fp2_t type struct on prime field
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]A --a pointer in Fp2.
- * @param[in]B --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
+ * @param[in]B --a pointer in fp2_t.
  */
-extern void Fp2_add(Fp2 *ANS,Fp2 *A,Fp2 *B);
+extern void fp2_add(fp2_t *ANS,fp2_t *A,fp2_t *B);
 
 /**
- * @brief Addition a Fp2 type struct and a Fp2 type struct on prime field (Lazy Reduction)
+ * @brief Addition a fp2_t type struct and a fp2_t type struct on prime field (Lazy Reduction)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]A --a pointer in Fp2.
- * @param[in]B --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
+ * @param[in]B --a pointer in fp2_t.
  */
-extern void Fp2_add_lazy(Fp2 *ANS,Fp2 *A,Fp2 *B);
+extern void fp2_add_lazy(fp2_t *ANS,fp2_t *A,fp2_t *B);
 
 /**
- * @brief Addition a Fp2 type struct and a Fp2 type struct on prime field (Always mod)
+ * @brief Addition a fp2_t type struct and a fp2_t type struct on prime field (Always mod)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]A --a pointer in Fp2.
- * @param[in]B --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
+ * @param[in]B --a pointer in fp2_t.
  */
-extern void Fp2_add_final(Fp2 *ANS,Fp2 *A,Fp2 *B);
+extern void fp2_add_final(fp2_t *ANS,fp2_t *A,fp2_t *B);
 
 /**
- * @brief Addition a Fp2 type struct and an unsigned long int on prime field
+ * @brief Addition a fp2_t type struct and an unsigned long int on prime field
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]A --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
  * @param[in]B --an unsigned long int.
  */
-extern void Fp2_add_ui(Fp2 *ANS,Fp2 *A,unsigned long int UI);
+extern void fp2_add_ui(fp2_t *ANS,fp2_t *A,unsigned long int UI);
 
 /**
- * @brief Addition a Fp2 type struct and an unsigned long int on prime field
+ * @brief Addition a fp2_t type struct and an unsigned long int on prime field
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]A --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
  * @param[in]B --an unsigned long int.
  */
-extern void Fp2_add_ui_ui(Fp2 *ANS,Fp2 *A,unsigned long int UI);
+extern void fp2_add_ui_ui(fp2_t *ANS,fp2_t *A,unsigned long int UI);
 
 /**
- * @brief Addition a Fp2 type struct and a mpn type struct on prime field
+ * @brief Addition a fp2_t type struct and a mpn type struct on prime field
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]A --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
  * @param[in]B --a pointer in mpn.
  */
-extern void Fp2_add_mpn(Fp2 *ANS,Fp2 *A,mp_limb_t *B);
+extern void fp2_add_mpn(fp2_t *ANS,fp2_t *A,mp_limb_t *B);
 
 /**
- * @brief Subtraction a Fp2 type struct and a Fp2 type struct on prime field
+ * @brief Subtraction a fp2_t type struct and a fp2_t type struct on prime field
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]A --a pointer in Fp2.
- * @param[in]B --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
+ * @param[in]B --a pointer in fp2_t.
  */
-extern void Fp2_sub(Fp2 *ANS,Fp2 *A,Fp2 *B);
+extern void fp2_sub(fp2_t *ANS,fp2_t *A,fp2_t *B);
 
 /**
- * @brief Subtraction a Fp2 type struct and a Fp2 type struct on prime field (Always mod)
+ * @brief Subtraction a fp2_t type struct and a fp2_t type struct on prime field (Always mod)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]A --a pointer in Fp2.
- * @param[in]B --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
+ * @param[in]B --a pointer in fp2_t.
  */
-extern void Fp2_sub_final(Fp2 *ANS,Fp2 *A,Fp2 *B);
+extern void fp2_sub_final(fp2_t *ANS,fp2_t *A,fp2_t *B);
 
 /**
- * @brief Subtraction a Fp2 type struct and a Fp2 type struct on prime field (Lazy Reduction)
+ * @brief Subtraction a fp2_t type struct and a fp2_t type struct on prime field (Lazy Reduction)
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]A --a pointer in Fp2.
- * @param[in]B --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
+ * @param[in]B --a pointer in fp2_t.
  */
-extern void Fp2_sub_lazy(Fp2 *ANS,Fp2 *A,Fp2 *B);
+extern void fp2_sub_lazy(fp2_t *ANS,fp2_t *A,fp2_t *B);
 
 /**
- * @brief Subtraction a Fp2 type struct and an unsigned long int on prime field
+ * @brief Subtraction a fp2_t type struct and an unsigned long int on prime field
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]A --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
  * @param[in]B --an unsigned long int.
  */
-extern void Fp2_sub_ui(Fp2 *ANS,Fp2 *A,unsigned long int UI);
+extern void fp2_sub_ui(fp2_t *ANS,fp2_t *A,unsigned long int UI);
 
 /**
- * @brief Subtraction a Fp2 type struct and an unsigned long int on prime field
+ * @brief Subtraction a fp2_t type struct and an unsigned long int on prime field
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]A --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
  * @param[in]B --an unsigned long int.
  */
-extern void Fp2_sub_ui_ui(Fp2 *ANS,Fp2 *A,unsigned long int UI);
+extern void fp2_sub_ui_ui(fp2_t *ANS,fp2_t *A,unsigned long int UI);
 
 /**
- * @brief Subtraction a Fp2 type struct and a mpn type struct on prime field
+ * @brief Subtraction a fp2_t type struct and a mpn type struct on prime field
  *
  * @param[out]ANS --a pointer of answer.
- * @param[in]A --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
  * @param[in]B --a pointer in mpn.
  */
-extern void Fp2_sub_mpn(Fp2 *ANS,Fp2 *A,mp_limb_t *B);
+extern void fp2_sub_mpn(fp2_t *ANS,fp2_t *A,mp_limb_t *B);
 
 /**
- * @brief Invert a Fp2 type struct on prime field
+ * @brief Invert a fp2_t type struct on prime field
  *
  * @param[out]ANS --a pointer of answer.
  * @param[in]A --a pointer to be inverted.
  */
-extern void Fp2_inv(Fp2 *ANS,Fp2 *A);
+extern void fp2_inv(fp2_t *ANS,fp2_t *A);
 
 /**
- * @brief Invert a Fp2 type struct on prime field (Lazy Reduciton)
+ * @brief Invert a fp2_t type struct on prime field (Lazy Reduciton)
  *
  * @param[out]ANS --a pointer of answer.
  * @param[in]A --a pointer to be inverted.
  */
-extern void Fp2_inv_lazy(Fp2 *ANS,Fp2 *A);
+extern void fp2_inv_lazy(fp2_t *ANS,fp2_t *A);
 
-extern void Fp2_inv_lazy_montgomery(Fp2 *ANS,Fp2 *A);
+extern void fp2_inv_lazy_montgomery(fp2_t *ANS,fp2_t *A);
 /**
  * @brief LegendreSymbol on prime field
  *
- * @param[in]A --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
  * 
  * @return int --a LegendreSymbol (0 or 1 or -1)
  */
-extern int  Fp2_legendre(Fp2 *A);
+extern int  fp2_legendre(fp2_t *A);
 
 /**
  * @brief Whether A is a Cubic non residure on prime field
  *
- * @param[in]A --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
  * 
  * @return int --a CNR (0 or 1 or -1)
  */
-extern int  Fp2_isCNR(Fp2 *A);
+extern int  fp2_isCNR(fp2_t *A);
 
 /**
  * @brief Sqrt on prime field
  *
- * @param[in]A --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
  * @param[out]ANS --a pointer of answer.
  */
-extern void Fp2_sqrt(Fp2 *ANS,Fp2 *A);
+extern void fp2_sqrt(fp2_t *ANS,fp2_t *A);
 
 /**
  * @brief Power A by mpz type struct
  *
- * @param[in]scalar --a pointer in Fp2.
- * @param[in]A --a pointer in Fp2.
- * @param[out]ANS --a pointer in Fp2.
+ * @param[in]scalar --a pointer in fp2_t.
+ * @param[in]A --a pointer in fp2_t.
+ * @param[out]ANS --a pointer in fp2_t.
  * 
  * @return int --(A=UI 0 or other 1)
  */
-extern void Fp2_pow(Fp2 *ANS,Fp2 *A,mpz_t scalar);
+extern void fp2_pow(fp2_t *ANS,fp2_t *A,mpz_t scalar);
 
 /**
- * @brief Compare Fp2 type construct and Fp2 type construct
+ * @brief Compare fp2_t type construct and fp2_t type construct
  *
- * @param[in]A --a pointer in Fp2.
- * @param[in]B --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
+ * @param[in]B --a pointer in fp2_t.
  * 
  * @return int --(A=B 0 or other 1)
  */
-extern int  Fp2_cmp(Fp2 *A,Fp2 *B);
+extern int  fp2_cmp(fp2_t *A,fp2_t *B);
 
 /**
- * @brief Compare Fp2 type construct and mpn type construct
+ * @brief Compare fp2_t type construct and mpn type construct
  *
- * @param[in]A --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
  * @param[in]UI --an unsigned long int.
  * 
  * @return int --(A=UI 0 or other 1)
  */
-extern int  Fp2_cmp_ui(Fp2 *A,unsigned long int UI);
+extern int  fp2_cmp_ui(fp2_t *A,unsigned long int UI);
 
 /**
- * @brief Compare Fp2 type construct and mpn type construct
+ * @brief Compare fp2_t type construct and mpn type construct
  *
- * @param[in]A --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
  * @param[in]B --a pointer in mpn.
  * 
  * @return int --(A=B 0 or other 1)
  */
-extern int  Fp2_cmp_mpn(Fp2 *A,mp_limb_t *B);
+extern int  fp2_cmp_mpn(fp2_t *A,mp_limb_t *B);
 
 /**
- * @brief Compare Fp2 type struct and zero
+ * @brief Compare fp2_t type struct and zero
  *
- * @param[in]A --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
  * 
  * @return int --(one 0 or other 1)
  */
-extern int  Fp2_cmp_zero(Fp2 *A);
+extern int  fp2_cmp_zero(fp2_t *A);
 
 /**
- * @brief Compare Fp2 type struct and one
+ * @brief Compare fp2_t type struct and one
  *
- * @param[in]A --a pointer in Fp2.
+ * @param[in]A --a pointer in fp2_t.
  * 
  * @return int --(zero 0 or other 1)
  */
-extern int  Fp2_cmp_one(Fp2 *A);
+extern int  fp2_cmp_one(fp2_t *A);
 
-extern int Fp2_montgomery_trick(Fp2 *A_inv,Fp2 *A,int n);
-extern int Fp2_montgomery_trick_montgomery(Fp2 *A_inv,Fp2 *A,int n);
+extern int fp2_montgomery_trick(fp2_t *A_inv,fp2_t *A,int n);
+extern int fp2_montgomery_trick_montgomery(fp2_t *A_inv,fp2_t *A,int n);
 #endif

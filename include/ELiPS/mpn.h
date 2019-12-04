@@ -1,7 +1,7 @@
 #ifndef MPN_H
 #define MPN_H
 
-#include <ELiPS/Define.h>
+#include <ELiPS/define.h>
 
 
 /**

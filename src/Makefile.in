@@ -130,15 +130,19 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
-libelips_la_LIBADD =
-am_libelips_la_OBJECTS = Define.lo bn12_generate_curve.lo \
-	bn12_generate_parameter.lo bn12_init.lo \
-	bls12_generate_curve.lo bls12_generate_parameter.lo \
-	bls12_init.lo mpn.lo Fp.lo Fp2.lo Fp6.lo Fp12.lo EFp.lo \
-	EFp2.lo EFp6.lo EFp12.lo twist.lo sparse.lo JSF.lo \
-	bn12_miller.lo bn12_final_exp.lo bn12_pairing.lo \
-	bls12_miller.lo bls12_final_exp.lo bls12_pairing.lo G1_SCM.lo \
-	G2_SCM.lo G3_exp.lo test.lo time.lo bn12_test.lo bls12_test.lo
+libelips_la_DEPENDENCIES = bls12/bls12_generate_curve.lo \
+	bls12/bls12_generate_parameter.lo bls12/bls12_init.lo \
+	bls12/bls12_g1_scm.lo bls12/bls12_g2_scm.lo \
+	bls12/bls12_g3_exp.lo bls12/bls12_miller.lo \
+	bls12/bls12_final_exp.lo bls12/bls12_pairing.lo \
+	bls12/bls12_test.lo bn12/bn12_generate_curve.lo \
+	bn12/bn12_generate_parameter.lo bn12/bn12_init.lo \
+	bn12/bn12_g1_scm.lo bn12/bn12_g2_scm.lo bn12/bn12_g3_exp.lo \
+	bn12/bn12_miller.lo bn12/bn12_final_exp.lo \
+	bn12/bn12_pairing.lo bn12/bn12_test.lo
+am_libelips_la_OBJECTS = define.lo scalar.lo mpn.lo fp.lo fp2.lo \
+	fp6.lo fp12.lo efp.lo efp2.lo efp6.lo efp12.lo twist.lo \
+	line_calculate.lo jsf_naf.lo test.lo time.lo
 libelips_la_OBJECTS = $(am_libelips_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -159,22 +163,12 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/Define.Plo ./$(DEPDIR)/EFp.Plo \
-	./$(DEPDIR)/EFp12.Plo ./$(DEPDIR)/EFp2.Plo \
-	./$(DEPDIR)/EFp6.Plo ./$(DEPDIR)/Fp.Plo ./$(DEPDIR)/Fp12.Plo \
-	./$(DEPDIR)/Fp2.Plo ./$(DEPDIR)/Fp6.Plo ./$(DEPDIR)/G1_SCM.Plo \
-	./$(DEPDIR)/G2_SCM.Plo ./$(DEPDIR)/G3_exp.Plo \
-	./$(DEPDIR)/JSF.Plo ./$(DEPDIR)/bls12_final_exp.Plo \
-	./$(DEPDIR)/bls12_generate_curve.Plo \
-	./$(DEPDIR)/bls12_generate_parameter.Plo \
-	./$(DEPDIR)/bls12_init.Plo ./$(DEPDIR)/bls12_miller.Plo \
-	./$(DEPDIR)/bls12_pairing.Plo ./$(DEPDIR)/bls12_test.Plo \
-	./$(DEPDIR)/bn12_final_exp.Plo \
-	./$(DEPDIR)/bn12_generate_curve.Plo \
-	./$(DEPDIR)/bn12_generate_parameter.Plo \
-	./$(DEPDIR)/bn12_init.Plo ./$(DEPDIR)/bn12_miller.Plo \
-	./$(DEPDIR)/bn12_pairing.Plo ./$(DEPDIR)/bn12_test.Plo \
-	./$(DEPDIR)/mpn.Plo ./$(DEPDIR)/sparse.Plo \
+am__depfiles_remade = ./$(DEPDIR)/define.Plo ./$(DEPDIR)/efp.Plo \
+	./$(DEPDIR)/efp12.Plo ./$(DEPDIR)/efp2.Plo \
+	./$(DEPDIR)/efp6.Plo ./$(DEPDIR)/fp.Plo ./$(DEPDIR)/fp12.Plo \
+	./$(DEPDIR)/fp2.Plo ./$(DEPDIR)/fp6.Plo \
+	./$(DEPDIR)/jsf_naf.Plo ./$(DEPDIR)/line_calculate.Plo \
+	./$(DEPDIR)/mpn.Plo ./$(DEPDIR)/scalar.Plo \
 	./$(DEPDIR)/test.Plo ./$(DEPDIR)/time.Plo \
 	./$(DEPDIR)/twist.Plo
 am__mv = mv -f
@@ -198,11 +192,27 @@ am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(libelips_la_SOURCES)
 DIST_SOURCES = $(libelips_la_SOURCES)
+RECURSIVE_TARGETS = all-recursive check-recursive cscopelist-recursive \
+	ctags-recursive dvi-recursive html-recursive info-recursive \
+	install-data-recursive install-dvi-recursive \
+	install-exec-recursive install-html-recursive \
+	install-info-recursive install-pdf-recursive \
+	install-ps-recursive install-recursive installcheck-recursive \
+	installdirs-recursive pdf-recursive ps-recursive \
+	tags-recursive uninstall-recursive
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
+RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
+  distclean-recursive maintainer-clean-recursive
+am__recursive_targets = \
+  $(RECURSIVE_TARGETS) \
+  $(RECURSIVE_CLEAN_TARGETS) \
+  $(am__extra_recursive_targets)
+AM_RECURSIVE_TARGETS = $(am__recursive_targets:-recursive=) TAGS CTAGS \
+	distdir distdir-am
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
 # and print each of them once, without duplicates.  Input order is
@@ -222,8 +232,34 @@ am__define_uniq_tagged_files = \
   done | $(am__uniquify_input)`
 ETAGS = etags
 CTAGS = ctags
+DIST_SUBDIRS = $(SUBDIRS)
 am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/depcomp
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+am__relativize = \
+  dir0=`pwd`; \
+  sed_first='s,^\([^/]*\)/.*$$,\1,'; \
+  sed_rest='s,^[^/]*/*,,'; \
+  sed_last='s,^.*/\([^/]*\)$$,\1,'; \
+  sed_butlast='s,/*[^/]*$$,,'; \
+  while test -n "$$dir1"; do \
+    first=`echo "$$dir1" | sed -e "$$sed_first"`; \
+    if test "$$first" != "."; then \
+      if test "$$first" = ".."; then \
+        dir2=`echo "$$dir0" | sed -e "$$sed_last"`/"$$dir2"; \
+        dir0=`echo "$$dir0" | sed -e "$$sed_butlast"`; \
+      else \
+        first2=`echo "$$dir2" | sed -e "$$sed_first"`; \
+        if test "$$first2" = "$$first"; then \
+          dir2=`echo "$$dir2" | sed -e "$$sed_rest"`; \
+        else \
+          dir2="../$$dir2"; \
+        fi; \
+        dir0="$$dir0"/"$$first"; \
+      fi; \
+    fi; \
+    dir1=`echo "$$dir1" | sed -e "$$sed_rest"`; \
+  done; \
+  reldir="$$dir2"
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
@@ -345,75 +381,66 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 lib_LTLIBRARIES = libelips.la
+libelips_la_LIBADD = bls12/bls12_generate_curve.lo\
+bls12/bls12_generate_parameter.lo\
+bls12/bls12_init.lo\
+bls12/bls12_g1_scm.lo\
+bls12/bls12_g2_scm.lo\
+bls12/bls12_g3_exp.lo\
+bls12/bls12_miller.lo\
+bls12/bls12_final_exp.lo\
+bls12/bls12_pairing.lo\
+bls12/bls12_test.lo\
+bn12/bn12_generate_curve.lo\
+bn12/bn12_generate_parameter.lo\
+bn12/bn12_init.lo\
+bn12/bn12_g1_scm.lo\
+bn12/bn12_g2_scm.lo\
+bn12/bn12_g3_exp.lo\
+bn12/bn12_miller.lo\
+bn12/bn12_final_exp.lo\
+bn12/bn12_pairing.lo\
+bn12/bn12_test.lo
+
+SUBDIRS = bls12 bn12
 AM_CPPFLAGS = -I../include
-libelips_la_SOURCES = Define.c\
-bn12_generate_curve.c\
-bn12_generate_parameter.c\
-bn12_init.c\
-bls12_generate_curve.c\
-bls12_generate_parameter.c\
-bls12_init.c\
+LDADD = bls12/libelipsbls12.la bn12/libelipsbn12.la
+libelips_la_SOURCES = define.c\
+scalar.c\
 mpn.c\
-Fp.c\
-Fp2.c\
-Fp6.c\
-Fp12.c\
-EFp.c\
-EFp2.c\
-EFp6.c\
-EFp12.c\
+fp.c\
+fp2.c\
+fp6.c\
+fp12.c\
+efp.c\
+efp2.c\
+efp6.c\
+efp12.c\
 twist.c\
-sparse.c\
-JSF.c\
-bn12_miller.c\
-bn12_final_exp.c\
-bn12_pairing.c\
-bls12_miller.c\
-bls12_final_exp.c\
-bls12_pairing.c\
-G1_SCM.c\
-G2_SCM.c\
-G3_exp.c\
+line_calculate.c\
+jsf_naf.c\
 test.c\
 time.c\
-bn12_test.c\
-bls12_test.c\
-../include/ELiPS/Define.h\
-../include/ELiPS/bn12_generate_curve.h\
-../include/ELiPS/bn12_generate_parameter.h\
-../include/ELiPS/bn12_init.h\
-../include/ELiPS/bls12_generate_curve.h\
-../include/ELiPS/bls12_generate_parameter.h\
-../include/ELiPS/bls12_init.h\
+../include/ELiPS/define.h\
+../include/ELiPS/scalar.h\
 ../include/ELiPS/mpn.h\
-../include/ELiPS/Fp.h\
-../include/ELiPS/Fp2.h\
-../include/ELiPS/Fp6.h\
-../include/ELiPS/Fp12.h\
-../include/ELiPS/EFp.h\
-../include/ELiPS/EFp2.h\
-../include/ELiPS/EFp6.h\
-../include/ELiPS/EFp12.h\
+../include/ELiPS/fp.h\
+../include/ELiPS/fp2.h\
+../include/ELiPS/fp6.h\
+../include/ELiPS/fp12.h\
+../include/ELiPS/efp.h\
+../include/ELiPS/efp2.h\
+../include/ELiPS/efp6.h\
+../include/ELiPS/efp12.h\
 ../include/ELiPS/twist.h\
-../include/ELiPS/sparse.h\
-../include/ELiPS/JSF.h\
-../include/ELiPS/bn12_miller.h\
-../include/ELiPS/bn12_final_exp.h\
-../include/ELiPS/bn12_pairing.h\
-../include/ELiPS/bls12_miller.h\
-../include/ELiPS/bls12_final_exp.h\
-../include/ELiPS/bls12_pairing.h\
-../include/ELiPS/G1_SCM.h\
-../include/ELiPS/G2_SCM.h\
-../include/ELiPS/G3_exp.h\
-../include/ELiPS/time.h\
+../include/ELiPS/line_calculate.h\
+../include/ELiPS/jsf_naf.h\
 ../include/ELiPS/test.h\
-../include/ELiPS/bn12_test.h\
-../include/ELiPS/bls12_test.h\
+../include/ELiPS/time.h\
 ../include/ELiPS/bn12.h\
 ../include/ELiPS/bls12.h
 
-all: all-am
+all: all-recursive
 
 .SUFFIXES:
 .SUFFIXES: .c .lo .o .obj
@@ -491,35 +518,19 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Define.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/EFp.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/EFp12.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/EFp2.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/EFp6.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Fp.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Fp12.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Fp2.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Fp6.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/G1_SCM.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/G2_SCM.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/G3_exp.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/JSF.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bls12_final_exp.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bls12_generate_curve.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bls12_generate_parameter.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bls12_init.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bls12_miller.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bls12_pairing.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bls12_test.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bn12_final_exp.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bn12_generate_curve.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bn12_generate_parameter.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bn12_init.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bn12_miller.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bn12_pairing.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bn12_test.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/define.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/efp.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/efp12.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/efp2.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/efp6.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fp.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fp12.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fp2.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fp6.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jsf_naf.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/line_calculate.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mpn.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sparse.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/scalar.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/time.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/twist.Plo@am__quote@ # am--include-marker
@@ -557,14 +568,61 @@ mostlyclean-libtool:
 clean-libtool:
 	-rm -rf .libs _libs
 
+# This directory's subdirectories are mostly independent; you can cd
+# into them and run 'make' without going through this Makefile.
+# To change the values of 'make' variables: instead of editing Makefiles,
+# (1) if the variable is set in 'config.status', edit 'config.status'
+#     (which will cause the Makefiles to be regenerated when you run 'make');
+# (2) otherwise, pass the desired values on the 'make' command line.
+$(am__recursive_targets):
+	@fail=; \
+	if $(am__make_keepgoing); then \
+	  failcom='fail=yes'; \
+	else \
+	  failcom='exit 1'; \
+	fi; \
+	dot_seen=no; \
+	target=`echo $@ | sed s/-recursive//`; \
+	case "$@" in \
+	  distclean-* | maintainer-clean-*) list='$(DIST_SUBDIRS)' ;; \
+	  *) list='$(SUBDIRS)' ;; \
+	esac; \
+	for subdir in $$list; do \
+	  echo "Making $$target in $$subdir"; \
+	  if test "$$subdir" = "."; then \
+	    dot_seen=yes; \
+	    local_target="$$target-am"; \
+	  else \
+	    local_target="$$target"; \
+	  fi; \
+	  ($(am__cd) $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+	  || eval $$failcom; \
+	done; \
+	if test "$$dot_seen" = "no"; then \
+	  $(MAKE) $(AM_MAKEFLAGS) "$$target-am" || exit 1; \
+	fi; test -z "$$fail"
+
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
-tags: tags-am
+tags: tags-recursive
 TAGS: tags
 
 tags-am: $(TAGS_DEPENDENCIES) $(am__tagged_files)
 	set x; \
 	here=`pwd`; \
+	if ($(ETAGS) --etags-include --version) >/dev/null 2>&1; then \
+	  include_option=--etags-include; \
+	  empty_fix=.; \
+	else \
+	  include_option=--include; \
+	  empty_fix=; \
+	fi; \
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  if test "$$subdir" = .; then :; else \
+	    test ! -f $$subdir/TAGS || \
+	      set "$$@" "$$include_option=$$here/$$subdir/TAGS"; \
+	  fi; \
+	done; \
 	$(am__define_uniq_tagged_files); \
 	shift; \
 	if test -z "$(ETAGS_ARGS)$$*$$unique"; then :; else \
@@ -577,7 +635,7 @@ tags-am: $(TAGS_DEPENDENCIES) $(am__tagged_files)
 	      $$unique; \
 	  fi; \
 	fi
-ctags: ctags-am
+ctags: ctags-recursive
 
 CTAGS: ctags
 ctags-am: $(TAGS_DEPENDENCIES) $(am__tagged_files)
@@ -590,7 +648,7 @@ GTAGS:
 	here=`$(am__cd) $(top_builddir) && pwd` \
 	  && $(am__cd) $(top_srcdir) \
 	  && gtags -i $(GTAGS_ARGS) "$$here"
-cscopelist: cscopelist-am
+cscopelist: cscopelist-recursive
 
 cscopelist-am: $(am__tagged_files)
 	list='$(am__tagged_files)'; \
@@ -642,22 +700,48 @@ distdir-am: $(DISTFILES)
 	    || exit 1; \
 	  fi; \
 	done
+	@list='$(DIST_SUBDIRS)'; for subdir in $$list; do \
+	  if test "$$subdir" = .; then :; else \
+	    $(am__make_dryrun) \
+	      || test -d "$(distdir)/$$subdir" \
+	      || $(MKDIR_P) "$(distdir)/$$subdir" \
+	      || exit 1; \
+	    dir1=$$subdir; dir2="$(distdir)/$$subdir"; \
+	    $(am__relativize); \
+	    new_distdir=$$reldir; \
+	    dir1=$$subdir; dir2="$(top_distdir)"; \
+	    $(am__relativize); \
+	    new_top_distdir=$$reldir; \
+	    echo " (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) top_distdir="$$new_top_distdir" distdir="$$new_distdir" \\"; \
+	    echo "     am__remove_distdir=: am__skip_length_check=: am__skip_mode_fix=: distdir)"; \
+	    ($(am__cd) $$subdir && \
+	      $(MAKE) $(AM_MAKEFLAGS) \
+	        top_distdir="$$new_top_distdir" \
+	        distdir="$$new_distdir" \
+		am__remove_distdir=: \
+		am__skip_length_check=: \
+		am__skip_mode_fix=: \
+	        distdir) \
+	      || exit 1; \
+	  fi; \
+	done
 check-am: all-am
-check: check-am
+check: check-recursive
 all-am: Makefile $(LTLIBRARIES)
-installdirs:
+installdirs: installdirs-recursive
+installdirs-am:
 	for dir in "$(DESTDIR)$(libdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
-install: install-am
-install-exec: install-exec-am
-install-data: install-data-am
-uninstall: uninstall-am
+install: install-recursive
+install-exec: install-exec-recursive
+install-data: install-data-recursive
+uninstall: uninstall-recursive
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 
-installcheck: installcheck-am
+installcheck: installcheck-recursive
 install-strip:
 	if test -z '$(STRIP)'; then \
 	  $(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
@@ -679,41 +763,25 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-clean: clean-am
+clean: clean-recursive
 
 clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
 	mostlyclean-am
 
-distclean: distclean-am
-		-rm -f ./$(DEPDIR)/Define.Plo
-	-rm -f ./$(DEPDIR)/EFp.Plo
-	-rm -f ./$(DEPDIR)/EFp12.Plo
-	-rm -f ./$(DEPDIR)/EFp2.Plo
-	-rm -f ./$(DEPDIR)/EFp6.Plo
-	-rm -f ./$(DEPDIR)/Fp.Plo
-	-rm -f ./$(DEPDIR)/Fp12.Plo
-	-rm -f ./$(DEPDIR)/Fp2.Plo
-	-rm -f ./$(DEPDIR)/Fp6.Plo
-	-rm -f ./$(DEPDIR)/G1_SCM.Plo
-	-rm -f ./$(DEPDIR)/G2_SCM.Plo
-	-rm -f ./$(DEPDIR)/G3_exp.Plo
-	-rm -f ./$(DEPDIR)/JSF.Plo
-	-rm -f ./$(DEPDIR)/bls12_final_exp.Plo
-	-rm -f ./$(DEPDIR)/bls12_generate_curve.Plo
-	-rm -f ./$(DEPDIR)/bls12_generate_parameter.Plo
-	-rm -f ./$(DEPDIR)/bls12_init.Plo
-	-rm -f ./$(DEPDIR)/bls12_miller.Plo
-	-rm -f ./$(DEPDIR)/bls12_pairing.Plo
-	-rm -f ./$(DEPDIR)/bls12_test.Plo
-	-rm -f ./$(DEPDIR)/bn12_final_exp.Plo
-	-rm -f ./$(DEPDIR)/bn12_generate_curve.Plo
-	-rm -f ./$(DEPDIR)/bn12_generate_parameter.Plo
-	-rm -f ./$(DEPDIR)/bn12_init.Plo
-	-rm -f ./$(DEPDIR)/bn12_miller.Plo
-	-rm -f ./$(DEPDIR)/bn12_pairing.Plo
-	-rm -f ./$(DEPDIR)/bn12_test.Plo
+distclean: distclean-recursive
+		-rm -f ./$(DEPDIR)/define.Plo
+	-rm -f ./$(DEPDIR)/efp.Plo
+	-rm -f ./$(DEPDIR)/efp12.Plo
+	-rm -f ./$(DEPDIR)/efp2.Plo
+	-rm -f ./$(DEPDIR)/efp6.Plo
+	-rm -f ./$(DEPDIR)/fp.Plo
+	-rm -f ./$(DEPDIR)/fp12.Plo
+	-rm -f ./$(DEPDIR)/fp2.Plo
+	-rm -f ./$(DEPDIR)/fp6.Plo
+	-rm -f ./$(DEPDIR)/jsf_naf.Plo
+	-rm -f ./$(DEPDIR)/line_calculate.Plo
 	-rm -f ./$(DEPDIR)/mpn.Plo
-	-rm -f ./$(DEPDIR)/sparse.Plo
+	-rm -f ./$(DEPDIR)/scalar.Plo
 	-rm -f ./$(DEPDIR)/test.Plo
 	-rm -f ./$(DEPDIR)/time.Plo
 	-rm -f ./$(DEPDIR)/twist.Plo
@@ -721,112 +789,98 @@ distclean: distclean-am
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
 
-dvi: dvi-am
+dvi: dvi-recursive
 
 dvi-am:
 
-html: html-am
+html: html-recursive
 
 html-am:
 
-info: info-am
+info: info-recursive
 
 info-am:
 
 install-data-am:
 
-install-dvi: install-dvi-am
+install-dvi: install-dvi-recursive
 
 install-dvi-am:
 
 install-exec-am: install-libLTLIBRARIES
 
-install-html: install-html-am
+install-html: install-html-recursive
 
 install-html-am:
 
-install-info: install-info-am
+install-info: install-info-recursive
 
 install-info-am:
 
 install-man:
 
-install-pdf: install-pdf-am
+install-pdf: install-pdf-recursive
 
 install-pdf-am:
 
-install-ps: install-ps-am
+install-ps: install-ps-recursive
 
 install-ps-am:
 
 installcheck-am:
 
-maintainer-clean: maintainer-clean-am
-		-rm -f ./$(DEPDIR)/Define.Plo
-	-rm -f ./$(DEPDIR)/EFp.Plo
-	-rm -f ./$(DEPDIR)/EFp12.Plo
-	-rm -f ./$(DEPDIR)/EFp2.Plo
-	-rm -f ./$(DEPDIR)/EFp6.Plo
-	-rm -f ./$(DEPDIR)/Fp.Plo
-	-rm -f ./$(DEPDIR)/Fp12.Plo
-	-rm -f ./$(DEPDIR)/Fp2.Plo
-	-rm -f ./$(DEPDIR)/Fp6.Plo
-	-rm -f ./$(DEPDIR)/G1_SCM.Plo
-	-rm -f ./$(DEPDIR)/G2_SCM.Plo
-	-rm -f ./$(DEPDIR)/G3_exp.Plo
-	-rm -f ./$(DEPDIR)/JSF.Plo
-	-rm -f ./$(DEPDIR)/bls12_final_exp.Plo
-	-rm -f ./$(DEPDIR)/bls12_generate_curve.Plo
-	-rm -f ./$(DEPDIR)/bls12_generate_parameter.Plo
-	-rm -f ./$(DEPDIR)/bls12_init.Plo
-	-rm -f ./$(DEPDIR)/bls12_miller.Plo
-	-rm -f ./$(DEPDIR)/bls12_pairing.Plo
-	-rm -f ./$(DEPDIR)/bls12_test.Plo
-	-rm -f ./$(DEPDIR)/bn12_final_exp.Plo
-	-rm -f ./$(DEPDIR)/bn12_generate_curve.Plo
-	-rm -f ./$(DEPDIR)/bn12_generate_parameter.Plo
-	-rm -f ./$(DEPDIR)/bn12_init.Plo
-	-rm -f ./$(DEPDIR)/bn12_miller.Plo
-	-rm -f ./$(DEPDIR)/bn12_pairing.Plo
-	-rm -f ./$(DEPDIR)/bn12_test.Plo
+maintainer-clean: maintainer-clean-recursive
+		-rm -f ./$(DEPDIR)/define.Plo
+	-rm -f ./$(DEPDIR)/efp.Plo
+	-rm -f ./$(DEPDIR)/efp12.Plo
+	-rm -f ./$(DEPDIR)/efp2.Plo
+	-rm -f ./$(DEPDIR)/efp6.Plo
+	-rm -f ./$(DEPDIR)/fp.Plo
+	-rm -f ./$(DEPDIR)/fp12.Plo
+	-rm -f ./$(DEPDIR)/fp2.Plo
+	-rm -f ./$(DEPDIR)/fp6.Plo
+	-rm -f ./$(DEPDIR)/jsf_naf.Plo
+	-rm -f ./$(DEPDIR)/line_calculate.Plo
 	-rm -f ./$(DEPDIR)/mpn.Plo
-	-rm -f ./$(DEPDIR)/sparse.Plo
+	-rm -f ./$(DEPDIR)/scalar.Plo
 	-rm -f ./$(DEPDIR)/test.Plo
 	-rm -f ./$(DEPDIR)/time.Plo
 	-rm -f ./$(DEPDIR)/twist.Plo
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
-mostlyclean: mostlyclean-am
+mostlyclean: mostlyclean-recursive
 
 mostlyclean-am: mostlyclean-compile mostlyclean-generic \
 	mostlyclean-libtool
 
-pdf: pdf-am
+pdf: pdf-recursive
 
 pdf-am:
 
-ps: ps-am
+ps: ps-recursive
 
 ps-am:
 
 uninstall-am: uninstall-libLTLIBRARIES
 
-.MAKE: install-am install-strip
+.MAKE: $(am__recursive_targets) install-am install-strip
 
-.PHONY: CTAGS GTAGS TAGS all all-am am--depfiles check check-am clean \
-	clean-generic clean-libLTLIBRARIES clean-libtool cscopelist-am \
-	ctags ctags-am distclean distclean-compile distclean-generic \
+.PHONY: $(am__recursive_targets) CTAGS GTAGS TAGS all all-am \
+	am--depfiles check check-am clean clean-generic \
+	clean-libLTLIBRARIES clean-libtool cscopelist-am ctags \
+	ctags-am distclean distclean-compile distclean-generic \
 	distclean-libtool distclean-tags distdir dvi dvi-am html \
 	html-am info info-am install install-am install-data \
 	install-data-am install-dvi install-dvi-am install-exec \
 	install-exec-am install-html install-html-am install-info \
 	install-info-am install-libLTLIBRARIES install-man install-pdf \
 	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags tags-am uninstall uninstall-am uninstall-libLTLIBRARIES
+	installcheck installcheck-am installdirs installdirs-am \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	pdf pdf-am ps ps-am tags tags-am uninstall uninstall-am \
+	uninstall-libLTLIBRARIES
 
 .PRECIOUS: Makefile
 

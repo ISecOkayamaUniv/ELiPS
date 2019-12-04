@@ -1,7 +1,7 @@
 sparse.lo: sparse.c ../include/ELiPS/sparse.h ../include/ELiPS/EFp2.h \
   ../include/ELiPS/EFp.h ../include/ELiPS/Fp12.h ../include/ELiPS/Fp6.h \
   ../include/ELiPS/Fp2.h ../include/ELiPS/Fp.h ../include/ELiPS/mpn.h \
-  ../include/ELiPS/Define.h \
+  ../include/ELiPS/define.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/_stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/sys/cdefs.h \
@@ -131,7 +131,7 @@ sparse.lo: sparse.c ../include/ELiPS/sparse.h ../include/ELiPS/EFp2.h \
 
 ../include/ELiPS/mpn.h:
 
-../include/ELiPS/Define.h:
+../include/ELiPS/define.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/stdio.h:
 

@@ -5,6 +5,11 @@
 #define FPLIMB2 16
 
 
+/***Calculation type***/
+#define Optimaization_type
+#define Basic_type
+#define Custom_type
+
 /***Field***/
 #define Field_basic
 //#define Field_lazy
@@ -12,21 +17,24 @@
 /***Eliptiic Curve***/
 #define EC_basic
 //#define EC_lazy
+
 #define EC_Affine
 //#define EC_Jacobian
 //#define EC_Mixture
 
 /***Scalar***/
 #define scalar_basic
-#define scalar_JSF
+//#define scalar_JSF
 //#define scalar_naf
 
 /***GLV***/
 #define GLV_1
-#define GLV_2
-#define GLV_4
+//#define GLV_2
+//#define GLV_4
 
-
+/***Reduction***/
+#define Reduction_basic
+#define Reduction_montgomery
 
 
 /***Field Macro***/
@@ -74,5 +82,9 @@
 #define Fp12_sqr Fp12_sqr_lazy
 #endif
 
+#define BLS12_EFp12_G1_SCM BLS12_EFp12_G1_SCM_2split_7NAF_interleaving_Mixture_lazy
+#define BLS12_G2_SCM BLS12_EFp12_G2_SCM_4split_5NAF_interleaving_Mixture_lazy_montgomery
+#define BLS12_G3_EXP BLS12_Fp12_G3_EXP_4split_5NAF_interleaving_GS_lazy_montgomery
+#define BLS12_Opt_ate_pairing BLS12_Opt_ate_pairing_compress_lazy_montgomery
 
 #endif
