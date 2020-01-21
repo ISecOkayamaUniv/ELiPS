@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([elips], [1.0.11])
+AC_INIT([elips], [1.0.14])
 #AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([src/mpn.c])
 #		src/bls12/bls12_generate_curve.c])

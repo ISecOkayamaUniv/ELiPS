@@ -39,6 +39,7 @@ include/ELiPS/bls12_g2_scm.h\
 include/ELiPS/bls12_g3_exp.h\
 include/ELiPS/time.h\
 include/ELiPS/test.h\
+include/ELiPS/field_test.h\
 include/ELiPS/bn12_test.h\
 include/ELiPS/bls12_test.h\
 include/ELiPS/bn12.h\
