@@ -203,7 +203,7 @@ for(i=0;i<ecd;i++){
     efp_affine_to_jacobian_montgomery(&B_efpJm,&B_efpm);
 	//fp_to_montgomery(B_efpJm.z.x0,B_efpJm.z.x0);
     efp_ecd(&B_efp,&B_efp);
-    efp_ecd_projective_lazy(&B_efpP,&B_efpP);
+    //efp_ecd_projective_lazy(&B_efpP,&B_efpP);
     efp_ecd_jacobian_lazy_montgomery(&B_efpJm,&B_efpJm);
 
     gettimeofday(&tv_A,NULL);
@@ -212,7 +212,7 @@ for(i=0;i<ecd;i++){
     ecd_time+=timedifference_msec(tv_A,tv_B)/n;
     
     gettimeofday(&tv_A,NULL);
-    for(j=0;j<n;j++)efp_ecd_projective_lazy(&testP1,&B_efpP);
+    //for(j=0;j<n;j++)efp_ecd_projective_lazy(&testP1,&B_efpP);
     gettimeofday(&tv_B,NULL);
     ecd_projective_lazy_time+=timedifference_msec(tv_A,tv_B)/n;
     efp_projective_to_affine(&test2,&testP1);
@@ -261,7 +261,7 @@ for(i=0;i<eca;i++){
 	//fp_to_montgomery(B_efpJm.z.x0,B_efpJm.z.x0);
     
     efp_ecd(&B_efp,&B_efp);
-    efp_ecd_projective_lazy(&B_efpP,&B_efpP);\
+    //efp_ecd_projective_lazy(&B_efpP,&B_efpP);\
     efp_ecd_jacobian_lazy_montgomery(&B_efpJm,&B_efpJm);
     
     
@@ -283,7 +283,7 @@ for(i=0;i<eca;i++){
     eca_time+=timedifference_msec(tv_A,tv_B)/n;
 
     gettimeofday(&tv_A,NULL);
-    for(j=0;j<n;j++)efp_eca_projective_lazy(&testP1,&A_efpP,&B_efpP);
+    //for(j=0;j<n;j++)efp_eca_projective_lazy(&testP1,&A_efpP,&B_efpP);
     gettimeofday(&tv_B,NULL);
     eca_projective_lazy_time+=timedifference_msec(tv_A,tv_B)/n;
     efp_projective_to_affine(&test2,&testP1);
@@ -399,7 +399,7 @@ for(i=0;i<ecd;i++){
     ecd_time+=timedifference_msec(tv_A,tv_B);
 
     gettimeofday(&tv_A,NULL);
-    efp2_ecd_projective_lazy(&testP2,&B_efp2_projective);
+    //efp2_ecd_projective_lazy(&testP2,&B_efp2_projective);
     gettimeofday(&tv_B,NULL);
     ecd_projective_lazy_time+=timedifference_msec(tv_A,tv_B);
     efp2_projective_to_affine(&test2,&testP2);
@@ -453,7 +453,7 @@ for(i=0;i<eca;i++){
     
     cost_zero();
     gettimeofday(&tv_A,NULL);
-    efp2_eca_projective_lazy(&testP2,&A_efp2_projective,&B_efp2_projective);
+    //efp2_eca_projective_lazy(&testP2,&A_efp2_projective,&B_efp2_projective);
     gettimeofday(&tv_B,NULL);
     eca_projective_lazy_time+=timedifference_msec(tv_A,tv_B);
     cost_check(&tmp);
