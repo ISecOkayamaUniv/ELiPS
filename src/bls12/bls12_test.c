@@ -197,7 +197,7 @@ int bls12_test_symmmetric_opt_ate_pairing(){
     bls12_sym_scm(&s2B,&B,s2);
         
     bls12_symmetric_optate_pairing(&test1,&A,&B);
-    fp12_pow(&test1,&test1,s12);
+    bls12_g3_exp(&test1,&test1,s12);
     bls12_symmetric_optate_pairing(&test2,&s1A,&s2B);    
     bls12_symmetric_optate_pairing(&test3,&s2A,&s1B);
     
