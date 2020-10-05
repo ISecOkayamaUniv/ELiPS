@@ -53,19 +53,40 @@ extern int bn12_X6_2_binary[bn12_X6_2_length+1];
 extern int bls12_X_binary[bls12_X_length+1];
 extern int bls12_X2_binary[bls12_X2_length+1];
 
-extern int cost_add,cost_add_ui,cost_sub,cost_sub_ui,cost_mul,cost_mul_ui,cost_sqr,cost_inv,cost_mod;
+//extern int cost_add,cost_add_ui,cost_sub,cost_sub_ui,cost_mul,cost_mul_ui,cost_sqr,cost_inv,cost_mod;
 
+extern int cost_add,cost_add_ui,cost_sub,cost_sub_ui,cost_mul,cost_set_neg,cost_div2,cost_sqr,cost_inv,cost_mod;
+extern int cost_add_nonmod,cost_add_nonmod_double,cost_sub_nonmod,cost_sub_nonmod_double,cost_mod_nomal;
+
+// typedef struct{
+// 	int add;
+//     int add_ui;
+//     int sub;
+//     int sub_ui;
+//     int mul;
+//     int mul_ui;
+//     int sqr;
+//     int inv;
+//     int mod;
+// }cost;
 typedef struct{
 	int add;
-    int add_ui;
-    int sub;
-    int sub_ui;
-    int mul;
-    int mul_ui;
-    int sqr;
-    int inv;
-    int mod;
+	int add_ui;
+	int add_nonmod;
+	int add_nonmod_double;
+	int sub;
+	int sub_ui;
+	int sub_nonmod;
+	int sub_nonmod_double;
+	int mul;
+	int set_neg;
+	int div2;
+	int sqr;
+	int inv;
+	int mod;
+	int mod_nomal;
 }cost;
+
 
 /*============================================================================*/
 /* Field                                                                      */
@@ -175,6 +196,14 @@ typedef struct{
 	int infinity;
 }efp12_jacobian_t;
 
+/*============================================================================*/
+/* rational point for symmetric pairing                                                             */
+/*============================================================================*/
+typedef struct{
+	efp12_t p;
+	efp12_t q;
+	int infinity;
+}sym_t;
 
 /*============================================================================*/
 /* Pairing functions                                                          */

@@ -5,6 +5,10 @@ void efp12_init(efp12_t *P){
     fp12_init(&P->y);
     P->infinity=0;
 }
+void sym_init(sym_t *A){
+    efp12_init(&A->p);
+    efp12_init(&A->q);
+}
 void efp12_printf(char *str,efp12_t *P){
     printf("%s",str);
     if(P->infinity==0){
@@ -149,6 +153,27 @@ void bls12_generate_g2(efp12_t *Q){
     
     mpz_clear(exp);
 }
+
+void bls12_generate_symmetric_point(sym_t *A,mpz_t a){
+  efp12_t tmp_p;
+  efp12_t tmp_q;
+  mpz_t s;
+  
+  mpz_init(s);
+
+  mpz_urandomm(a, state, order_z);
+  bls12_generate_g1(&tmp_p);
+  bls12_generate_g2(&tmp_q);
+  efp12_scm(&tmp_q, &tmp_q, a);
+
+  mpz_urandomm(s, state, order_z);
+
+  efp12_scm(&A->p, &tmp_p, s);
+  efp12_scm(&A->q, &tmp_q, s);
+  
+  mpz_clear(s);
+}
+
 void efp12_ecd(efp12_t *ANS,efp12_t *P){
     static efp12_t tmp1_efp12;
     static fp12_t tmp1_fp12,tmp2_fp12,tmp3_fp12;
@@ -296,6 +321,10 @@ void efp12_scm(efp12_t *ANS,efp12_t *P,mpz_t scalar){
         }
     }
     efp12_set(ANS,&Next_P);
+}
+void efp12_sym_scm(sym_t *ANS,sym_t *A,mpz_t scalar){
+    efp12_scm(&ANS->p,&A->p,scalar);
+    efp12_scm(&ANS->q,&A->q,scalar);
 }
 void efp12_scm_lazy(efp12_t *ANS,efp12_t *P,mpz_t scalar){
     if(mpz_cmp_ui(scalar,0)==0){

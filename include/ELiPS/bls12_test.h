@@ -8,7 +8,8 @@
 
 
 extern int bls12_test_rational_point();
-extern int bls12_test_opt_ate_pairing();
+extern int bls12_test_opt_ate_pairing(int pairing);
+extern int bls12_test_symmmetric_opt_ate_pairing();
 extern int bls12_test_g1_scm(int scm);
 extern int bls12_test_g2_scm(int scm);
 extern int bls12_test_g3_exp(int exp);

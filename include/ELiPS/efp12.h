@@ -11,6 +11,13 @@
 extern void efp12_init(efp12_t *P);
 
 /**
+ * @brief Initializes a efp12_t type struct
+ *
+ * @param[in]P --a pointer to be initialized.
+ */
+extern void sym_init(sym_t *P);
+
+/**
  * @brief Print a efp12_t type struct
  *
  * @param[in]str --a pointer to be printed.
@@ -105,6 +112,13 @@ extern void bn12_generate_g2(efp12_t *Q);
 extern void bls12_generate_g2(efp12_t *Q);
 
 /**
+ * @brief Generate symmetric point..
+ *
+ * @param[in]A --a pointer to be setted.
+ */
+extern void bls12_generate_symmetric_point(sym_t *A,mpz_t a);
+
+/**
  * @brief Doubling a efp12_t type struct
  *
  * @param[out]ANS --a pointer of answer.
@@ -146,6 +160,15 @@ extern void efp12_eca_lazy(efp12_t *ANS,efp12_t *P1,efp12_t *P2);
  * @param[in]scalar --a pointer in mpz.
  */
 extern void efp12_scm(efp12_t *ANS,efp12_t *P,mpz_t scalar);
+
+/**
+ * @brief Scalar multiplication a efp12_t type struct
+ *
+ * @param[out]ANS --a pointer of answer.
+ * @param[in]P --a pointer in efp12_t.
+ * @param[in]scalar --a pointer in mpz.
+ */
+extern void efp12_sym_scm(sym_t *ANS,sym_t *A,mpz_t scalar);
 
 /**
  * @brief Scalar multiplication a efp12_t type struct (Lazy Reduction)

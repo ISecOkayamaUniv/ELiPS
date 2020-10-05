@@ -347,7 +347,6 @@ int bn12_test_g2_scm(int scm){
 for(i=0;i<scm;i++){
 
     mpz_urandomm(scalar,state,order_z);
-    //mpz_tdiv_q_2exp(scalar,scalar,30);//relic
     bn12_generate_g2(&A_efp12);
 
     gettimeofday(&tv_A,NULL);

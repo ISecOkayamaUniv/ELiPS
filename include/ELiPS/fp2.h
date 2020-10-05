@@ -306,7 +306,7 @@ extern void fp2_inv_lazy_montgomery(fp2_t *ANS,fp2_t *A);
  * @brief LegendreSymbol on prime field
  *
  * @param[in]A --a pointer in fp2_t.
- * 
+ *
  * @return int --a LegendreSymbol (0 or 1 or -1)
  */
 extern int  fp2_legendre(fp2_t *A);
@@ -315,7 +315,7 @@ extern int  fp2_legendre(fp2_t *A);
  * @brief Whether A is a Cubic non residure on prime field
  *
  * @param[in]A --a pointer in fp2_t.
- * 
+ *
  * @return int --a CNR (0 or 1 or -1)
  */
 extern int  fp2_isCNR(fp2_t *A);
@@ -334,7 +334,7 @@ extern void fp2_sqrt(fp2_t *ANS,fp2_t *A);
  * @param[in]scalar --a pointer in fp2_t.
  * @param[in]A --a pointer in fp2_t.
  * @param[out]ANS --a pointer in fp2_t.
- * 
+ *
  * @return int --(A=UI 0 or other 1)
  */
 extern void fp2_pow(fp2_t *ANS,fp2_t *A,mpz_t scalar);
@@ -344,7 +344,7 @@ extern void fp2_pow(fp2_t *ANS,fp2_t *A,mpz_t scalar);
  *
  * @param[in]A --a pointer in fp2_t.
  * @param[in]B --a pointer in fp2_t.
- * 
+ *
  * @return int --(A=B 0 or other 1)
  */
 extern int  fp2_cmp(fp2_t *A,fp2_t *B);
@@ -354,7 +354,7 @@ extern int  fp2_cmp(fp2_t *A,fp2_t *B);
  *
  * @param[in]A --a pointer in fp2_t.
  * @param[in]UI --an unsigned long int.
- * 
+ *
  * @return int --(A=UI 0 or other 1)
  */
 extern int  fp2_cmp_ui(fp2_t *A,unsigned long int UI);
@@ -364,7 +364,7 @@ extern int  fp2_cmp_ui(fp2_t *A,unsigned long int UI);
  *
  * @param[in]A --a pointer in fp2_t.
  * @param[in]B --a pointer in mpn.
- * 
+ *
  * @return int --(A=B 0 or other 1)
  */
 extern int  fp2_cmp_mpn(fp2_t *A,mp_limb_t *B);
@@ -373,7 +373,7 @@ extern int  fp2_cmp_mpn(fp2_t *A,mp_limb_t *B);
  * @brief Compare fp2_t type struct and zero
  *
  * @param[in]A --a pointer in fp2_t.
- * 
+ *
  * @return int --(one 0 or other 1)
  */
 extern int  fp2_cmp_zero(fp2_t *A);
@@ -382,11 +382,13 @@ extern int  fp2_cmp_zero(fp2_t *A);
  * @brief Compare fp2_t type struct and one
  *
  * @param[in]A --a pointer in fp2_t.
- * 
+ *
  * @return int --(zero 0 or other 1)
  */
 extern int  fp2_cmp_one(fp2_t *A);
 
 extern int fp2_montgomery_trick(fp2_t *A_inv,fp2_t *A,int n);
 extern int fp2_montgomery_trick_montgomery(fp2_t *A_inv,fp2_t *A,int n);
+
+extern void fp2_sqr_nonmod_montgomery(fpd2_t *ANS,fp2_t *A);//add
 #endif

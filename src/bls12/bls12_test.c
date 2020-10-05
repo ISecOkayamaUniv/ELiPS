@@ -158,7 +158,62 @@ for(i=0;i<pairing;i++){
 
     return 0;
 }
+int bls12_test_symmmetric_opt_ate_pairing(){
+    struct timeval tv_A,tv_B;
+    printf("====================================================================================\n");
+    printf("bls12_symmetric_Opt-ate pairing\n\n");
 
+    sym_t A,B,s1A,s2A,s1B,s2B;
+    sym_init(&A);
+    sym_init(&B);
+    sym_init(&s1A);
+    sym_init(&s2A);
+    sym_init(&s1B);
+    sym_init(&s2B);
+
+    fp12_t test1,test2,test3;
+    fp12_init(&test1);
+    fp12_init(&test2);
+    fp12_init(&test3);
+    
+    mpz_t a,s12,s1,s2;
+    mpz_init(a);
+    mpz_init(s12);
+    mpz_init(s1);
+    mpz_init(s2);
+    
+    mpz_urandomm(a,state,order_z);
+    mpz_urandomm(s1,state,order_z);
+    mpz_urandomm(s2,state,order_z);
+    mpz_mul(s12,s1,s2);
+    mpz_mod(s12,s12,order_z);
+
+    bls12_generate_symmetric_point(&A,a);
+    bls12_generate_symmetric_point(&B,a);
+
+    efp12_sym_scm(&s1A,&A,s1);
+    efp12_sym_scm(&s2A,&A,s2);
+    efp12_sym_scm(&s1B,&B,s1);
+    efp12_sym_scm(&s2B,&B,s2);
+        
+    bls12_symmetric_optate_pairing(&test1,&A,&B);
+    fp12_pow(&test1,&test1,s12);
+    bls12_symmetric_optate_pairing(&test2,&s1A,&s2B);    
+    bls12_symmetric_optate_pairing(&test3,&s2A,&s1B);
+    
+    printf("symmmetric pairing bilinear test\n");
+    if(fp12_cmp(&test1,&test2)!=0 || fp12_cmp(&test1,&test3)!=0){
+        printf("bilinear failed!!\n\n");
+	return 1;
+    }
+    printf("bilinear succeced!!\n\n");
+    
+    mpz_clear(s12);
+    mpz_clear(s1);
+    mpz_clear(s2);
+
+    return 0;
+}
 /*----------------------------------------------------------------------------*/
 //bls12_scm
 int bls12_test_g1_scm(int scm){

@@ -54,3 +54,17 @@ void bls12_optate_pairing(fp12_t *ANS,efp12_t *P,efp12_t *Q){
     gettimeofday(&tv_end,NULL);
     FINALEXP_OPT_PROJECTIVE+=timedifference_msec(tv_start,tv_end);
 }
+
+void bls12_symmetric_optate_pairing(fp12_t *ANS,sym_t *A,sym_t *B){
+    efp12_t P;
+    efp12_t Q;
+    
+    efp12_set(&P,&A->p);
+    efp12_set(&Q,&B->q);
+    
+    //Miller's Algo.
+    bls12_miller_algo_for_optate_projective(ANS,&P,&Q);
+    
+    //Final Exp.
+    bls12_final_exp_optimal_compress(ANS,ANS);
+}
