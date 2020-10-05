@@ -322,7 +322,7 @@ void efp12_scm(efp12_t *ANS,efp12_t *P,mpz_t scalar){
     }
     efp12_set(ANS,&Next_P);
 }
-void efp12_sym_scm(sym_t *ANS,sym_t *A,mpz_t scalar){
+void bls12_sym_scm(sym_t *ANS,sym_t *A,mpz_t scalar){
     efp12_scm(&ANS->p,&A->p,scalar);
     efp12_scm(&ANS->q,&A->q,scalar);
 }

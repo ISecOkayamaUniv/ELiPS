@@ -191,10 +191,10 @@ int bls12_test_symmmetric_opt_ate_pairing(){
     bls12_generate_symmetric_point(&A,a);
     bls12_generate_symmetric_point(&B,a);
 
-    efp12_sym_scm(&s1A,&A,s1);
-    efp12_sym_scm(&s2A,&A,s2);
-    efp12_sym_scm(&s1B,&B,s1);
-    efp12_sym_scm(&s2B,&B,s2);
+    bls12_sym_scm(&s1A,&A,s1);
+    bls12_sym_scm(&s2A,&A,s2);
+    bls12_sym_scm(&s1B,&B,s1);
+    bls12_sym_scm(&s2B,&B,s2);
         
     bls12_symmetric_optate_pairing(&test1,&A,&B);
     fp12_pow(&test1,&test1,s12);
