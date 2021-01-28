@@ -397,7 +397,7 @@ int bench_pairing(int pairing){
 //         fp12_printf_montgomery("\ntest2\n",&test2);
 //         return 1;
 //     }else{
-//         printf("ok unko!");
+//         printf("ok!");
 //     }
 // }
 void billlinear_test_precompute(){

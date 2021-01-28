@@ -369,7 +369,7 @@ void montgomery_test(){
   fp_mod_montgomery(&C_2,&C_2);
 
   if(fp_cmp(&C_2,&C)==0) printf("montgomery ok!\n");
-  else printf("unko\n");
+  else printf("error\n");
 }
 int main(){
     int type=0;
