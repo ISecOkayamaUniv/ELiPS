@@ -17,6 +17,8 @@ void bls12_init(){
         bls12_set_curve_parameter();
         bls12_set_root2();
 	    pre_montgomery();
+        bls12_power_init();
+        fr_order_init();
     }else{
         bls12_clear();
         printf("error : prime\nexit\n");

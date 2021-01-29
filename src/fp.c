@@ -585,3 +585,22 @@ void fp_lshift_ui_nonmod_double(fpd_t *ANS,fpd_t *A,int s){
     #endif
     mpn_lshift(ANS->x0,A->x0,FPLIMB2,s);
 }
+
+int fp_legendre_sqrt(fp_t *ANS,fp_t *A){
+    //need to 4|(p+1)
+    fp_t C,D,A_tmp;
+    int i;
+
+    //legendre
+    fp_pow(&C,A,sqrt_power_z);
+    fp_mul(&D,&C,&C);
+    fp_mul(&D,&D,A);
+
+    if(mpn_cmp_ui(D.x0,FPLIMB,1)==0)        i=1;
+    else if(mpn_cmp_ui(D.x0,FPLIMB,0)==0)    return 0;
+    else                    return -1;
+
+    //sqrt
+    fp_mul(ANS,&C,A);
+    return 1;
+}

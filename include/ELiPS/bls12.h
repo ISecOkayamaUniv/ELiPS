@@ -6,5 +6,6 @@
 #include <ELiPS/bls12_test.h>
 #include <ELiPS/test.h>
 #include <ELiPS/field_test.h>
+#include <ELiPS/fr.h>
 
 #endif

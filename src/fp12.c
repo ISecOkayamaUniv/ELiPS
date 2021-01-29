@@ -1577,3 +1577,21 @@ int fp12_montgomery_trick_montgomery(fp12_t *A_inv,fp12_t *A,int n){
     fp12_set(A_inv,&ALL_inv);
     return 0;
 }
+
+// int fp12_legendre_sqrt(fp12_t *ANS,fp12_t *A){
+//     fp12_t C,D,A_tmp;
+//     int i;
+
+//     //legendre
+//     fp12_pow(&C,A,fp12_sqrt_power_z);
+//     fp12_mul(&D,&C,&C);
+//     fp12_mul(&D,&D,A);
+
+//     if(mpn_cmp_ui(D.x0.x0.x0.x0,FPLIMB,1)==0)        i=1;
+//     else if(mpn_cmp_ui(D.x0.x0.x0.x0,FPLIMB,0)==0)    return 0;
+//     else                    return -1;
+
+//     //sqrt
+//     fp_mul(ANS,&C,A);
+//     return 1;
+// }

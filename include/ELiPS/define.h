@@ -29,13 +29,9 @@
 /* available for only 64bit parameter*/
 #define PARAM_ELIPS_CHANGE_B
 //#define PARAM_ELIPS_IMPROVE
-//#define PARAM_MINUS_TYPE2 //bug
-//#define PARAM_PLUS_TYPE1 //bug
 //#define PARAM_TAXONOMY
 //#define PARAM_TAXONOMY_CHANGE_B
 //#define PARAM_ELIPS_IMPROVE_CHANGE_B
-//#define PARAM_TATARA
-//#define PARAM_TATARA_CHANGE_B
 
 /* x-mood*/
 //ELiPS param
@@ -85,24 +81,6 @@
 #define ORDER_BIT 308
 #define X_BIT 77
 #endif
-//X_MINUS and TYPE2 param
-#ifdef PARAM_MINUS_TYPE2
-#define X_MINUS
-#define EP_TYPE2
-#define CURVE_B_16
-#define PRIME_BIT 461
-#define ORDER_BIT 308
-#define X_BIT 77
-#endif
-//X_PLUS and TYPE1 param
-#ifdef PARAM_PLUS_TYPE1
-#define X_PLUS
-#define EP_TYPE1
-#define CURVE_B_4
-#define PRIME_BIT 461
-#define ORDER_BIT 308
-#define X_BIT 77
-#endif
 //taxonomy cahnge b
 #ifdef PARAM_TAXONOMY_CHANGE_B
 #define X_MINUS
@@ -128,15 +106,6 @@
 #define X_PLUS
 #define EP_TYPE2
 #define CURVE_B_8_3_TYPE2
-#define PRIME_BIT 461
-#define ORDER_BIT 308
-#define X_BIT 77
-#endif
-//tatara choise
-#ifdef PARAM_TATARA_CHANGE_B
-#define X_MINUS
-#define EP_TYPE2
-#define CURVE_B_2_3
 #define PRIME_BIT 461
 #define ORDER_BIT 308
 #define X_BIT 77
@@ -371,6 +340,8 @@ extern fp2_t frobenius_constant[12][6];
 extern fp2_t frobenius_constant_montgomery[12][6];
 extern fp2_t skew_frobenius_constant[12][2];
 extern mp_limb_t curve_b[FPLIMB];
+extern mpz_t sqrt_power_z;
+extern mpz_t g1_power;
 /*============================================================================*/
 /* Transformation matrix                                                      */
 /*============================================================================*/

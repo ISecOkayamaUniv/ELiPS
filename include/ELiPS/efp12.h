@@ -156,5 +156,7 @@ extern void efp12_scm(efp12_t *ANS,efp12_t *P,mpz_t scalar);
  */
 extern void efp12_scm_lazy(efp12_t *ANS,efp12_t *P,mpz_t scalar);
 
+extern void bls12_generate_g1_fast(efp12_t *P);
+
 #endif
 

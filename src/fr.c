@@ -507,6 +507,38 @@ void g1_test(int scm){
     mpz_clear(sca);
 }
 
+void g1_set_random_fast(g1_t *ANS, gmp_randstate_t state){
+    efp12_t P;
+    g1_t P_twisted;
+    bls12_generate_g1_fast(&P);
+    efp12_to_efp(&P_twisted,&P);
+    efp_to_montgomery(ANS,&P_twisted);
+    ANS->infinity=0;
+}
+
+void g1_set_random_test(int scm){
+    g1_t P_test;
+    int i;
+    float random_time=0,random_fast_time=0;
+    struct timeval tv_A,tv_B;
+    for(i=0;i<scm;i++){
+        //normal type
+        gettimeofday(&tv_A,NULL);
+        g1_set_random(&P_test,state);
+        gettimeofday(&tv_B,NULL);
+        random_time+=timedifference_msec(tv_A,tv_B);
+
+        //faster type
+        gettimeofday(&tv_A,NULL);
+        g1_set_random_fast(&P_test,state);
+        gettimeofday(&tv_B,NULL);
+        random_fast_time+=timedifference_msec(tv_A,tv_B);
+    }
+    printf("g1_set_random.          : %.4f[ms]\n",random_time/scm);
+    printf("g1_set_random_fast.     : %.4f[ms]\n",random_fast_time/scm);
+
+}
+
 /************g2_t**************/
 void g2_init(g2_t *A){
     efp2_init(A);
@@ -1800,7 +1832,7 @@ int debug_pairing(int pairing){
     fr_set_random(&s2,state);
     fr_mul(&s12,&s1,&s2);
 
-    g1_set_random(&P,state);
+    g1_set_random_fast(&P,state);
     g2_set_random(&Q,state);
 
     g1_scm(&s1P,&P,&s1);

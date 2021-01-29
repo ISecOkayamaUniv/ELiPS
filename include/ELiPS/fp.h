@@ -365,4 +365,5 @@ extern int fp_montgomery_trick_montgomery(fp_t *A_inv,fp_t *A,int n);
 extern void fp_lshift_ui_nonmod_single(fp_t *ANS,fp_t *A,int s);
 extern void fp_lshift_ui_nonmod_double(fpd_t *ANS,fpd_t *A,int s);
 extern void fpd_mod_montgomery(fp_t *ANS,fpd_t *A);
+extern int fp_legendre_sqrt(fp_t *ANS,fp_t *A);
 #endif
