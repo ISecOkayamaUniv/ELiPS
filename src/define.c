@@ -35,6 +35,9 @@ matrix_t matrix_of_fp12_to_fpm2,matrix_of_fpm2_to_fp12;
 matrix_t matrix_of_fp12_to_fpm,matrix_of_fpm_to_fp12;
 matrix_t matrix_of_fpm_to_fp12cv,matrix_of_fp12cv_to_fpm;
 
+mpz_t sqrt_power_z;
+mpz_t g1_power;
+
 //montgomery
 // mp_limb_t R[FPLIMB],Ri[FPLIMB],R1[FPLIMB],RR[FPLIMB],Ni[FPLIMB];
 // mp_limb_t u[FPLIMB+1];

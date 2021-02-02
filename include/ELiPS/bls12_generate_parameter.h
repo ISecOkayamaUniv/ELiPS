@@ -40,4 +40,6 @@ extern void bls12_set_curve_parameter();
  */
 extern void bls12_set_root2();
 
+extern void bls12_power_init();
+
 #endif

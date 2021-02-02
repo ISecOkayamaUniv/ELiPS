@@ -27,28 +27,6 @@ void bls12_generate_X(){
     bls12_X2_binary[49]=1;
     bls12_X2_binary[32]=1;
     #endif
-    #ifdef PARAM_MINUS_TYPE2
-    bls12_X_binary[77]=-1;
-    bls12_X_binary[71]=1;
-    bls12_X_binary[63]=1;
-    bls12_X_binary[22]=-1;
-
-    bls12_X2_binary[76]=-1;
-    bls12_X2_binary[70]=1;
-    bls12_X2_binary[62]=1;
-    bls12_X2_binary[21]=-1;
-    #endif
-    #ifdef PARAM_PLUS_TYPE1
-    bls12_X_binary[77]=1;
-    bls12_X_binary[59]=1;
-    bls12_X_binary[48]=-1;
-    bls12_X_binary[22]=1;
-
-    bls12_X2_binary[76]=1;
-    bls12_X2_binary[58]=1;
-    bls12_X2_binary[47]=-1;
-    bls12_X2_binary[21]=1;
-    #endif
     //#ifdef PARAM_ELIPS_IMPROVE_CHANGE_B
     #if defined(PARAM_ELIPS_IMPROVE) || defined(PARAM_ELIPS_IMPROVE_CHANGE_B)
     bls12_X_binary[77]=1;
@@ -60,18 +38,6 @@ void bls12_generate_X(){
     bls12_X2_binary[9]=1;
     bls12_X2_binary[8]=1;
     bls12_X2_binary[5]=-1;
-    #endif
-    //tatara param
-    #ifdef PARAM_TATARA_CHANGE_B
-    bls12_X_binary[77]=-1;
-    bls12_X_binary[55]=-1;
-    bls12_X_binary[32]=1;
-    bls12_X_binary[8]=1;
-
-    bls12_X2_binary[76]=-1;
-    bls12_X2_binary[54]=-1;
-    bls12_X2_binary[31]=1;
-    bls12_X2_binary[7]=1;
     #endif
     //GOD param
     #ifdef PARAM_GOD

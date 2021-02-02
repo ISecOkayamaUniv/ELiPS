@@ -1,0 +1,17 @@
+:TODO
+/**********************BUGS****************************/
+bls12_g1_scm(ANS,A,order_z) is not right.
+jacobian eca's infinity function is not correct.
+projective eca's infinity function is not correct.
+
+
+/*******************RESEARCHES*************************/
+Research that GS + Compressed > Compressed monty trick? 
+Research add -> add_nonmod.
+
+mpn_mod_montgomery->　May not need "carry"
+
+:DONE
+/**********************BUGS****************************/
+
+/*******************RESEARCHES*************************/

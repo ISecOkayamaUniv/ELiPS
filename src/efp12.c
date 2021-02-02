@@ -322,3 +322,20 @@ void efp12_scm_lazy(efp12_t *ANS,efp12_t *P,mpz_t scalar){
     }
     efp12_set(ANS,&Next_P);
 }
+
+void bls12_generate_g1_fast(efp12_t *P){
+    efp_t tmp_P;
+    efp_init(&tmp_P);
+    mpz_t exp;
+    mpz_init(exp);
+
+    efp_set_random_fast(&tmp_P,state);
+    efp12_set_ui(P,0,0);
+    mpz_tdiv_q(exp,efp_total,order_z);
+    efp_scm(&tmp_P,&tmp_P,exp);
+    fp_set(&P->x.x0.x0.x0,&tmp_P.x);
+    fp_set(&P->y.x0.x0.x0,&tmp_P.y);
+    P->infinity=tmp_P.infinity;
+
+    mpz_clear(exp);
+}

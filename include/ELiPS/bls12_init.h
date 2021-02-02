@@ -4,6 +4,7 @@
 #include <ELiPS/bls12_generate_curve.h>
 #include <ELiPS/bls12_generate_parameter.h>
 #include <ELiPS/efp12.h>
+#include <ELiPS/fr.h>
 
 
 /**

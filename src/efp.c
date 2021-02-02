@@ -764,3 +764,23 @@ void efp_jacobian_skew_frobenius_map_p2_montgomery(efp_jacobian_t *ANS,efp_jacob
     fp_set(&ANS->z,&A->z);
     ANS->infinity = A->infinity;
 }
+
+void efp_set_random_fast(efp_t *P,gmp_randstate_t state){
+    fp_t tmp1,tmp2,tmp_x;
+    fp_init(&tmp1);
+    fp_init(&tmp2);
+    fp_init(&tmp_x);
+
+    while(1){
+        fp_set_random(&P->x,state);
+        fp_mul(&tmp1,&P->x,&P->x);
+        fp_mul(&tmp2,&tmp1,&P->x);
+        fp_add_mpn(&tmp_x,&tmp2,curve_b);
+        // if(fp_legendre_montgomery(&tmp_x)==1){
+        //     fp_sqrt_montgomery(&P->y,&tmp_x);
+        //     break;
+        // }
+        if(fp_legendre_sqrt(&P->x,&tmp_x)==1) break;
+    }
+    P->infinity=0;
+}

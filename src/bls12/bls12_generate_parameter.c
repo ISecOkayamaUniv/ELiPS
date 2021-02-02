@@ -282,3 +282,18 @@ void bls12_set_curve_parameter(){
 void bls12_set_root2(){
     mpz_set_str(root_2,"10031503624258748060575468630512234256688",10);
 }
+
+void bls12_power_init(){
+    mpz_t tmp;
+    mpz_init(tmp);
+  
+    mpz_init(sqrt_power_z);
+    mpz_init(g1_power);
+
+    //set sqrt2_power_z
+    mpz_sub_ui(sqrt_power_z,prime_z,3);
+    mpz_div_ui(sqrt_power_z,sqrt_power_z,4);
+
+    //set g1_power
+    mpz_tdiv_q(g1_power,efp_total,order_z);
+}
