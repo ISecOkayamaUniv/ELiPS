@@ -1766,7 +1766,7 @@ void g1g2_to_g3_pairing_GS(g3_t *ANS,g1_t *P,g2_t *Q){
     gettimeofday(&tv_end,NULL);
     FINALEXP_OPT_AFFINE+=timedifference_msec(tv_start,tv_end);
 }
-int billlinear_test(){
+void billlinear_test(){
     fr_t a,b,c;
     g1_t P,aP;
     g2_t Q,bQ;
