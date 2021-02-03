@@ -295,7 +295,7 @@ void test_g1_scm_jsf(efp12_t *ANS,efp12_t *P,mpz_t scalar){
     efp12_to_efp(&tmp_P,P);                    //tmp_P
 	efp_to_montgomery(&tmp_P,&tmp_P);//add
     efp_set_neg(&tmp_P_neg,&tmp_P);            //tmp_P_neg //montfomery
-    efp_jacobian_skew_frobenius_map_p2_montgomery(&tmp_P_4x,&tmp_P);        //tmp_P_4x
+    efp_skew_frobenius_map_p2_montgomery(&tmp_P_4x,&tmp_P);        //tmp_P_4x
     efp_set_neg(&tmp_P_4x_neg,&tmp_P_4x);        //tmp_P_4x_neg
 
     //set jacobian
@@ -396,7 +396,7 @@ void test_g1_scm_jsf(efp12_t *ANS,efp12_t *P,mpz_t scalar){
         //getchar();
     }
 
-    efp_jacobian_to_affine(&next_tmp_P,&next_tmpJ_P);
+    efp_jacobian_to_affine_montgomery(&next_tmp_P,&next_tmpJ_P);
 	efp_mod_montgomery(&next_tmp_P,&next_tmp_P);
     efp_to_efp12(ANS,&next_tmp_P);
     ANS->infinity=next_tmp_P.infinity;

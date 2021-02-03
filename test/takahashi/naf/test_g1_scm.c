@@ -104,7 +104,9 @@ int main(void){
     printf("test g1 scm            : %.4f[ms]\n",test1/cnt);
     printf("test g1 scm naf 3      : %.4f[ms]\n",test_wnaf_3/cnt);
     printf("test g1 scm naf 5      : %.4f[ms]\n",test_wnaf_5/cnt);
-    printf("test g1 scm naf 7      : %.4f[ms]\n",test_wnaf_7/cnt);
+    printf("test g1 scm naf 7      : %.4f[ms]\n\n",test_wnaf_7/cnt);
+    printf("test g1 scm jsf        : %.4f[ms]\n",test_jsf/cnt);
+
 
 
     //Clear variable
