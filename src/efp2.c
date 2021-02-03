@@ -912,6 +912,33 @@ void efp2_jacobian_skew_frobenius_map_p3(efp2_jacobian_t *ANS,efp2_jacobian_t *A
     //z
     fp2_set(&ANS->z,&A->z);
 }
+void efp2_skew_frobenius_map_p1_montgomery(efp2_t *ANS,efp2_t *A){
+#ifdef EP_TYPE2
+    //x(w2w3)
+    fp_set(&ANS->x.x0,&A->x.x0);
+    fp_set_neg(&ANS->x.x1,&A->x.x1);
+    fp2_mul_lazy_montgomery(&ANS->x,&ANS->x,&frobenius_constant_montgomery[f_p1][1]);
+    //y(w8w9)
+    fp_set(&ANS->y.x0,&A->y.x0);
+    fp_set_neg(&ANS->y.x1,&A->y.x1);
+    fp2_mul_lazy_montgomery(&ANS->y,&ANS->y,&frobenius_constant_montgomery[f_p1][4]);
+#endif
+#ifdef EP_TYPE1
+    //x(w4w5)
+    fp2_inv_basis(&ANS->x,&A->x);
+    fp_set(&ANS->x.x0,&ANS->x.x0);
+    fp_set_neg(&ANS->x.x1,&ANS->x.x1);
+    fp2_mul(&ANS->x,&ANS->x,&frobenius_constant_montgomery[f_p1][2]);
+    fp2_mul_basis(&ANS->x,&ANS->x);
+
+    //y
+    fp2_inv_basis(&ANS->y,&A->y);
+    fp_set(&ANS->y.x0,&ANS->y.x0);
+    fp_set_neg(&ANS->y.x1,&ANS->y.x1);
+    fp2_mul(&ANS->y,&ANS->y,&frobenius_constant_montgomery[f_p1][4]);
+    fp2_mul_basis(&ANS->y,&ANS->y);
+#endif
+}
 void efp2_jacobian_skew_frobenius_map_p1_montgomery(efp2_jacobian_t *ANS,efp2_jacobian_t *A){
 #ifdef EP_TYPE2
     //x

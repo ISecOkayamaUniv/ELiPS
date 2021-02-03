@@ -151,7 +151,7 @@ extern void efp2_jacobian_set_neg(efp2_jacobian_t *ANS,efp2_jacobian_t *A);
  *
  * @param[in]A --a pointer in efp2_t.
  * @param[in]B --a pointer in efp2_t.
- * 
+ *
  * @return int --(A=B 0 or other 1)
  */
 extern int  efp2_cmp(efp2_t *A,efp2_t *B);
@@ -222,6 +222,7 @@ extern void efp2_skew_frobenius_map_p3(efp2_t *ANS,efp2_t *A);
 extern void efp2_jacobian_skew_frobenius_map_p1(efp2_jacobian_t *ANS,efp2_jacobian_t *A);
 extern void efp2_jacobian_skew_frobenius_map_p2(efp2_jacobian_t *ANS,efp2_jacobian_t *A);
 extern void efp2_jacobian_skew_frobenius_map_p3(efp2_jacobian_t *ANS,efp2_jacobian_t *A);
+extern void efp2_skew_frobenius_map_p1_montgomery(efp2_t *ANS,efp2_t *A);
 extern void efp2_jacobian_skew_frobenius_map_p1_montgomery(efp2_jacobian_t *ANS,efp2_jacobian_t *A);
 extern void efp2_jacobian_skew_frobenius_map_p2_montgomery(efp2_jacobian_t *ANS,efp2_jacobian_t *A);
 extern void efp2_jacobian_skew_frobenius_map_p3_montgomery(efp2_jacobian_t *ANS,efp2_jacobian_t *A);
