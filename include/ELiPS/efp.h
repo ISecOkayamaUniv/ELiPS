@@ -211,6 +211,7 @@ extern void efp_scm(efp_t *ANS,efp_t *P,mpz_t scalar);
 
 //skew_frobenius_map
 extern void efp_skew_frobenius_map_p2(efp_t *ANS,efp_t *A);
+extern void efp_skew_frobenius_map_p2_montgomery(efp_t *ANS,efp_t *A);
 extern void efp_jacobian_skew_frobenius_map_p2(efp_jacobian_t *ANS,efp_jacobian_t *A);
 extern void efp_jacobian_skew_frobenius_map_p2_montgomery(efp_jacobian_t *ANS,efp_jacobian_t *A);
 extern void efp_ecd_jacobian_lazy_montgomery(efp_jacobian_t *ANS,efp_jacobian_t *P);

@@ -749,6 +749,14 @@ void efp_skew_frobenius_map_p2(efp_t *ANS,efp_t *A){
     fp_set_neg(&ANS->y,&A->y);
     ANS->infinity = A->infinity;
 }
+void efp_skew_frobenius_map_p2_montgomery(efp_t *ANS,efp_t *A){
+	static fp_t buf;
+    //TODO:global
+    mpn_to_montgomery(buf.x0,epsilon1);
+    fp_mulmod_montgomery(&ANS->x,&A->x,&buf);
+    fp_set_neg(&ANS->y,&A->y);
+    ANS->infinity = A->infinity;
+}
 void efp_jacobian_skew_frobenius_map_p2(efp_jacobian_t *ANS,efp_jacobian_t *A){
     fp_mul_mpn(&ANS->x,&A->x,epsilon1);
     fp_set_neg(&ANS->y,&A->y);
