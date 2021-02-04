@@ -27,10 +27,10 @@
 //#define PARAM_GOD
 
 /* available for only 64bit parameter*/
-#define PARAM_ELIPS_CHANGE_B
+//#define PARAM_ELIPS_CHANGE_B
 //#define PARAM_ELIPS_IMPROVE
 //#define PARAM_TAXONOMY
-//#define PARAM_TAXONOMY_CHANGE_B
+#define PARAM_TAXONOMY_CHANGE_B
 //#define PARAM_ELIPS_IMPROVE_CHANGE_B
 
 /* x-mood*/

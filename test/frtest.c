@@ -11,10 +11,10 @@ int main(void){
     //cost test;
     //cost_init(&test);
     //cost_mul=0;
-    billlinear_test();
+    //billlinear_test();
     //g2_test(1000);
     //bls12_test_g2_scm(10);
-    //debug_pairing(10000);
+    debug_pairing(10000);
     //cost_check(&test);
     //printf("sub=%d",cost_mul);
     return 0;
