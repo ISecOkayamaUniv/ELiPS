@@ -126,7 +126,7 @@ void mpn_mulmod_montgomery(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_siz
 
     mpn_mul(T,A,A_size,B,B_size);
     for (int i = 0; i < FPLIMB; i++)
-        T[i] = mpn_addmul_1(&T[i],prime,FPLIMB,T[i] * mNi);
+        T[i] = mpn_addmul_1(&T[i],prime,FPLIMB,T[i] * Ni_neg);
     
     mpn_add_n(ANS, T+FPLIMB, T, FPLIMB);
     if (mpn_cmp(ANS, prime, FPLIMB) != -1) mpn_sub_n(ANS,ANS,prime,FPLIMB);
@@ -149,7 +149,7 @@ void mpn_mulmod_montgomery(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_siz
 //     mpn_sqr(T,A,A_size);
 //     index=0;
 //     for (i = 0; i < FPLIMB; i++,index++) {
-//         r = (mp_limb_t)(T[index] * mNi);
+//         r = (mp_limb_t)(T[index] * Ni_neg);
 //         T[index] = mpn_addmul_1(T+index,prime,FPLIMB,r);
 //     }
 //     carry = mpn_add_n(ANS, T+FPLIMB, T, FPLIMB);
@@ -167,7 +167,7 @@ void mpn_mod_montgomery(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t
 
     mpn_copyd(T,A,A_size);
     for (int i = 0; i < FPLIMB; i++) 
-        T[i] = mpn_addmul_1(&T[i],prime,FPLIMB,T[i] * mNi);
+        T[i] = mpn_addmul_1(&T[i],prime,FPLIMB,T[i] * Ni_neg);
 
     mpn_add_n(ANS, T+FPLIMB, T, FPLIMB);
     while (mpn_cmp(ANS, prime, FPLIMB) != -1) mpn_sub_n(ANS,ANS,prime,FPLIMB);

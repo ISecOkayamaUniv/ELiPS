@@ -130,7 +130,7 @@ void pre_montgomery(){
     mpz_invert(tmp_z,prime_z,R);
     mpz_sub(tmp_z,R,tmp_z);
     mpn_set_mpz(tmp1,tmp_z);
-    mNi = tmp1[0];
+    Ni_neg = tmp1[0];
 
     mpn_set_mpz(tmp1,R);
     mpn_mod(tmp1,tmp1,FPLIMB+1);
@@ -155,7 +155,7 @@ void fp_mulmod_montgomery(fp_t *ANS,fp_t *A,fp_t *B){
 
     mpn_mul_n(T,A->x0,B->x0,FPLIMB);
     for (int i = 0; i < FPLIMB; i++)
-        T[i] = mpn_addmul_1(&T[i],prime,FPLIMB,T[i] * mNi);
+        T[i] = mpn_addmul_1(&T[i],prime,FPLIMB,T[i] * Ni_neg);
 
     mpn_add_n(ANS->x0, T+FPLIMB, T, FPLIMB);
     if (mpn_cmp(ANS->x0, prime, FPLIMB) != -1) mpn_sub_n(ANS->x0,ANS->x0,prime,FPLIMB);
@@ -171,7 +171,7 @@ void fp_sqrmod_montgomery(fp_t *ANS,fp_t *A){
 
     mpn_sqr(T,A->x0,FPLIMB);
     for (int i = 0; i < FPLIMB; i++)
-        T[i] = mpn_addmul_1(&T[i],prime,FPLIMB,T[i] * mNi);
+        T[i] = mpn_addmul_1(&T[i],prime,FPLIMB,T[i] * Ni_neg);
 
     mpn_add_n(ANS->x0, T+FPLIMB, T, FPLIMB);
     if (mpn_cmp(ANS->x0, prime, FPLIMB) != -1) mpn_sub_n(ANS->x0,ANS->x0,prime,FPLIMB);
@@ -186,7 +186,7 @@ void fp_mod_montgomery(fp_t *ANS,fp_t *A){
 
     mpn_copyd(T,A->x0,FPLIMB);
     for (int i = 0; i < FPLIMB; i++)
-        T[i] = mpn_addmul_1(&T[i],prime,FPLIMB,T[i] * mNi);
+        T[i] = mpn_addmul_1(&T[i],prime,FPLIMB,T[i] * Ni_neg);
 
     mpn_add_n(ANS->x0, T+FPLIMB, T, FPLIMB);
     if (mpn_cmp(ANS->x0, prime, FPLIMB) != -1) mpn_sub_n(ANS->x0,ANS->x0,prime,FPLIMB);

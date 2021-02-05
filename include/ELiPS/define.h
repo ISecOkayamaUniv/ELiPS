@@ -27,10 +27,10 @@
 //#define PARAM_GOD
 
 /* available for only 64bit parameter*/
-#define PARAM_ELIPS_CHANGE_B
+//#define PARAM_ELIPS_CHANGE_B
 //#define PARAM_ELIPS_IMPROVE
 //#define PARAM_TAXONOMY
-//#define PARAM_TAXONOMY_CHANGE_B
+#define PARAM_TAXONOMY_CHANGE_B
 //#define PARAM_ELIPS_IMPROVE_CHANGE_B
 
 /* x-mood*/
@@ -355,7 +355,7 @@ extern matrix_t matrix_of_fpm_to_fp12cv,matrix_of_fp12cv_to_fpm;
 // extern mp_limb_t N[FPLIMB2],R2[FPLIMB],R3[FPLIMB],RmodP[FPLIMB];
 
 extern mp_limb_t N[FPLIMB2],RmodP[FPLIMB],R3[FPLIMB];
-extern mp_limb_t mNi;//mNi=-N^(-1)
+extern mp_limb_t Ni_neg;//Ni_neg=-N^(-1)
 /*============================================================================*/
 /* Test functions                                                             */
 /*============================================================================*/
