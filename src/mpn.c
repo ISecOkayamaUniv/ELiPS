@@ -121,51 +121,42 @@ void mpn_mulmod_montgomery(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_siz
     cost_mod++;
     #endif
 
-    unsigned long int carry;
-    mp_limb_t r;
     static mp_limb_t T[FPLIMB2];
-    static unsigned int index=0;
-    static unsigned long int c;
-    static int i,j;
     mpn_zero(T,FPLIMB2);
 
     mpn_mul(T,A,A_size,B,B_size);
-    index=0;
-    for (i = 0; i < FPLIMB; i++,index++) {
-        r = (mp_limb_t)(T[index] * mNi);
-        T[index] = mpn_addmul_1(T+index,prime,FPLIMB,r);
-    }
-    carry = mpn_add_n(ANS, T+FPLIMB, T, FPLIMB);
-    if (carry || (mpn_cmp(ANS, prime, FPLIMB) != -1)) {
-        carry = mpn_sub_n(ANS,ANS,prime,FPLIMB);
-    }
+    for (int i = 0; i < FPLIMB; i++)
+        T[i] = mpn_addmul_1(&T[i],prime,FPLIMB,T[i] * mNi);
+    
+    mpn_add_n(ANS, T+FPLIMB, T, FPLIMB);
+    if (mpn_cmp(ANS, prime, FPLIMB) != -1) mpn_sub_n(ANS,ANS,prime,FPLIMB);
 }
 //TODO: unuse
-void mpn_sqrmod_montgomery(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size){
-    #ifdef DEBUG_COST_A
-    cost_sqr++;
-    cost_mod++;
-    #endif
+// void mpn_sqrmod_montgomery(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size){
+//     #ifdef DEBUG_COST_A
+//     cost_sqr++;
+//     cost_mod++;
+//     #endif
 
-    unsigned long int carry;
-    mp_limb_t r;
-    static mp_limb_t T[FPLIMB2];
-    static unsigned int index=0;
-    static unsigned long int c;
-    static int i,j;
-    mpn_zero(T,FPLIMB2);
+//     unsigned long int carry;
+//     mp_limb_t r;
+//     static mp_limb_t T[FPLIMB2];
+//     static unsigned int index=0;
+//     static unsigned long int c;
+//     static int i,j;
+//     mpn_zero(T,FPLIMB2);
 
-    mpn_sqr(T,A,A_size);
-    index=0;
-    for (i = 0; i < FPLIMB; i++,index++) {
-        r = (mp_limb_t)(T[index] * mNi);
-        T[index] = mpn_addmul_1(T+index,prime,FPLIMB,r);
-    }
-    carry = mpn_add_n(ANS, T+FPLIMB, T, FPLIMB);
-    if (carry || (mpn_cmp(ANS, prime, FPLIMB) != -1)) {
-        carry = mpn_sub_n(ANS,ANS,prime,FPLIMB);
-    }
-}
+//     mpn_sqr(T,A,A_size);
+//     index=0;
+//     for (i = 0; i < FPLIMB; i++,index++) {
+//         r = (mp_limb_t)(T[index] * mNi);
+//         T[index] = mpn_addmul_1(T+index,prime,FPLIMB,r);
+//     }
+//     carry = mpn_add_n(ANS, T+FPLIMB, T, FPLIMB);
+//     if (carry || (mpn_cmp(ANS, prime, FPLIMB) != -1)) {
+//         carry = mpn_sub_n(ANS,ANS,prime,FPLIMB);
+//     }
+// }
 
 void mpn_mod_montgomery(mp_limb_t *ANS,mp_size_t ANS_size,mp_limb_t *A,mp_size_t A_size){
     #ifdef DEBUG_COST_A
