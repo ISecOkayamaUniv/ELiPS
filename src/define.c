@@ -44,7 +44,7 @@ mpz_t g1_power;
 // mp_limb_t N[FPLIMB2],R2[FPLIMB],R3[FPLIMB],RmodP[FPLIMB];
 mp_limb_t N[FPLIMB2],RmodP[FPLIMB],R3[FPLIMB];
 mp_limb_t Ni_neg;//Ni_neg=-N^(-1)
-mpz_t trace_mod_order_z,X_mod_order_z;
+mpz_t X_mod_order_z;
 /*============================================================================*/
 /* Test functions                                                             */
 /*============================================================================*/

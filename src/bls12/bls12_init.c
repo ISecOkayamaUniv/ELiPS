@@ -34,7 +34,6 @@ void bls12_init_parameters(){
     mpz_init(trace_z);
     mpz_init(root_X);
     mpz_init(root_2);
-    mpz_init(trace_mod_order_z);
     mpz_init(X_mod_order_z);
     
     mpz_init(efp_total);

@@ -76,8 +76,7 @@ void test_g1_scm_w_naf(efp12_t *ANS,efp12_t *P,mpz_t scalar,int w){
     efp_jacobian_set(&table1[i+naf_table_size+1],&tmpJ_P_4x_neg[i]);                //[-1]P'
     }
     //s0,s1
-    mpz_neg(buf,X_z);
-    mpz_pow_ui(buf,buf,2);
+    mpz_pow_ui(buf,X_mod_order_z,2);
     mpz_tdiv_qr(s[1],s[0],scalar,buf);
 
     //get loop_length
@@ -198,8 +197,7 @@ void test_g1_scm(efp12_t *ANS,efp12_t *P,mpz_t scalar){
     efp_jacobian_set(&table1[i+9],&tmpJ_P_4x_neg[i]);                //[-1]P'
     }
     //s0,s1
-    mpz_neg(buf,X_z);
-    mpz_pow_ui(buf,buf,2);
+    mpz_pow_ui(buf,X_mod_order_z,2);
     mpz_tdiv_qr(s[1],s[0],scalar,buf);
 
     //get loop_length
@@ -347,8 +345,7 @@ void test_g1_scm_jsf(efp12_t *ANS,efp12_t *P,mpz_t scalar){
 	efp_jacobian_to_mixture_noninv_montgomery(&table[8],&table[8],&di);
 
     //s0,s1
-    mpz_neg(buf,X_z);
-    mpz_pow_ui(buf,buf,2);
+    mpz_pow_ui(buf,X_mod_order_z,2);
     mpz_tdiv_qr(s[1],s[0],scalar,buf);
 
     //get loop_length
