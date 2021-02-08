@@ -163,6 +163,8 @@ int bls12_generate_order(){
 
 void bls12_generate_trace(){
     mpz_add_ui(trace_z,X_z,1);
+    mpz_mod(trace_mod_order_z,trace_z,order_z);
+    mpz_mod(X_mod_order_z,X_z,order_z);
 }
 
 void bls12_weil(){

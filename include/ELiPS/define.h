@@ -342,6 +342,8 @@ extern fp2_t skew_frobenius_constant[12][2];
 extern mp_limb_t curve_b[FPLIMB];
 extern mpz_t sqrt_power_z;
 extern mpz_t g1_power;
+extern mpz_t trace_mod_order_z,X_mod_order_z;
+
 /*============================================================================*/
 /* Transformation matrix                                                      */
 /*============================================================================*/
