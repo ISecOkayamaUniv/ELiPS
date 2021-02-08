@@ -40,10 +40,9 @@ void test_g2_scm_w_naf(efp12_t *ANS,efp12_t *Q,mpz_t scalar,int w){
     efp2_jacobian_init(&twistedJ_Q_3x_neg[i]);
     }
 
-    mpz_t A,B,s[4],x_2,x_1;
+    mpz_t A,B,s[4],x_2;
     mpz_init(A);
     mpz_init(B);
-    mpz_init(x_1);
     mpz_init(x_2);
     for(i=0; i<4; i++){
         mpz_init(s[i]);
@@ -76,7 +75,6 @@ void test_g2_scm_w_naf(efp12_t *ANS,efp12_t *Q,mpz_t scalar,int w){
 
 
 	for(i=0;i<naf_table_size;i++){
-        #ifdef X_PLUS
             efp2_jacobian_skew_frobenius_map_p1_montgomery(&twistedJ_Q_x[i],&twistedJ_Q[i]);        //twisted_Q_x
             efp2_jacobian_skew_frobenius_map_p2_montgomery(&twistedJ_Q_2x[i],&twistedJ_Q[i]);    //twisted_Q_2x
             efp2_jacobian_skew_frobenius_map_p3_montgomery(&twistedJ_Q_3x[i],&twistedJ_Q[i]);    //twisted_Q_3x
@@ -85,17 +83,6 @@ void test_g2_scm_w_naf(efp12_t *ANS,efp12_t *Q,mpz_t scalar,int w){
             efp2_jacobian_set_neg(&twistedJ_Q_x_neg[i],&twistedJ_Q_x[i]);        //twisted_P_4x_neg
             efp2_jacobian_set_neg(&twistedJ_Q_2x_neg[i],&twistedJ_Q_2x[i]);        //twisted_P_4x_neg
             efp2_jacobian_set_neg(&twistedJ_Q_3x_neg[i],&twistedJ_Q_3x[i]);        //twisted_P_4x_neg
-        #endif
-        #ifdef X_MINUS
-            efp2_jacobian_skew_frobenius_map_p1_montgomery(&twistedJ_Q_x_neg[i],&twistedJ_Q[i]);        //twisted_Q_x
-            efp2_jacobian_skew_frobenius_map_p2_montgomery(&twistedJ_Q_2x[i],&twistedJ_Q[i]);    //twisted_Q_2x
-            efp2_jacobian_skew_frobenius_map_p3_montgomery(&twistedJ_Q_3x_neg[i],&twistedJ_Q[i]);    //twisted_Q_3x
-
-            efp2_jacobian_set_neg(&twistedJ_Q_neg[i],&twistedJ_Q[i]);            //twisted_P_neg
-            efp2_jacobian_set_neg(&twistedJ_Q_x[i],&twistedJ_Q_x_neg[i]);        //twisted_P_4x_neg
-            efp2_jacobian_set_neg(&twistedJ_Q_2x_neg[i],&twistedJ_Q_2x[i]);        //twisted_P_4x_neg
-            efp2_jacobian_set_neg(&twistedJ_Q_3x[i],&twistedJ_Q_3x_neg[i]);        //twisted_P_4x_neg
-        #endif
     }
 
     //set table
@@ -117,16 +104,10 @@ void test_g2_scm_w_naf(efp12_t *ANS,efp12_t *Q,mpz_t scalar,int w){
 
     //set
     //s0,s1,s2,s3
-    #ifdef X_PLUS
-        mpz_set(x_1,X_z);
-    #endif
-    #ifdef X_MINUS
-        mpz_neg(x_1,X_z);
-    #endif
-    mpz_mul(x_2,x_1,x_1);
+    mpz_mul(x_2,X_mod_order_z,X_mod_order_z);
     mpz_tdiv_qr(B,A,scalar,x_2);
-    mpz_tdiv_qr(s[1],s[0],A,x_1);
-    mpz_tdiv_qr(s[3],s[2],B,x_1);
+    mpz_tdiv_qr(s[1],s[0],A,X_mod_order_z);
+    mpz_tdiv_qr(s[3],s[2],B,X_mod_order_z);
 
     //binary
     loop_length=0;
@@ -204,7 +185,6 @@ void test_g2_scm_w_naf(efp12_t *ANS,efp12_t *Q,mpz_t scalar,int w){
     efp2_to_efp12(ANS,&next_twisted_Q);
     ANS->infinity=next_twisted_Q.infinity;
 
-    mpz_clear(x_1);
     mpz_clear(x_2);
     for(i=0; i<4; i++){
         mpz_clear(s[i]);
@@ -234,10 +214,9 @@ void test_g2_scm(efp12_t *ANS,efp12_t *Q,mpz_t scalar){
     efp2_jacobian_init(&twistedJ_Q_3x_neg[i]);
     }
 
-    mpz_t A,B,s[4],x_2,x_1;
+    mpz_t A,B,s[4],x_2;
     mpz_init(A);
     mpz_init(B);
-    mpz_init(x_1);
     mpz_init(x_2);
     for(i=0; i<4; i++){
         mpz_init(s[i]);
@@ -270,7 +249,6 @@ void test_g2_scm(efp12_t *ANS,efp12_t *Q,mpz_t scalar){
 
 
 	for(i=0;i<8;i++){
-	    #ifdef X_PLUS
             efp2_jacobian_skew_frobenius_map_p1_montgomery(&twistedJ_Q_x[i],&twistedJ_Q[i]);        //twisted_Q_x
             efp2_jacobian_skew_frobenius_map_p2_montgomery(&twistedJ_Q_2x[i],&twistedJ_Q[i]);    //twisted_Q_2x
             efp2_jacobian_skew_frobenius_map_p3_montgomery(&twistedJ_Q_3x[i],&twistedJ_Q[i]);    //twisted_Q_3x
@@ -279,17 +257,6 @@ void test_g2_scm(efp12_t *ANS,efp12_t *Q,mpz_t scalar){
             efp2_jacobian_set_neg(&twistedJ_Q_x_neg[i],&twistedJ_Q_x[i]);        //twisted_P_4x_neg
             efp2_jacobian_set_neg(&twistedJ_Q_2x_neg[i],&twistedJ_Q_2x[i]);        //twisted_P_4x_neg
             efp2_jacobian_set_neg(&twistedJ_Q_3x_neg[i],&twistedJ_Q_3x[i]);        //twisted_P_4x_neg
-        #endif
-        #ifdef X_MINUS
-            efp2_jacobian_skew_frobenius_map_p1_montgomery(&twistedJ_Q_x_neg[i],&twistedJ_Q[i]);        //twisted_Q_x
-            efp2_jacobian_skew_frobenius_map_p2_montgomery(&twistedJ_Q_2x[i],&twistedJ_Q[i]);    //twisted_Q_2x
-            efp2_jacobian_skew_frobenius_map_p3_montgomery(&twistedJ_Q_3x_neg[i],&twistedJ_Q[i]);    //twisted_Q_3x
-
-            efp2_jacobian_set_neg(&twistedJ_Q_neg[i],&twistedJ_Q[i]);            //twisted_P_neg
-            efp2_jacobian_set_neg(&twistedJ_Q_x[i],&twistedJ_Q_x_neg[i]);        //twisted_P_4x_neg
-            efp2_jacobian_set_neg(&twistedJ_Q_2x_neg[i],&twistedJ_Q_2x[i]);        //twisted_P_4x_neg
-            efp2_jacobian_set_neg(&twistedJ_Q_3x[i],&twistedJ_Q_3x_neg[i]);        //twisted_P_4x_neg
-        #endif
     }
 
     //set table
@@ -311,16 +278,10 @@ void test_g2_scm(efp12_t *ANS,efp12_t *Q,mpz_t scalar){
 
     //set
     //s0,s1,s2,s3
-    #ifdef X_PLUS
-        mpz_set(x_1,X_z);
-    #endif
-    #ifdef X_MINUS
-        mpz_neg(x_1,X_z);
-    #endif
-    mpz_mul(x_2,x_1,x_1);
+    mpz_mul(x_2,X_mod_order_z,X_mod_order_z);
     mpz_tdiv_qr(B,A,scalar,x_2);
-    mpz_tdiv_qr(s[1],s[0],A,x_1);
-    mpz_tdiv_qr(s[3],s[2],B,x_1);
+    mpz_tdiv_qr(s[1],s[0],A,X_mod_order_z);
+    mpz_tdiv_qr(s[3],s[2],B,X_mod_order_z);
 
     //binary
     loop_length=0;
@@ -398,7 +359,6 @@ void test_g2_scm(efp12_t *ANS,efp12_t *Q,mpz_t scalar){
     efp2_to_efp12(ANS,&next_twisted_Q);
     ANS->infinity=next_twisted_Q.infinity;
 
-    mpz_clear(x_1);
     mpz_clear(x_2);
     for(i=0; i<4; i++){
         mpz_clear(s[i]);
@@ -447,15 +407,6 @@ void test_g2_scm_jsf(efp12_t *ANS,efp12_t *Q,mpz_t scalar){
     efp2_affine_to_jacobian_montgomery(&tmpJ_Q_4x_neg,&Q_4x_neg);
 
     //set table
-    // table[0].infinity=1;                        //00
-    // efp2_set(&table[1],&tmp_Q);                //01
-    // efp2_set(&table[2],&Q_4x);                //10
-    // efp2_eca(&table[3],&Q_4x,&tmp_Q);        //11
-    // efp2_set(&table[4],&tmp_Q_neg);            //0-1
-    // efp2_set(&table[5],&Q_4x_neg);            //-10
-    // efp2_eca(&table[6],&Q_4x_neg,&tmp_Q_neg);    //-1-1
-    // efp2_eca(&table[7],&Q_4x,&tmp_Q_neg);        //1-1
-    // efp2_eca(&table[8],&Q_4x_neg,&tmp_Q);        //-11
 	table[0].infinity=1;                        //00
     efp2_affine_to_jacobian_montgomery(&table[1],&tmp_Q);                //01
     efp2_affine_to_jacobian_montgomery(&table[2],&Q_4x);                //10
@@ -498,11 +449,7 @@ void test_g2_scm_jsf(efp12_t *ANS,efp12_t *Q,mpz_t scalar){
 	efp2_mix_montgomery(&table[8],&table[8],&di);
 
     //s0,s1
-    mpz_sub_ui(buf,trace_z,1);
-    #ifdef X_MINUS
-        mpz_add(buf,buf,order_z);
-    #endif
-    mpz_tdiv_qr(s[1],s[0],scalar,buf);
+    mpz_tdiv_qr(s[1],s[0],scalar,X_mod_order_z);
 
     //get loop_length
     loop_length=0;
@@ -545,7 +492,6 @@ void test_g2_scm_jsf(efp12_t *ANS,efp12_t *Q,mpz_t scalar){
 	efp2_mod_montgomery(&next_tmp_Q,&next_tmp_Q);
     efp2_to_efp12(ANS,&next_tmp_Q);
 
-    mpz_clear(buf);
     for(i=0; i<2; i++){
         mpz_clear(s[i]);
     }

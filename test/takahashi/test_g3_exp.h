@@ -36,14 +36,14 @@ void test_g3_exp_w_naf(fp12_t *ANS,fp12_t *A,mpz_t scalar,int w){
     fp12_init(&next_f);
     fp12_init(&f2);
     for(i=0;i<naf_table_size;i++){
-    fp12_init(&f[i]);
-    fp12_init(&f_2x[i]);
-    fp12_init(&f_4x[i]);
-    fp12_init(&f_6x[i]);
-    fp12_init(&f_neg[i]);
-    fp12_init(&f_2x_neg[i]);
-    fp12_init(&f_4x_neg[i]);
-    fp12_init(&f_6x_neg[i]);
+        fp12_init(&f[i]);
+        fp12_init(&f_2x[i]);
+        fp12_init(&f_4x[i]);
+        fp12_init(&f_6x[i]);
+        fp12_init(&f_neg[i]);
+        fp12_init(&f_2x_neg[i]);
+        fp12_init(&f_4x_neg[i]);
+        fp12_init(&f_6x_neg[i]);
     }
 
 
@@ -74,7 +74,6 @@ void test_g3_exp_w_naf(fp12_t *ANS,fp12_t *A,mpz_t scalar,int w){
     }
 
     for(i=0;i<naf_table_size;i++){
-        #ifdef X_PLUS
 	    fp12_frobenius_map_p6_montgomery(&f_neg[i],&f[i]);            //twisted_P_neg
     	fp12_frobenius_map_p1_lazy_montgomery(&f_2x[i],&f[i]);                    //f_2x
     	fp12_frobenius_map_p2_montgomery(&f_4x[i],&f[i]);                    //f_4x
@@ -82,16 +81,6 @@ void test_g3_exp_w_naf(fp12_t *ANS,fp12_t *A,mpz_t scalar,int w){
     	fp12_frobenius_map_p6_montgomery(&f_2x_neg[i],&f_2x[i]);                    //f_2x
     	fp12_frobenius_map_p6_montgomery(&f_4x_neg[i],&f_4x[i]);                    //f_4x
     	fp12_frobenius_map_p6_montgomery(&f_6x_neg[i],&f_6x[i]);                    //f_6x
-    #endif
-    #ifdef X_MINUS
-	    fp12_frobenius_map_p6_montgomery(&f_neg[i],&f[i]);            //twisted_P_neg
-    	fp12_frobenius_map_p1_lazy_montgomery(&f_2x_neg[i],&f[i]);                    //f_2x
-    	fp12_frobenius_map_p2_montgomery(&f_4x[i],&f[i]);                    //f_4x
-    	fp12_frobenius_map_p3_lazy_montgomery(&f_6x_neg[i],&f[i]);                    //f_6x
-    	fp12_frobenius_map_p6_montgomery(&f_2x[i],&f_2x_neg[i]);                    //f_2x
-    	fp12_frobenius_map_p6_montgomery(&f_4x_neg[i],&f_4x[i]);                    //f_4x
-    	fp12_frobenius_map_p6_montgomery(&f_6x[i],&f_6x_neg[i]);                    //f_6x
-    #endif
     }
 
     //set table
@@ -114,12 +103,7 @@ void test_g3_exp_w_naf(fp12_t *ANS,fp12_t *A,mpz_t scalar,int w){
 
     //set
     //s0,s1,s2,s3
-    #ifdef X_PLUS
-        mpz_set(x_2,X_z);
-    #endif
-    #ifdef X_MINUS
-        mpz_neg(x_2,X_z);
-    #endif
+    mpz_mul(x_2,X_mod_order_z,X_mod_order_z);
     mpz_mul(x_4,x_2,x_2);
     mpz_tdiv_qr(B_s,A_s,scalar,x_4);
     mpz_tdiv_qr(s[1],s[0],A_s,x_2);
@@ -253,7 +237,6 @@ void test_g3_exp(fp12_t *ANS,fp12_t *A,mpz_t scalar){
     }
 
     for(i=0;i<8;i++){
-        #ifdef X_PLUS
 	    fp12_frobenius_map_p6_montgomery(&f_neg[i],&f[i]);            //twisted_P_neg
     	fp12_frobenius_map_p1_lazy_montgomery(&f_2x[i],&f[i]);                    //f_2x
     	fp12_frobenius_map_p2_montgomery(&f_4x[i],&f[i]);                    //f_4x
@@ -261,16 +244,6 @@ void test_g3_exp(fp12_t *ANS,fp12_t *A,mpz_t scalar){
     	fp12_frobenius_map_p6_montgomery(&f_2x_neg[i],&f_2x[i]);                    //f_2x
     	fp12_frobenius_map_p6_montgomery(&f_4x_neg[i],&f_4x[i]);                    //f_4x
     	fp12_frobenius_map_p6_montgomery(&f_6x_neg[i],&f_6x[i]);                    //f_6x
-    #endif
-    #ifdef X_MINUS
-	    fp12_frobenius_map_p6_montgomery(&f_neg[i],&f[i]);            //twisted_P_neg
-    	fp12_frobenius_map_p1_lazy_montgomery(&f_2x_neg[i],&f[i]);                    //f_2x
-    	fp12_frobenius_map_p2_montgomery(&f_4x[i],&f[i]);                    //f_4x
-    	fp12_frobenius_map_p3_lazy_montgomery(&f_6x_neg[i],&f[i]);                    //f_6x
-    	fp12_frobenius_map_p6_montgomery(&f_2x[i],&f_2x_neg[i]);                    //f_2x
-    	fp12_frobenius_map_p6_montgomery(&f_4x_neg[i],&f_4x[i]);                    //f_4x
-    	fp12_frobenius_map_p6_montgomery(&f_6x[i],&f_6x_neg[i]);                    //f_6x
-    #endif
     }
 
     //set table
@@ -293,12 +266,7 @@ void test_g3_exp(fp12_t *ANS,fp12_t *A,mpz_t scalar){
 
     //set
     //s0,s1,s2,s3
-    #ifdef X_PLUS
-        mpz_set(x_2,X_z);
-    #endif
-    #ifdef X_MINUS
-        mpz_neg(x_2,X_z);
-    #endif
+    mpz_mul(x_2,X_mod_order_z,X_mod_order_z);
     mpz_mul(x_4,x_2,x_2);
     mpz_tdiv_qr(B_s,A_s,scalar,x_4);
     mpz_tdiv_qr(s[1],s[0],A_s,x_2);
@@ -390,8 +358,7 @@ void test_g3_exp_jsf(fp12_t *ANS,fp12_t *A,mpz_t scalar){
     fp12_init(&f_inv);
     fp12_init(&frobenius_f);
     fp12_init(&frobenius_f_inv);
-    mpz_t s[2],buf;
-    mpz_init(buf);
+    mpz_t s[2];
     for(i=0; i<2; i++){
         mpz_init(s[i]);
     }
@@ -419,11 +386,7 @@ void test_g3_exp_jsf(fp12_t *ANS,fp12_t *A,mpz_t scalar){
     fp12_mul_lazy_montgomery(&table[8],&frobenius_f_inv,&f);    //-11
 
     //s0,s1
-    mpz_sub_ui(buf,trace_z,1);
-    #ifdef X_MINUS
-        mpz_add(buf,buf,order_z);
-    #endif
-    mpz_tdiv_qr(s[1],s[0],scalar,buf);
+    mpz_tdiv_qr(s[1],s[0],scalar,X_mod_order_z);
     
 
     //get loop_length
@@ -467,8 +430,6 @@ void test_g3_exp_jsf(fp12_t *ANS,fp12_t *A,mpz_t scalar){
         fp12_mul_lazy_montgomery(&next_f,&next_f,&table[binary[i]]);
     }
     fp12_mod_montgomery(ANS,&next_f);
-
-    mpz_clear(buf);
 
     for(i=0; i<2; i++){
         mpz_clear(s[i]);

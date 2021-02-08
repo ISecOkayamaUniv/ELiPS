@@ -33,7 +33,7 @@ int main(void){
     bls12_init();
     bls12_print_parameters();
 
-    int cnt = 10000;
+    int cnt = 100;
 
     //Generate rationalpoit P on G1 and Q on G2
         bls12_generate_g1(&P);
