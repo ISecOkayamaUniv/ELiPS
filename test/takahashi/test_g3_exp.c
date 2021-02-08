@@ -33,46 +33,68 @@ int main(void){
     bls12_init();
     bls12_print_parameters();
 
-    int cnt = 10;
+    int cnt = 10000;
+
+    //Generate rationalpoit P on G1 and Q on G2
+        bls12_generate_g1(&P);
+        bls12_generate_g2(&Q);
+        bls12_optate_pairing(&E,&P,&Q);
+    cost cost_g3_basic,cost_g3,cost_naf_3,cost_naf_5,cost_naf_7,cost_jsf;
+    cost tmp;
 
     for(int i=0;i<cnt;i++){
         //Generate random scalar
         scalar_random_order(s);
 
-        //Generate rationalpoit P on G1 and Q on G2
-        bls12_generate_g1(&P);
-        bls12_generate_g2(&Q);
-        bls12_optate_pairing(&E,&P,&Q);
+        
 
+        cost_zero();
         gettimeofday(&tv_A,NULL);
         test_g3_exp_basic(&ans0,&E,s);
         gettimeofday(&tv_B,NULL);
         test0+=timedifference_msec(tv_A,tv_B);
+        cost_check(&tmp);
+        cost_addition(&cost_g3_basic,&tmp);
 
+        cost_zero();
         gettimeofday(&tv_A,NULL);
         test_g3_exp(&ans1,&E,s);
         gettimeofday(&tv_B,NULL);
         test1+=timedifference_msec(tv_A,tv_B);
+        cost_check(&tmp);
+        cost_addition(&cost_g3,&tmp);
 
+        cost_zero();
         gettimeofday(&tv_A,NULL);
         test_g3_exp_w_naf(&ans_wnaf_3,&E,s,3);
         gettimeofday(&tv_B,NULL);
         test_wnaf_3+=timedifference_msec(tv_A,tv_B);
+        cost_check(&tmp);
+        cost_addition(&cost_naf_3,&tmp);
 
+        cost_zero();
         gettimeofday(&tv_A,NULL);
         test_g3_exp_w_naf(&ans_wnaf_5,&E,s,5);
         gettimeofday(&tv_B,NULL);
         test_wnaf_5+=timedifference_msec(tv_A,tv_B);
+        cost_check(&tmp);
+        cost_addition(&cost_naf_5,&tmp);
 
+        cost_zero();
         gettimeofday(&tv_A,NULL);
         test_g3_exp_w_naf(&ans_wnaf_7,&E,s,7);
         gettimeofday(&tv_B,NULL);
         test_wnaf_7+=timedifference_msec(tv_A,tv_B);
+        cost_check(&tmp);
+        cost_addition(&cost_naf_7,&tmp);
 
-		gettimeofday(&tv_A,NULL);
-        test_g3_exp_jsf(&ans_jsf,&E,s);
-        gettimeofday(&tv_B,NULL);
+        cost_zero();
+        gettimeofday(&tv_A,NULL);
+		test_g3_exp_jsf(&ans_jsf,&E,s);
+		gettimeofday(&tv_B,NULL);
         test_jsf+=timedifference_msec(tv_A,tv_B);
+        cost_check(&tmp);
+        cost_addition(&cost_jsf,&tmp);
 
         if(fp12_cmp(&ans0,&ans1) != 0){
             printf("test1 failed!\n\n");
@@ -106,6 +128,17 @@ int main(void){
     printf("test g3 exp naf 5      : %.4f[ms]\n",test_wnaf_5/cnt);
     printf("test g3 exp naf 7      : %.4f[ms]\n",test_wnaf_7/cnt);
     printf("test g3 exp jsf        : %.4f[ms]\n",test_jsf/cnt);
+
+    #ifdef DEBUG_COST_A
+    printf("*********COST********         \n");
+    cost_printf("test g3 exp basic", &cost_g3_basic, cnt);
+    cost_printf("test g3 exp      ", &cost_g3, cnt);
+    cost_printf("test g3 exp naf 3", &cost_naf_3, cnt);
+    cost_printf("test g3 exp naf 5", &cost_naf_5, cnt);
+    cost_printf("test g3 exp naf 7", &cost_naf_7, cnt);
+    cost_printf("test g3 exp jsf  ", &cost_jsf, cnt);
+    printf("***************************************         \n");
+    #endif
 
     //Clear variable
     scalar_clear(s);
