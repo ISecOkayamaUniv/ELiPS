@@ -2,7 +2,7 @@
 
 /*----------------------------------------------------------------------------*/
 //bls12
-void bls12_optate_pairing(fp12_t *ANS,efp12_t *P,efp12_t *Q){
+void bls12_optate_pairing_basic(fp12_t *ANS,efp12_t *P,efp12_t *Q){
     //Miller's Algo.
     bls12_miller_algo_for_optate_projective(ANS,P,Q);
     

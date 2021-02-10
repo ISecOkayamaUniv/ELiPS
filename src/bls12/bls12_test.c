@@ -71,10 +71,10 @@ int bls12_test_opt_ate_pairing(int pairing){
     efp12_scm(&s1Q,&Q,s1);
     efp12_scm(&s2Q,&Q,s2);
 
-    bls12_optate_pairing(&Z,&P,&Q);
+    bls12_optate_pairing_basic(&Z,&P,&Q);
     fp12_pow(&testA,&Z,s12);
-    bls12_optate_pairing(&testB,&s1P,&s2Q);
-    bls12_optate_pairing(&testC,&s2P,&s1Q);
+    bls12_optate_pairing_basic(&testB,&s1P,&s2Q);
+    bls12_optate_pairing_basic(&testC,&s2P,&s1Q);
 
     printf("bilinear test\n");
     fp12_printf("testA=",&testA);
@@ -99,7 +99,7 @@ for(i=0;i<pairing;i++){
 
     bls12_generate_g1(&P);
 
-    bls12_optate_pairing(&test1,&P,&Q);
+    bls12_optate_pairing_basic(&test1,&P,&Q);
 
     // cost_zero();
     // gettimeofday(&tv_A,NULL);
