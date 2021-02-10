@@ -612,7 +612,7 @@ void fp12_sqr_recover_g1_noninv(fp12_t *ANS,fp12_t *A){
     fp2_set(&ANS->x1.x2,&g5);
 }
 
-void fp12_sqr_recover_g1_montrick_ham3(fp12_t *A,fp12_t *B,fp12_t *C){
+void fp12_sqr_recover_g1_montrick_montgomery_ham3(fp12_t *A,fp12_t *B,fp12_t *C){
     static fp2_t a0,a1,b0,b1,c0,c1,ai,bi,ci;
     static fp2_t inv,all,buf,ab,bc,ca;
     static fp2_t g1,g2,g3,g4,g5;

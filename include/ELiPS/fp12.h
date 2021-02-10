@@ -385,7 +385,7 @@ extern void fp12_frobenius_map_p1_lazy_montgomery(fp12_t *ANS,fp12_t *A);
 extern void fp12_frobenius_map_p2_montgomery(fp12_t *ANS,fp12_t *A);
 extern void fp12_frobenius_map_p3_lazy_montgomery(fp12_t *ANS,fp12_t *A);
 extern void fp12_frobenius_map_p6_montgomery(fp12_t *ANS,fp12_t *A);
-extern void fp12_sqr_recover_g1_montrick_ham3(fp12_t *A,fp12_t *B,fp12_t *C);
+extern void fp12_sqr_recover_g1_montrick_montgomery_ham3(fp12_t *A,fp12_t *B,fp12_t *C);
 int fp12_montgomery_trick_montgomery(fp12_t *A_inv,fp12_t *A,int n);
 void fp12_sqr_recover_g1_montrick_montgomery();
 #endif

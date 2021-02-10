@@ -574,80 +574,9 @@ void fp2_lshift_ui_nonmod_double(fpd2_t *ANS,fpd2_t *A,int s){
 }
 
 void fp2_mul_3_twist_b(fp2_t *ANS,fp2_t *A){
-#ifdef CURVE_B_16
-    static fp2_t tmp;
-    fp2_add_nonmod_single(&tmp,A,A);
-    fp2_add_nonmod_single(&tmp,&tmp,A);
-    fp2_lshift_ui_nonmod_single(&tmp,&tmp,3);
-    fp_add_nonmod_single(&ANS->x0,&tmp.x0,&tmp.x1);
-    fp_sub_nonmod_single(&ANS->x1,&tmp.x1,&tmp.x0);
-#endif
-#ifdef CURVE_B_8_3_TYPE2
-    // static fp2_t tmp;
-    // fp2_add_nonmod_single(&tmp,A,A);
-    // fp2_add_nonmod_single(&tmp,&tmp,&tmp);
-
-    // fp_add_nonmod_single(&ANS->x0,&tmp.x0,&tmp.x1);
-    // fp_sub_nonmod_single(&ANS->x1,&tmp.x1,&tmp.x0);
-
-    static fp2_t tmp;
-    fp2_lshift_ui_nonmod_single(&tmp,A,2);
-
-    fp_add_nonmod_single(&ANS->x0,&tmp.x0,&tmp.x1);
-    fp_sub_nonmod_single(&ANS->x1,&tmp.x1,&tmp.x0);
-#endif
-#ifdef CURVE_B_8_3_TYPE1
-    //add only version
-    // static fp2_t tmp;
-    // fp2_add_nonmod_single(&tmp,A,A);
-    // fp2_add_nonmod_single(&tmp,&tmp,&tmp);
-    // fp2_add_nonmod_single(&tmp,&tmp,&tmp);
-
-    // fp_sub_nonmod_single(&ANS->x0,&tmp.x0,&tmp.x1);
-    // fp_add_nonmod_single(&ANS->x1,&tmp.x1,&tmp.x0);
-
-    //add & lshift version
     static fp2_t tmp;
     fp2_lshift_ui_nonmod_single(&tmp,A,3);
 
     fp_sub_nonmod_single(&ANS->x0,&tmp.x0,&tmp.x1);
     fp_add_nonmod_single(&ANS->x1,&tmp.x1,&tmp.x0);
-#endif
-#ifdef CURVE_B_4
-    //add only version
-    // static fp2_t tmp;
-    // fp2_add_nonmod_single(&tmp,A,A);
-    // fp2_add_nonmod_single(&tmp,&tmp,A);
-    // fp2_add_nonmod_single(&tmp,&tmp,&tmp);
-    // fp2_add_nonmod_single(&tmp,&tmp,&tmp);
-    // fp_sub_nonmod_single(&ANS->x0,&tmp.x0,&tmp.x1);
-    // fp_add_nonmod_single(&ANS->x1,&tmp.x1,&tmp.x0);
-
-    //add & lshift version
-    static fp2_t tmp;
-    //fp2_lshift_ui_nonmod_single(&tmp,A,1);
-    fp2_add_nonmod_single(&tmp,A,A);
-    fp2_add_nonmod_single(&tmp,&tmp,A);
-    fp2_lshift_ui_nonmod_single(&tmp,&tmp,2);
-    fp_sub_nonmod_single(&ANS->x0,&tmp.x0,&tmp.x1);
-    fp_add_nonmod_single(&ANS->x1,&tmp.x1,&tmp.x0);
-#endif
-#ifdef CURVE_B_2_3
-    static fp2_t tmp;
-    //fp2_add_nonmod_single(&tmp,A,A);
-    //fp2_add_nonmod_single(&tmp,&tmp,&tmp);
-    fp2_set(&tmp,A);
-    fp_add_nonmod_single(&ANS->x0,&tmp.x0,&tmp.x1);
-    fp_sub_nonmod_single(&ANS->x1,&tmp.x1,&tmp.x0);
-#endif
-#ifdef CURVE_B_6
-    static fp2_t tmp;
-    fp2_add_nonmod_single(&tmp,A,A);
-    fp2_add_nonmod_single(&tmp,&tmp,&tmp);
-    fp2_add_nonmod_single(&tmp,&tmp,&tmp);
-    fp2_add_nonmod_single(&tmp,&tmp,A);
-
-    fp_add_nonmod_single(&ANS->x0,&tmp.x0,&tmp.x1);
-    fp_sub_nonmod_single(&ANS->x1,&tmp.x1,&tmp.x0);
-#endif
 }

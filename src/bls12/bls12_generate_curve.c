@@ -6,17 +6,6 @@ void bls12_generate_X(){
     mpz_init(buf);
 
     //X_binary
-    #if defined(PARAM_ELIPS) || defined(PARAM_ELIPS_CHANGE_B)
-    bls12_X_binary[77]=1;
-    bls12_X_binary[11]=1;
-    bls12_X_binary[9]=-1;
-    bls12_X_binary[6]=-1;
-
-    bls12_X2_binary[76]=1;
-    bls12_X2_binary[10]=1;
-    bls12_X2_binary[8]=-1;
-    bls12_X2_binary[5]=-1;
-    #endif
     //#ifdef PARAM_TAXONOMY
     #if defined(PARAM_TAXONOMY) || defined(PARAM_TAXONOMY_CHANGE_B)
     bls12_X_binary[77]=-1;
@@ -27,43 +16,6 @@ void bls12_generate_X(){
     bls12_X2_binary[49]=1;
     bls12_X2_binary[32]=1;
     #endif
-    //#ifdef PARAM_ELIPS_IMPROVE_CHANGE_B
-    #if defined(PARAM_ELIPS_IMPROVE) || defined(PARAM_ELIPS_IMPROVE_CHANGE_B)
-    bls12_X_binary[77]=1;
-    bls12_X_binary[10]=1;
-    bls12_X_binary[9]=1;
-    bls12_X_binary[6]=-1;
-
-    bls12_X2_binary[76]=1;
-    bls12_X2_binary[9]=1;
-    bls12_X2_binary[8]=1;
-    bls12_X2_binary[5]=-1;
-    #endif
-    //GOD param
-    #ifdef PARAM_GOD
-    bls12_X_binary[76]=1;
-    bls12_X_binary[70]=-1;
-    bls12_X_binary[66]=1;
-
-    bls12_X2_binary[75]=1;
-    bls12_X2_binary[69]=-1;
-    bls12_X2_binary[65]=1;
-    #endif
-
-    /*
-    //X_binary
-    bls12_X_binary[76]=1;
-    bls12_X_binary[59]=-1;
-    bls12_X_binary[11]=-1;
-    bls12_X_binary[5]=-1;
-    */
-    /*
-    //X2_binary
-    bls12_X2_binary[75]=1;
-    bls12_X2_binary[58]=-1;
-    bls12_X2_binary[10]=-1;
-    bls12_X2_binary[4]=-1;
-    */
 
     //bls12.X
     mpz_set_ui(X_z,0);

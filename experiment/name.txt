@@ -553,7 +553,7 @@ fp12.h,fp12_frobenius_map_p2_montgomery
 fp12.h,fp12_frobenius_map_p3_lazy_montgomery
 fp12.h,fp12_frobenius_map_p6_montgomery
 fp12.h,fp12_montgomery_trick
-fp12.h,fp12_sqr_recover_g1_montrick_ham3
+fp12.h,fp12_sqr_recover_g1_montrick_montgomery_ham3
 bls12_pairing.h,bls12_optate_pairing_basic
 bls12_pairing.h,bls12_optate_pairing_affine
 bls12_pairing.h,bls12_optate_pairing

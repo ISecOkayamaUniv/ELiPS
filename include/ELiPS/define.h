@@ -22,65 +22,9 @@
 //#define DEBUG_COST_A
 //#define DEBUG_ASSERT
 
-/* available for 32bit and 64bit parameter*/
-//#define PARAM_ELIPS
-//#define PARAM_GOD
-
-/* available for only 64bit parameter*/
-//#define PARAM_ELIPS_CHANGE_B
-//#define PARAM_ELIPS_IMPROVE
-//#define PARAM_TAXONOMY
 #define PARAM_TAXONOMY_CHANGE_B
-//#define PARAM_ELIPS_IMPROVE_CHANGE_B
 
 /* x-mood*/
-//ELiPS param
-#ifdef PARAM_ELIPS
-	#define X_PLUS
-	#define EP_TYPE2
-	#define CURVE_B_16
-	#define PRIME_BIT 461
-	#define ORDER_BIT 308
-	#define X_BIT 77
-#endif
-//god choise
-#ifdef PARAM_GOD
-	#define X_PLUS
-	#define EP_TYPE2
-	#define CURVE_B_2_3
-	#define PRIME_BIT 455
-	#define ORDER_BIT 304
-	#define X_BIT 76//76 is bug?
-#endif
-//ELiPS change b
-#ifdef PARAM_ELIPS_CHANGE_B
-	#define X_PLUS
-	#define EP_TYPE2
-	#define CURVE_B_8_3_TYPE2
-	#define PRIME_BIT 461
-	#define ORDER_BIT 308
-	#define X_BIT 77
-#endif
-//TAXONOMY param
-#ifdef PARAM_TAXONOMY
-#define X_MINUS
-#define EP_TYPE1
-#define CURVE_B_4
-#define exp_type_2
-#define PRIME_BIT 461
-#define ORDER_BIT 308
-#define X_BIT 77
-#endif
-//TAXONOMY param maybe fast
-#ifdef PARAM_TAXONOMY_2
-#define X_MINUS
-#define EP_TYPE1
-#define CURVE_B_4
-#define exp_type_2
-#define PRIME_BIT 461
-#define ORDER_BIT 308
-#define X_BIT 77
-#endif
 //taxonomy cahnge b
 #ifdef PARAM_TAXONOMY_CHANGE_B
 #define X_MINUS
@@ -92,25 +36,6 @@
 #define X_BIT 77
 
 #endif
-//maybe fastest x
-#ifdef PARAM_ELIPS_IMPROVE
-#define X_PLUS
-#define EP_TYPE2
-#define CURVE_B_16
-#define PRIME_BIT 461
-#define ORDER_BIT 308
-#define X_BIT 77
-#endif
-//maybe fastest
-#ifdef PARAM_ELIPS_IMPROVE_CHANGE_B
-#define X_PLUS
-#define EP_TYPE2
-#define CURVE_B_8_3_TYPE2
-#define PRIME_BIT 461
-#define ORDER_BIT 308
-#define X_BIT 77
-#endif
-
 
 /************************************/
 
