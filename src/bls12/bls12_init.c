@@ -11,11 +11,9 @@ void bls12_init(){
         bls12_generate_trace();
         bls12_weil();
         bls12_get_epsilon();
-        bls12_get_Two_inv();
         bls12_set_basis();
         bls12_set_frobenius_constant();
         bls12_set_curve_parameter();
-        bls12_set_root2();
 	    pre_montgomery();
         bls12_power_init();
         fr_order_init();
@@ -32,8 +30,6 @@ void bls12_init_parameters(){
     mpz_init(prime_z);
     mpz_init(order_z);
     mpz_init(trace_z);
-    mpz_init(root_X);
-    mpz_init(root_2);
     mpz_init(X_mod_order_z);
     
     mpz_init(efp_total);
@@ -50,7 +46,6 @@ void bls12_init_parameters(){
     
     mpn_zero(epsilon1,FPLIMB);
     mpn_zero(epsilon2,FPLIMB);
-    mpz_init(Two_inv_z);
     fp2_init(&Alpha_1);
     fp2_init(&Alpha_1_inv);
     
@@ -90,11 +85,8 @@ void bls12_clear(){
     mpz_clear(prime_z);
     mpz_clear(order_z);
     mpz_clear(trace_z);
-    mpz_clear(root_X);
-    mpz_clear(root_2);
     
     mpz_clear(efp_total);
     mpz_clear(efp12_total);
     
-    mpz_clear(Two_inv_z);
 }

@@ -20,11 +20,6 @@ void bls12_get_epsilon(){
     mpn_copyd(epsilon2,result2.x0,FPLIMB);
 }
 
-void bls12_get_Two_inv(){
-    mpz_set_ui(Two_inv_z,2);
-    mpz_invert(Two_inv_z,Two_inv_z,prime_z);
-}
-
 void bls12_set_basis(){
     fp2_set_ui_ui(&Alpha_1,1);
     fp2_inv(&Alpha_1_inv,&Alpha_1);
@@ -279,9 +274,6 @@ void bls12_set_curve_parameter(){
     #endif
 }
 
-void bls12_set_root2(){
-    mpz_set_str(root_2,"10031503624258748060575468630512234256688",10);
-}
 
 void bls12_power_init(){
     mpz_t tmp;

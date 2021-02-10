@@ -84,11 +84,9 @@ bls12_init.h,bls12_init_parameters
 bls12_init.h,bls12_clear
 bls12_init.h,bls12_print_parameters
 bls12_generate_parameter.h,bls12_get_epsilon
-bls12_generate_parameter.h,bls12_get_Two_inv
 bls12_generate_parameter.h,bls12_set_basis
 bls12_generate_parameter.h,bls12_set_frobenius_constant
 bls12_generate_parameter.h,bls12_set_curve_parameter
-bls12_generate_parameter.h,bls12_set_root2
 bls12_generate_parameter.h,bls12_set_montgomery
 efp12.h,efp12_init
 efp12.h,sym_init

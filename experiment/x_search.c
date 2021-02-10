@@ -26,8 +26,6 @@ void bls12_init_without_x_binary(){
     mpz_init(prime_z);
     mpz_init(order_z);
     mpz_init(trace_z);
-    mpz_init(root_X);
-    mpz_init(root_2);
 
     mpz_init(efp_total);
     mpz_init(efp12_total);
@@ -43,7 +41,6 @@ void bls12_init_without_x_binary(){
 
     mpn_zero(epsilon1,FPLIMB);
     mpn_zero(epsilon2,FPLIMB);
-    mpz_init(Two_inv_z);
     fp2_init(&Alpha_1);
     fp2_init(&Alpha_1_inv);
 
@@ -63,13 +60,10 @@ void bls12_clear_without_x_binary(){
     mpz_clear(prime_z);
     mpz_clear(order_z);
     mpz_clear(trace_z);
-    mpz_clear(root_X);
-    mpz_clear(root_2);
 
     mpz_clear(efp_total);
     mpz_clear(efp12_total);
 
-    mpz_clear(Two_inv_z);
 }
 int p_test(){
   //gmp_randinit_default (state);
@@ -92,11 +86,9 @@ int p_test(){
     bls12_generate_trace();
     bls12_weil();
     bls12_get_epsilon();
-    bls12_get_Two_inv();
     bls12_set_basis();
     bls12_set_frobenius_constant();
     //bls12_set_curve_parameter();
-    bls12_set_root2();
 	  //bls12_ry();
 	  pre_montgomery();
   }else{
