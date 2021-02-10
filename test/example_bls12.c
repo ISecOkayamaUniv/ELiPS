@@ -44,9 +44,9 @@ int main(void){
     bls12_g2_scm(&s2Q,&Q,s2);
     
     //Calculate pairing
-    bls12_optate_pairing(&ans1,&P,&Q);
-    bls12_optate_pairing(&ans2,&s1P,&s2Q);
-    bls12_optate_pairing(&ans3,&s2P,&s1Q);
+    bls12_optate_pairing_projective(&ans1,&P,&Q);
+    bls12_optate_pairing_projective(&ans2,&s1P,&s2Q);
+    bls12_optate_pairing_projective(&ans3,&s2P,&s1Q);
     
     //Calculate exponentiation
     bls12_g3_exp(&ans1,&ans1,s12);

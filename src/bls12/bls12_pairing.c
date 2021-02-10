@@ -2,7 +2,7 @@
 
 /*----------------------------------------------------------------------------*/
 //bls12
-void bls12_optate_pairing_basic(fp12_t *ANS,efp12_t *P,efp12_t *Q){
+void bls12_optate_pairing(fp12_t *ANS,efp12_t *P,efp12_t *Q){
     //Miller's Algo.
     bls12_miller_algo_for_optate_projective(ANS,P,Q);
     
@@ -32,7 +32,7 @@ void bls12_optate_pairing_affine(fp12_t *ANS,efp12_t *P,efp12_t *Q){
     FINALEXP_OPT_AFFINE+=timedifference_msec(tv_start,tv_end);
 }
 
-void bls12_optate_pairing(fp12_t *ANS,efp12_t *P,efp12_t *Q){
+void bls12_optate_pairing_projective(fp12_t *ANS,efp12_t *P,efp12_t *Q){
     #ifdef DEBUG_COST_A
     cost tmp;
     #endif

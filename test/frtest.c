@@ -8,6 +8,7 @@ int main(void){
     g1_test(1000);
     g2_test(1000);
     g3_test(1000);
+    g1_set_random_test(1000);
 
     debug_pairing(1000);
     return 0;

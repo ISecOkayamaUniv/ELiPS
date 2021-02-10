@@ -29,7 +29,7 @@ extern int g1_cmp_efp12(g1_t *A, efp12_t *B);
 extern void g1_scm(g1_t *ANS,g1_t *P,fr_t *sca);
 extern void g1_set_random_with_basepoint(g1_t *ANS,g1_t *basepoint, gmp_randstate_t state);
 extern void g1_test(int scm);
-extern void g1_set_random_fast(g1_t *ANS, gmp_randstate_t state);
+extern void g1_set_random_schoolbook(g1_t *ANS, gmp_randstate_t state);
 extern void g1_set_random_test(int scm);
 
 extern void g2_init(g2_t *A);
@@ -42,6 +42,7 @@ extern void g2_scm(g2_t *ANS,g2_t *Q,fr_t *sca);
 extern void g2_set_random_with_basepoint(g2_t *ANS,g2_t *basepoint, gmp_randstate_t state);
 extern void g2_test(int scm);
 extern void g3_init(g3_t *A);
+extern int g3_cmp(g3_t *A,g3_t *B);
 extern void g3_exp(g3_t *ANS,g3_t *A,fr_t *sca);
 extern void g1g2_to_g3_miller_algo(g3_t *ANS,g1_t *P,g2_t *Q);
 extern void g1g2_to_g3_miller_algo_affine(g3_t *ANS,g1_t *P,g2_t *Q);

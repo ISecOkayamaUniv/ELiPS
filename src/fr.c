@@ -313,7 +313,9 @@ int g1_cmp(g1_t *ANS,g1_t *A){
 void g1_set_random(g1_t *ANS, gmp_randstate_t state){
     efp12_t P;
     g1_t P_twisted;
-    bls12_generate_g1(&P);
+    //bls12_generate_g1(&P);
+    bls12_generate_g1_fast(&P);
+
     efp12_to_efp(&P_twisted,&P);
     efp_to_montgomery(ANS,&P_twisted);
     ANS->infinity=0;
@@ -507,10 +509,10 @@ void g1_test(int scm){
     mpz_clear(sca);
 }
 
-void g1_set_random_fast(g1_t *ANS, gmp_randstate_t state){
+void g1_set_random_schoolbook(g1_t *ANS, gmp_randstate_t state){
     efp12_t P;
     g1_t P_twisted;
-    bls12_generate_g1_fast(&P);
+    bls12_generate_g1(&P);
     efp12_to_efp(&P_twisted,&P);
     efp_to_montgomery(ANS,&P_twisted);
     ANS->infinity=0;
@@ -530,12 +532,12 @@ void g1_set_random_test(int scm){
 
         //faster type
         gettimeofday(&tv_A,NULL);
-        g1_set_random_fast(&P_test,state);
+        g1_set_random_schoolbook(&P_test,state);
         gettimeofday(&tv_B,NULL);
         random_fast_time+=timedifference_msec(tv_A,tv_B);
     }
     printf("g1_set_random.          : %.4f[ms]\n",random_time/scm);
-    printf("g1_set_random_fast.     : %.4f[ms]\n",random_fast_time/scm);
+    printf("g1_set_random_schoolbook.     : %.4f[ms]\n",random_fast_time/scm);
 
 }
 
@@ -1052,6 +1054,9 @@ void g2_test(int scm){
 /*******************g3_t******************************/
 void g3_init(g3_t *A){
     fp12_init(A);
+}
+int g3_cmp(g3_t *A,g3_t *B){
+    return fp12_cmp(A,B);
 }
 #if ARCBIT==64
 void g3_exp(g3_t *ANS,g3_t *A,fr_t *sca){
@@ -1713,7 +1718,7 @@ int debug_pairing(int pairing){
     fr_set_random(&s2,state);
     fr_mul(&s12,&s1,&s2);
 
-    g1_set_random_fast(&P,state);
+    g1_set_random_schoolbook(&P,state);
     g2_set_random(&Q,state);
 
     g1_scm(&s1P,&P,&s1);

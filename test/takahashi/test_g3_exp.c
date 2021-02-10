@@ -38,7 +38,7 @@ int main(void){
     //Generate rationalpoit P on G1 and Q on G2
         bls12_generate_g1(&P);
         bls12_generate_g2(&Q);
-        bls12_optate_pairing(&E,&P,&Q);
+        bls12_optate_pairing_projective(&E,&P,&Q);
     cost cost_g3_basic,cost_g3,cost_naf_3,cost_naf_5,cost_naf_7,cost_jsf;
     cost tmp;
 

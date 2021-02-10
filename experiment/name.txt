@@ -548,9 +548,9 @@ fp12.h,fp12_frobenius_map_p3_lazy_montgomery
 fp12.h,fp12_frobenius_map_p6_montgomery
 fp12.h,fp12_montgomery_trick
 fp12.h,fp12_sqr_recover_g1_montrick_montgomery_ham3
-bls12_pairing.h,bls12_optate_pairing
+bls12_pairing.h,bls12_optate_pairing_projective
 bls12_pairing.h,bls12_optate_pairing_affine
-bls12_pairing.h,bls12_optate_pairing
+bls12_pairing.h,bls12_optate_pairing_projective
 bls12_pairing.h,bls12_symmetric_optate_pairing
 bls12_generate_curve.h,bls12_generate_X
 bls12_generate_curve.h,bls12_generate_prime

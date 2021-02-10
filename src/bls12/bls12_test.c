@@ -71,10 +71,10 @@ int bls12_test_opt_ate_pairing(int pairing){
     efp12_scm(&s1Q,&Q,s1);
     efp12_scm(&s2Q,&Q,s2);
 
-    bls12_optate_pairing_basic(&Z,&P,&Q);
+    bls12_optate_pairing(&Z,&P,&Q);
     fp12_pow(&testA,&Z,s12);
-    bls12_optate_pairing_basic(&testB,&s1P,&s2Q);
-    bls12_optate_pairing_basic(&testC,&s2P,&s1Q);
+    bls12_optate_pairing(&testB,&s1P,&s2Q);
+    bls12_optate_pairing(&testC,&s2P,&s1Q);
 
     printf("bilinear test\n");
     fp12_printf("testA=",&testA);
@@ -99,7 +99,7 @@ for(i=0;i<pairing;i++){
 
     bls12_generate_g1(&P);
 
-    bls12_optate_pairing_basic(&test1,&P,&Q);
+    bls12_optate_pairing(&test1,&P,&Q);
 
     // cost_zero();
     // gettimeofday(&tv_A,NULL);
@@ -112,7 +112,7 @@ for(i=0;i<pairing;i++){
 
     cost_zero();
     gettimeofday(&tv_A,NULL);
-    bls12_optate_pairing(&test3,&P,&Q);
+    bls12_optate_pairing_projective(&test3,&P,&Q);
     gettimeofday(&tv_B,NULL);
     opt_time+=timedifference_msec(tv_A,tv_B);
     cost_check(&tmp);
@@ -367,7 +367,7 @@ for(i=0;i<exp;i++){
 
     mpz_urandomm(scalar,state,order_z);
     bls12_generate_g1(&P);
-    bls12_optate_pairing(&A_fp12,&P,&Q);
+    bls12_optate_pairing_projective(&A_fp12,&P,&Q);
 
     //basic type
     bls12_g3_exp_basic(&test1,&A_fp12,scalar);

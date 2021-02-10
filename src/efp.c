@@ -788,7 +788,7 @@ void efp_set_random_fast(efp_t *P,gmp_randstate_t state){
         //     fp_sqrt_montgomery(&P->y,&tmp_x);
         //     break;
         // }
-        if(fp_legendre_sqrt(&P->x,&tmp_x)==1) break;
+        if(fp_legendre_sqrt(&P->y,&tmp_x)==1) break;
     }
     P->infinity=0;
 }

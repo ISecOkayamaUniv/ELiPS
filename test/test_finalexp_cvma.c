@@ -79,7 +79,7 @@ int main(void){
 
     cost_zero();
     cost_init(&tmp);
-    bls12_optate_pairing(&ans1,&P,&Q);
+    bls12_optate_pairing_projective(&ans1,&P,&Q);
     cost_check(&tmp);
     cost_printf("bls12_fp12 pairing",&tmp,1);
 
