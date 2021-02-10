@@ -79,13 +79,13 @@ int main(void){
 
     cost_zero();
     cost_init(&tmp);
-    bls12_optate_pairing_basic(&ans1,&P,&Q);
+    bls12_optate_pairing(&ans1,&P,&Q);
     cost_check(&tmp);
     cost_printf("bls12_fp12 pairing",&tmp,1);
 
     cost_zero();
     cost_init(&tmp);
-    bls12_optate_pairing_basic_cvma(&ans1,&P,&Q);
+    bls12_optate_pairing_cvma(&ans1,&P,&Q);
     cost_check(&tmp);
     cost_printf("bls12_fp12cv pairing",&tmp,1);
 
@@ -119,9 +119,9 @@ int main(void){
     cost_printf("fp4cv_mul",&tmp,1);
 
 
-    bls12_optate_pairing_basic_cvma(&ans1,&P,&Q);
-    bls12_optate_pairing_basic_cvma(&ans2,&s1P,&s2Q);
-    bls12_optate_pairing_basic_cvma(&ans3,&s2P,&s1Q);
+    bls12_optate_pairing_cvma(&ans1,&P,&Q);
+    bls12_optate_pairing_cvma(&ans2,&s1P,&s2Q);
+    bls12_optate_pairing_cvma(&ans3,&s2P,&s1Q);
 
     //Calculate exponentiation
     bls12_g3_exp(&ans1,&ans1,s12);

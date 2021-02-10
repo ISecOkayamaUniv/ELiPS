@@ -12,7 +12,7 @@
  * @param[in]P --a pointer in efp12_t on G1.
  * @param[in]Q --a pointer in efp12_t on G2.
  */
-extern void bls12_optate_pairing_basic(fp12_t *ANS,efp12_t *P,efp12_t *Q);
+extern void bls12_optate_pairing(fp12_t *ANS,efp12_t *P,efp12_t *Q);
 /**
  * @brief Calculation Optimal-ate pairing on prime field for bls12
  *
@@ -40,5 +40,5 @@ extern void bls12_optate_pairing(fp12_t *ANS,efp12_t *P,efp12_t *Q);
  */
 extern void bls12_symmetric_optate_pairing(fp12_t *ANS,sym_t *A,sym_t *B);
 
-extern void bls12_optate_pairing_basic_cvma(fp12_t *ANS,efp12_t *P,efp12_t *Q);
+extern void bls12_optate_pairing_cvma(fp12_t *ANS,efp12_t *P,efp12_t *Q);
 #endif

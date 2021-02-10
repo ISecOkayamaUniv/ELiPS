@@ -71,10 +71,10 @@ int bls12_test_opt_ate_pairing(int pairing){
     efp12_scm(&s1Q,&Q,s1);
     efp12_scm(&s2Q,&Q,s2);
 
-    bls12_optate_pairing_basic(&Z,&P,&Q);
+    bls12_optate_pairing(&Z,&P,&Q);
     fp12_pow(&testA,&Z,s12);
-    bls12_optate_pairing_basic(&testB,&s1P,&s2Q);
-    bls12_optate_pairing_basic(&testC,&s2P,&s1Q);
+    bls12_optate_pairing(&testB,&s1P,&s2Q);
+    bls12_optate_pairing(&testC,&s2P,&s1Q);
 
     printf("bilinear test\n");
     fp12_printf("testA=",&testA);
@@ -99,15 +99,15 @@ for(i=0;i<pairing;i++){
 
     bls12_generate_g1(&P);
 
-    bls12_optate_pairing_basic(&test1,&P,&Q);
+    bls12_optate_pairing(&test1,&P,&Q);
 
-    cost_zero();
-    gettimeofday(&tv_A,NULL);
-    bls12_optate_pairing_affine(&test2,&P,&Q);
-    gettimeofday(&tv_B,NULL);
-    opt_affine_time+=timedifference_msec(tv_A,tv_B);
-    cost_check(&tmp);
-    cost_addition(&opt_affine_cost,&tmp);
+    // cost_zero();
+    // gettimeofday(&tv_A,NULL);
+    // bls12_optate_pairing_affine(&test2,&P,&Q);
+    // gettimeofday(&tv_B,NULL);
+    // opt_affine_time+=timedifference_msec(tv_A,tv_B);
+    // cost_check(&tmp);
+    // cost_addition(&opt_affine_cost,&tmp);
 
 
     cost_zero();
@@ -118,24 +118,24 @@ for(i=0;i<pairing;i++){
     cost_check(&tmp);
     cost_addition(&opt_cost,&tmp);
 
-    if(fp12_cmp(&test1,&test2) != 0){
-        printf("pairing affine failed!\n\n");
-        fp12_printf("test2=",&test2);
-	    printf("\n\n");
-	    return 1;
-    }
+    // if(fp12_cmp(&test1,&test2) != 0){
+    //     printf("pairing affine failed!\n\n");
+    //     fp12_printf("test2=",&test2);
+	//     printf("\n\n");
+	//     return 1;
+    // }
     if(fp12_cmp(&test1,&test3) != 0){
         printf("pairing projective failed!\n\n");
 	    printf("\n\n");
 	    return 1;
     }
 }
-    cost_substruction(&FINALEXP_OPT_AFFINE_COST, &opt_affine_cost, &MILLER_OPT_AFFINE_COST);
+    //cost_substruction(&FINALEXP_OPT_AFFINE_COST, &opt_affine_cost, &MILLER_OPT_AFFINE_COST);
     cost_substruction(&FINALEXP_OPT_PROJECTIVE_COST, &opt_cost, &MILLER_OPT_PROJECTIVE_COST);
 
-    printf("bls12 opt ate affine.            : %.4f[ms]\n",opt_affine_time/pairing);
-    printf("bls12 opt ate affine (MILLER).   : %.4f[ms]\n",MILLER_OPT_AFFINE/pairing);
-    printf("bls12 opt ate affine (FINALEXP). : %.4f[ms]\n",FINALEXP_OPT_AFFINE/pairing);
+    // printf("bls12 opt ate affine.            : %.4f[ms]\n",opt_affine_time/pairing);
+    // printf("bls12 opt ate affine (MILLER).   : %.4f[ms]\n",MILLER_OPT_AFFINE/pairing);
+    // printf("bls12 opt ate affine (FINALEXP). : %.4f[ms]\n",FINALEXP_OPT_AFFINE/pairing);
 
     printf("bls12 opt ate.                   : %.4f[ms]\n",opt_time/pairing);
     printf("bls12 opt ate (MILLER).          : %.4f[ms]\n",MILLER_OPT_PROJECTIVE/pairing);
@@ -143,9 +143,9 @@ for(i=0;i<pairing;i++){
 
     #ifdef DEBUG_COST_A
     printf("*********bls12 opt ate fp COST.********         \n");
-    cost_printf("bls12 opt ate affine", &opt_affine_cost, pairing);
-    cost_printf("bls12 opt ate affine (MILLER)", &MILLER_OPT_AFFINE_COST, pairing);
-    cost_printf("bls12 opt ate affine (FINALEXP)", &FINALEXP_OPT_AFFINE_COST, pairing);
+    // cost_printf("bls12 opt ate affine", &opt_affine_cost, pairing);
+    // cost_printf("bls12 opt ate affine (MILLER)", &MILLER_OPT_AFFINE_COST, pairing);
+    // cost_printf("bls12 opt ate affine (FINALEXP)", &FINALEXP_OPT_AFFINE_COST, pairing);
 
 
     cost_printf("bls12 opt ate ", &opt_cost, pairing);

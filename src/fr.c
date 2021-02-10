@@ -1466,76 +1466,76 @@ void g1g2_to_g3_miller_algo(g3_t *ANS,g1_t *P,g2_t *Q){
     #endif
     fp12_set(ANS,&f);
 }
-void g1g2_to_g3_miller_algo_affine(g3_t *ANS,g1_t *P,g2_t *Q){
-    efp2_t T;
-    efp2_t mapped_Q,mapped_Q_neg;
-    efp_t mapped_P;
-    fp12_t f;
-    fp_t L;
-    int i;
+// void g1g2_to_g3_miller_algo_affine(g3_t *ANS,g1_t *P,g2_t *Q){
+//     efp2_t T;
+//     efp2_t mapped_Q,mapped_Q_neg;
+//     efp_t mapped_P;
+//     fp12_t f;
+//     fp_t L;
+//     int i;
 
-    efp2_init(&T);
-    efp2_init(&mapped_Q);
-    efp2_init(&mapped_Q_neg);
-    efp_init(&mapped_P);
-    fp12_init(&f);
-    fp_init(&L);
+//     efp2_init(&T);
+//     efp2_init(&mapped_Q);
+//     efp2_init(&mapped_Q_neg);
+//     efp_init(&mapped_P);
+//     fp12_init(&f);
+//     fp_init(&L);
 
-    //set
-    efp_set(&mapped_P,P);//set mapped_P
-    efp2_set(&mapped_Q,Q);//set mapped_Q
-    Pseudo_8_sparse_mapping_montgomery(&mapped_P,&mapped_Q,&L);
-    efp2_set(&mapped_Q_neg,&mapped_Q);//set mapped_Q_neg
-    fp2_set_neg(&mapped_Q_neg.y,&mapped_Q_neg.y);
-    efp2_set(&T,&mapped_Q);     //set T
-    //TODO:1->RmodP?
-    fp_set_ui(&f.x0.x0.x0,1);
-    //fp_set_mpn(&f.x0.x0.x0,RmodP);
+//     //set
+//     efp_set(&mapped_P,P);//set mapped_P
+//     efp2_set(&mapped_Q,Q);//set mapped_Q
+//     Pseudo_8_sparse_mapping_montgomery(&mapped_P,&mapped_Q,&L);
+//     efp2_set(&mapped_Q_neg,&mapped_Q);//set mapped_Q_neg
+//     fp2_set_neg(&mapped_Q_neg.y,&mapped_Q_neg.y);
+//     efp2_set(&T,&mapped_Q);     //set T
+//     //TODO:1->RmodP?
+//     //fp_set_ui(&f.x0.x0.x0,1);
+//     fp_set_mpn(&f.x0.x0.x0,RmodP);
 
-    //miller
-    #ifdef X_PLUS
-    for(i=bls12_X_length-1; i>=0; i--){
-        switch(bls12_X_binary[i]){
-            case 0:
-                ff_ltt_lazy_montgomery(&f,&T,&mapped_P,&L);
-                break;
-            case 1:
-                ff_ltt_lazy_montgomery(&f,&T,&mapped_P,&L);
-                f_ltq_lazy_montgomery(&f,&T,&mapped_Q,&mapped_P,&L);
-                break;
-            case -1:
-                ff_ltt_lazy_montgomery(&f,&T,&mapped_P,&L);
-                f_ltq_lazy_montgomery(&f,&T,&mapped_Q_neg,&mapped_P,&L);
-                break;
-            default:
-                break;
-        }
-    }
-    #endif
+//     //miller
+//     #ifdef X_PLUS
+//     for(i=bls12_X_length-1; i>=0; i--){
+//         switch(bls12_X_binary[i]){
+//             case 0:
+//                 ff_ltt_lazy_montgomery(&f,&T,&mapped_P,&L);
+//                 break;
+//             case 1:
+//                 ff_ltt_lazy_montgomery(&f,&T,&mapped_P,&L);
+//                 f_ltq_lazy_montgomery(&f,&T,&mapped_Q,&mapped_P,&L);
+//                 break;
+//             case -1:
+//                 ff_ltt_lazy_montgomery(&f,&T,&mapped_P,&L);
+//                 f_ltq_lazy_montgomery(&f,&T,&mapped_Q_neg,&mapped_P,&L);
+//                 break;
+//             default:
+//                 break;
+//         }
+//     }
+//     #endif
 
-    #ifdef X_MINUS
-    //miller
-    for(i=bls12_X_length-1; i>=0; i--){
-        switch(bls12_X_binary[i]){
-            case 0:
-                ff_ltt_lazy_montgomery(&f,&T,&mapped_P,&L);
-                break;
-            case -1:
-               ff_ltt_lazy_montgomery(&f,&T,&mapped_P,&L);
-                f_ltq_lazy_montgomery(&f,&T,&mapped_Q,&mapped_P,&L);
-                break;
-            case 1:
-                ff_ltt_lazy_montgomery(&f,&T,&mapped_P,&L);
-                f_ltq_lazy_montgomery(&f,&T,&mapped_Q_neg,&mapped_P,&L);
-                break;
-            default:
-                break;
-        }
-    }
-    #endif
+//     #ifdef X_MINUS
+//     //miller
+//     for(i=bls12_X_length-1; i>=0; i--){
+//         switch(bls12_X_binary[i]){
+//             case 0:
+//                 ff_ltt_lazy_montgomery(&f,&T,&mapped_P,&L);
+//                 break;
+//             case -1:
+//                ff_ltt_lazy_montgomery(&f,&T,&mapped_P,&L);
+//                 f_ltq_lazy_montgomery(&f,&T,&mapped_Q,&mapped_P,&L);
+//                 break;
+//             case 1:
+//                 ff_ltt_lazy_montgomery(&f,&T,&mapped_P,&L);
+//                 f_ltq_lazy_montgomery(&f,&T,&mapped_Q_neg,&mapped_P,&L);
+//                 break;
+//             default:
+//                 break;
+//         }
+//     }
+//     #endif
 
-    fp12_set(ANS,&f);
-}
+//     fp12_set(ANS,&f);
+// }
 void g1g2_to_g3_hardpart_compress_montrick(fp12_t *ANS, fp12_t *A){
     fp12_t tmp,t0,t1,t2,t3,t4,t5, test,At;
     fp12_init(&tmp);
@@ -1625,28 +1625,28 @@ void g1g2_to_g3_pairing(g3_t *ANS,g1_t *P,g2_t *Q){
     gettimeofday(&tv_end,NULL);
     FINALEXP_OPT_PROJECTIVE+=timedifference_msec(tv_start,tv_end);
 }
-void g1g2_to_g3_pairing_affine(g3_t *ANS,g1_t *P,g2_t *Q){
-    #ifdef DEBUG_COST_A
-    cost tmp;
-    #endif
+// void g1g2_to_g3_pairing_affine(g3_t *ANS,g1_t *P,g2_t *Q){
+//     #ifdef DEBUG_COST_A
+//     cost tmp;
+//     #endif
 
-    //Miller's Algo.
-    gettimeofday(&tv_start,NULL);
-    g1g2_to_g3_miller_algo_affine(ANS,P,Q);
-    gettimeofday(&tv_end,NULL);
-    MILLER_OPT_AFFINE+=timedifference_msec(tv_start,tv_end);
+//     //Miller's Algo.
+//     gettimeofday(&tv_start,NULL);
+//     g1g2_to_g3_miller_algo_affine(ANS,P,Q);
+//     gettimeofday(&tv_end,NULL);
+//     MILLER_OPT_AFFINE+=timedifference_msec(tv_start,tv_end);
 
-    #ifdef DEBUG_COST_A
-    cost_check(&tmp);
-    cost_addition(&MILLER_OPT_AFFINE_COST,&tmp);
-    #endif
+//     #ifdef DEBUG_COST_A
+//     cost_check(&tmp);
+//     cost_addition(&MILLER_OPT_AFFINE_COST,&tmp);
+//     #endif
 
-    //Final Exp.
-    gettimeofday(&tv_start,NULL);
-    g1g2_to_g3_final_exp(ANS,ANS);
-    gettimeofday(&tv_end,NULL);
-    FINALEXP_OPT_AFFINE+=timedifference_msec(tv_start,tv_end);
-}
+//     //Final Exp.
+//     gettimeofday(&tv_start,NULL);
+//     g1g2_to_g3_final_exp(ANS,ANS);
+//     gettimeofday(&tv_end,NULL);
+//     FINALEXP_OPT_AFFINE+=timedifference_msec(tv_start,tv_end);
+// }
 void billlinear_test(){
     fr_t a,b,c;
     g1_t P,aP;
@@ -1663,11 +1663,11 @@ void billlinear_test(){
     g2_scm(&bQ,&Q,&b);
 
     //test1={Pairng(P,Q)^c
-    g1g2_to_g3_pairing_affine(&test1,&P,&Q);
+    g1g2_to_g3_pairing(&test1,&P,&Q);
     g3_exp(&test1,&test1,&c);
 
     //test2=Pairng(aP,bQ)
-    g1g2_to_g3_pairing_affine(&test2,&aP,&bQ);
+    g1g2_to_g3_pairing(&test2,&aP,&bQ);
 
     if(fp12_cmp(&test1,&test2)==0) printf("ok!\n");
     else printf("ng\n");
@@ -1758,13 +1758,13 @@ int debug_pairing(int pairing){
         cost_check(&tmp);
         cost_addition(&opt_cost,&tmp);
 
-        cost_zero();
-        gettimeofday(&tv_A,NULL);
-        g1g2_to_g3_pairing_affine(&test2,&P,&Q);
-        gettimeofday(&tv_B,NULL);
-        opt_affine_time+=timedifference_msec(tv_A,tv_B);
-        cost_check(&tmp);
-        cost_addition(&opt_affine_cost,&tmp);
+        // cost_zero();
+        // gettimeofday(&tv_A,NULL);
+        // g1g2_to_g3_pairing_affine(&test2,&P,&Q);
+        // gettimeofday(&tv_B,NULL);
+        // opt_affine_time+=timedifference_msec(tv_A,tv_B);
+        // cost_check(&tmp);
+        // cost_addition(&opt_affine_cost,&tmp);
 
         //if(fp12_cmp(&test1,&test2) != 0){
             //printf("pairing projective failed!\n\n");
@@ -1773,15 +1773,15 @@ int debug_pairing(int pairing){
         //}
     }
     cost_substruction(&FINALEXP_OPT_PROJECTIVE_COST, &opt_cost, &MILLER_OPT_PROJECTIVE_COST);
-    cost_substruction(&FINALEXP_OPT_AFFINE_COST, &opt_affine_cost, &MILLER_OPT_AFFINE_COST);
+    //cost_substruction(&FINALEXP_OPT_AFFINE_COST, &opt_affine_cost, &MILLER_OPT_AFFINE_COST);
 
     printf("bls12 opt ate           : %.4f[ms]\n",opt_time/pairing);
     printf("bls12 opt ate (MILLER).          : %.4f[ms]\n",MILLER_OPT_PROJECTIVE/pairing);
     printf("bls12 opt ate (FINALEXP).        : %.4f[ms]\n",FINALEXP_OPT_PROJECTIVE/pairing);
 
-    printf("bls12 opt ate affine.                : %.4f[ms]\n",opt_affine_time/pairing);
-    printf("bls12 opt ate (MILLER).          : %.4f[ms]\n",MILLER_OPT_AFFINE/pairing);
-    printf("bls12 opt ate (FINALEXP).        : %.4f[ms]\n",FINALEXP_OPT_AFFINE/pairing);
+    // printf("bls12 opt ate affine.                : %.4f[ms]\n",opt_affine_time/pairing);
+    // printf("bls12 opt ate (MILLER).          : %.4f[ms]\n",MILLER_OPT_AFFINE/pairing);
+    // printf("bls12 opt ate (FINALEXP).        : %.4f[ms]\n",FINALEXP_OPT_AFFINE/pairing);
 
     #ifdef DEBUG_COST_A
     printf("*********bls12 opt ate montrick fp COST.********         \n");
@@ -1789,11 +1789,11 @@ int debug_pairing(int pairing){
     cost_printf("bls12 opt ate (MILLER)", &MILLER_OPT_PROJECTIVE_COST, pairing);
     cost_printf("bls12 opt ate (FINALEXP)", &FINALEXP_OPT_PROJECTIVE_COST, pairing);
     printf("***************************************         \n");
-    printf("*********bls12 opt ate GS fp COST.********         \n");
-    cost_printf("bls12 opt ate ", &opt_affine_cost, pairing);
-    cost_printf("bls12 opt ate (MILLER)", &MILLER_OPT_AFFINE_COST, pairing);
-    cost_printf("bls12 opt ate (FINALEXP)", &FINALEXP_OPT_AFFINE_COST, pairing);
-    printf("***************************************         \n");
+    // printf("*********bls12 opt ate GS fp COST.********         \n");
+    // cost_printf("bls12 opt ate ", &opt_affine_cost, pairing);
+    // cost_printf("bls12 opt ate (MILLER)", &MILLER_OPT_AFFINE_COST, pairing);
+    // cost_printf("bls12 opt ate (FINALEXP)", &FINALEXP_OPT_AFFINE_COST, pairing);
+    // printf("***************************************         \n");
     #endif
 
     return 0;
