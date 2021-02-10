@@ -100,7 +100,7 @@ void bls12_miller_algo_for_optate_affine(fp12_t *ANS,efp12_t *P,efp12_t *Q){
     fp2_set_neg(&mapped_Q_neg.y,&mapped_Q_neg.y);
     efp2_set(&T,&mapped_Q);     //set T
     //TODO:1->RmodP?
-    fp_set_ui(&f.x0.x0.x0,1);
+    fp_set_mpn(&f.x0.x0.x0,RmodP);
     //fp_set_mpn(&f.x0.x0.x0,RmodP);
 
     //miller

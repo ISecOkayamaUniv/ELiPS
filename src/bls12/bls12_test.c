@@ -298,10 +298,11 @@ int bls12_test_g2_scm(int scm){
     gmp_randinit_default (state);
     //gmp_randseed_ui(state,(unsigned long)time(NULL));
     gmp_randseed_ui(state,1);
-
-for(i=0;i<scm;i++){
     mpz_urandomm(scalar,state,order_z);
     bls12_generate_g2(&A_efp12);
+
+for(i=0;i<scm;i++){
+    
 
     //basic type
     bls12_g2_scm_basic(&test1,&A_efp12,scalar);

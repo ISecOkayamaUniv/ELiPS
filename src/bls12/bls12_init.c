@@ -27,6 +27,7 @@ void bls12_init_parameters(){
     int i,j;
     
     mpz_init(X_z);
+    mpz_init(X_abs_z);
     mpz_init(prime_z);
     mpz_init(order_z);
     mpz_init(trace_z);

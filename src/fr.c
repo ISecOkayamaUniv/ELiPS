@@ -43,15 +43,15 @@ void mpz_set_mpn_size(mpz_t ans,mp_limb_t *a,int bits,mp_size_t size){
 void fr_order_init(){
   mpn_set_mpz_size(order,order_z,FRLIMB);
 #ifdef X_PLUS
-  mpn_set_mpz_size(X,X_z,FXLIMB);
+  mpn_set_mpz_size(X_abs,X_z,FXLIMB);
 #endif
 #ifdef X_MINUS
   mpz_neg(X_z,X_z);
-  mpn_set_mpz_size(X,X_z,FXLIMB);
+  mpn_set_mpz_size(X_abs,X_z,FXLIMB);
   mpz_neg(X_z,X_z);
 #endif
     mp_limb_t tmp[FXLIMB*2];//TODO
-  mpn_mul(tmp,X,FXLIMB,X,FXLIMB);
+  mpn_mul(tmp,X_abs,FXLIMB,X_abs,FXLIMB);
   mpn_copyd(X2,tmp,FXLIMB2);
 }
 int w_naf_frt(int *dw,mpz_t d,int w){
@@ -677,8 +677,8 @@ void g2_scm(g2_t *ANS,g2_t *Q,fr_t *sca){
         //set
         //s0,s1,s2,s3
         mpn_tdiv_qr(B_mpn,A_mpn,0,sca->x0,FRLIMB,X2,FXLIMB2);
-        mpn_tdiv_qr(s1,s0,0,A_mpn,FXLIMB2,X,FXLIMB);
-        mpn_tdiv_qr(s3,s2,0,B_mpn,FRLIMB-FXLIMB2+1,X,FXLIMB);
+        mpn_tdiv_qr(s1,s0,0,A_mpn,FXLIMB2,X_abs,FXLIMB);
+        mpn_tdiv_qr(s3,s2,0,B_mpn,FRLIMB-FXLIMB2+1,X_abs,FXLIMB);
 
         //s0[FXLIMB],s1[FXLIMB2-FXLIMB+1],s2[FXLIMB],s3[FRLIMB-FXLIMB2+1-FXLIMB+1]
         // mpn_println("s0=",s0,FXLIMB);
@@ -1134,8 +1134,8 @@ void g3_exp(g3_t *ANS,g3_t *A,fr_t *sca){
     //set
     //s0,s1,s2,s3
     mpn_tdiv_qr(B_mpn,A_mpn,0,sca->x0,FRLIMB,X2,FXLIMB2);
-    mpn_tdiv_qr(s1,s0,0,A_mpn,FXLIMB2,X,FXLIMB);
-    mpn_tdiv_qr(s3,s2,0,B_mpn,FRLIMB-FXLIMB2+1,X,FXLIMB);
+    mpn_tdiv_qr(s1,s0,0,A_mpn,FXLIMB2,X_abs,FXLIMB);
+    mpn_tdiv_qr(s3,s2,0,B_mpn,FRLIMB-FXLIMB2+1,X_abs,FXLIMB);
 
     length_s[0]=(int)mpn_sizeinbase(s0,2,FXLIMB);
     if(loop_length<length_s[0]){
@@ -1269,6 +1269,7 @@ void g3_exp(fp12_t *ANS,fp12_t *A,fr_t *sca){
     }
 
 	for(i=0;i<8;i++){
+    #ifdef X_PLUS
 	    fp12_frobenius_map_p6_montgomery(&f_neg[i],&f[i]);            //twisted_P_neg
     	fp12_frobenius_map_p1_lazy_montgomery(&f_2x[i],&f[i]);                    //f_2x
     	fp12_frobenius_map_p2_montgomery(&f_4x[i],&f[i]);                    //f_4x
@@ -1276,6 +1277,16 @@ void g3_exp(fp12_t *ANS,fp12_t *A,fr_t *sca){
     	fp12_frobenius_map_p6_montgomery(&f_2x_neg[i],&f_2x[i]);                    //f_2x
     	fp12_frobenius_map_p6_montgomery(&f_4x_neg[i],&f_4x[i]);                    //f_4x
     	fp12_frobenius_map_p6_montgomery(&f_6x_neg[i],&f_6x[i]);                    //f_6x
+    #endif
+    #ifdef X_MINUS
+	    fp12_frobenius_map_p6_montgomery(&f_neg[i],&f[i]);            //twisted_P_neg
+    	fp12_frobenius_map_p1_lazy_montgomery(&f_2x_neg[i],&f[i]);                    //f_2x
+    	fp12_frobenius_map_p2_montgomery(&f_4x[i],&f[i]);                    //f_4x
+    	fp12_frobenius_map_p3_lazy_montgomery(&f_6x_neg[i],&f[i]);                    //f_6x
+    	fp12_frobenius_map_p6_montgomery(&f_2x[i],&f_2x_neg[i]);                    //f_2x
+    	fp12_frobenius_map_p6_montgomery(&f_4x_neg[i],&f_4x[i]);                    //f_4x
+    	fp12_frobenius_map_p6_montgomery(&f_6x[i],&f_6x_neg[i]);                    //f_6x
+    #endif
     }
 
     //set table
@@ -1566,88 +1577,6 @@ void g1g2_to_g3_hardpart_compress_montrick(fp12_t *ANS, fp12_t *A){
     fp12_mul_lazy_montgomery(ANS,&t1,&t2);//t1:=t1*t2;
     //fp12_mod_montgomery(ANS,ANS);
 }
-void g1g2_to_g3_hardpart_GS(fp12_t *ANS, fp12_t *A){
-    fp12_t tmp,t0,t1,t2,t3,t4,t5, test,At;
-    fp12_init(&tmp);
-    fp12_init(&t0);
-    fp12_init(&t1);
-    fp12_init(&t2);
-    fp12_init(&t3);
-    fp12_init(&t5);
-    fp12_init(&t4);
-    fp12_init(&test);
-    fp12_init(&At);
-    //HARDPART
-    fp12_sqr_GS_lazy_montgomery(&t0, A);
-    bls12_fp12_pow_X_compress(&t1, &t0);
-
-    bls12_fp12_pow_X2_compress(&t2,&t1);//t2:=t1^(u2);
-    fp12_frobenius_map_p6_montgomery(&t3,A);//t3:=f^(-1);
-    fp12_mul_lazy_montgomery(&t1,&t3,&t1);//t1:=t3*t1;
-    fp12_frobenius_map_p6_montgomery(&t1,&t1);//t1:=t1^(-1);
-    fp12_mul_lazy_montgomery(&t1,&t1,&t2);//t1:=t1*t2;
-
-    bls12_fp12_pow_X_compress(&t2,&t1);//t2:=t1^(u);
-    bls12_fp12_pow_X_compress(&t3,&t2);//t3:=t2^(u);
-    fp12_frobenius_map_p6_montgomery(&t1,&t1);//t1:=t1^(-1);
-
-    fp12_mul_lazy_montgomery(&t3,&t1,&t3);//t3:=t1*t3;
-    fp12_frobenius_map_p6_montgomery(&t1,&t1);//t1:=t1^(-1);
-    fp12_frobenius_map_p3_lazy_montgomery(&t1,&t1);//t1:=t1^(p^3);
-    fp12_frobenius_map_p2_montgomery(&t2,&t2);//t2:=t2^(p^2);
-
-
-    fp12_mul_lazy_montgomery(&t1,&t1,&t2);//t1:=t1*t2;
-    bls12_fp12_pow_X_compress(&t2,&t3);//t2:=t3^(u);
-    fp12_mul_lazy_montgomery(&t2,&t2,&t0);//t2:=t2*t0;
-    fp12_mul_lazy_montgomery(&t2,&t2,A);//t2:=t2*f;
-    fp12_mul_lazy_montgomery(&t1,&t1,&t2);//t1:=t1*t2;
-
-    fp12_frobenius_map_p1_lazy_montgomery(&t2,&t3);//t2:=t3^p;
-    fp12_mul_lazy_montgomery(ANS,&t1,&t2);//t1:=t1*t2;
-    //fp12_mod_montgomery(ANS,ANS);
-}
-// void g1g2_to_g3_hardpart_compress_GS(fp12_t *ANS, fp12_t *A){
-//     fp12_t tmp,t0,t1,t2,t3,t4,t5, test,At;
-//     fp12_init(&tmp);
-//     fp12_init(&t0);
-//     fp12_init(&t1);
-//     fp12_init(&t2);
-//     fp12_init(&t3);
-//     fp12_init(&t5);
-//     fp12_init(&t4);
-//     fp12_init(&test);
-//     fp12_init(&At);
-//     //HARDPART
-//     fp12_sqr_GS_lazy_montgomery(&t0, A);
-//     bls12_fp12_pow_X_compress_montrick(&t1, &t0);
-
-//     bls12_fp12_pow_X2_compress_montrick(&t2,&t1);//t2:=t1^(u2);
-//     fp12_frobenius_map_p6_montgomery(&t3,A);//t3:=f^(-1);
-//     fp12_mul_lazy_montgomery(&t1,&t3,&t1);//t1:=t3*t1;
-//     fp12_frobenius_map_p6_montgomery(&t1,&t1);//t1:=t1^(-1);
-//     fp12_mul_lazy_montgomery(&t1,&t1,&t2);//t1:=t1*t2;
-
-//     bls12_fp12_pow_X_compress_montrick(&t2,&t1);//t2:=t1^(u);
-//     bls12_fp12_pow_X_compress_montrick(&t3,&t2);//t3:=t2^(u);
-//     fp12_frobenius_map_p6_montgomery(&t1,&t1);//t1:=t1^(-1);
-
-//     fp12_mul_lazy_montgomery(&t3,&t1,&t3);//t3:=t1*t3;
-//     fp12_frobenius_map_p6_montgomery(&t1,&t1);//t1:=t1^(-1);
-//     fp12_frobenius_map_p3_lazy_montgomery(&t1,&t1);//t1:=t1^(p^3);
-//     fp12_frobenius_map_p2_montgomery(&t2,&t2);//t2:=t2^(p^2);
-
-
-//     fp12_mul_lazy_montgomery(&t1,&t1,&t2);//t1:=t1*t2;
-//     bls12_fp12_pow_X_compress_montrick(&t2,&t3);//t2:=t3^(u);
-//     fp12_mul_lazy_montgomery(&t2,&t2,&t0);//t2:=t2*t0;
-//     fp12_mul_lazy_montgomery(&t2,&t2,A);//t2:=t2*f;
-//     fp12_mul_lazy_montgomery(&t1,&t1,&t2);//t1:=t1*t2;
-
-//     fp12_frobenius_map_p1_lazy_montgomery(&t2,&t3);//t2:=t3^p;
-//     fp12_mul_lazy_montgomery(ANS,&t1,&t2);//t1:=t1*t2;
-//     //fp12_mod_montgomery(ANS,ANS);
-// }
 void g1g2_to_g3_final_exp(g3_t *ANS,g3_t *A){
     fp12_t tmp,t0,t1,t2,t3,t4,t5, test,At;
     fp12_init(&tmp);
@@ -1673,32 +1602,6 @@ void g1g2_to_g3_final_exp(g3_t *ANS,g3_t *A){
     fp12_mul_lazy_montgomery(&tmp,&t0,&tmp);//f^(p^2)*f
 
     g1g2_to_g3_hardpart_compress_montrick(ANS,&tmp);
-}
-void g1g2_to_g3_final_exp_GS(g3_t *ANS,g3_t *A){
-    fp12_t tmp,t0,t1,t2,t3,t4,t5, test,At;
-    fp12_init(&tmp);
-    fp12_init(&t0);
-    fp12_init(&t1);
-    fp12_init(&t2);
-    fp12_init(&t3);
-    fp12_init(&t5);
-    fp12_init(&t4);
-    fp12_init(&test);
-    fp12_init(&At);
-
-    fp12_set(&At,A);
-
-    //EASY PART
-    //f←f^(p^6)*f^-1
-    fp12_frobenius_map_p6_montgomery(&t0,&At);//f^(p^6)
-    fp12_inv_lazy_montgomery(&t1,&At);//f^-1
-    fp12_mul_lazy_montgomery(&tmp,&t0,&t1);//f^(p^6)*f^-1
-
-    //f←f^(p^2)*f
-    fp12_frobenius_map_p2_montgomery(&t0,&tmp);//f^(p^2)
-    fp12_mul_lazy_montgomery(&tmp,&t0,&tmp);//f^(p^2)*f
-
-    g1g2_to_g3_hardpart_GS(ANS,&tmp);
 }
 void g1g2_to_g3_pairing(g3_t *ANS,g1_t *P,g2_t *Q){
     #ifdef DEBUG_COST_A
@@ -1741,28 +1644,6 @@ void g1g2_to_g3_pairing_affine(g3_t *ANS,g1_t *P,g2_t *Q){
     //Final Exp.
     gettimeofday(&tv_start,NULL);
     g1g2_to_g3_final_exp(ANS,ANS);
-    gettimeofday(&tv_end,NULL);
-    FINALEXP_OPT_AFFINE+=timedifference_msec(tv_start,tv_end);
-}
-void g1g2_to_g3_pairing_GS(g3_t *ANS,g1_t *P,g2_t *Q){
-    #ifdef DEBUG_COST_A
-    cost tmp;
-    #endif
-
-    //Miller's Algo.
-    gettimeofday(&tv_start,NULL);
-    g1g2_to_g3_miller_algo(ANS,P,Q);
-    gettimeofday(&tv_end,NULL);
-    MILLER_OPT_AFFINE+=timedifference_msec(tv_start,tv_end);
-
-    #ifdef DEBUG_COST_A
-    cost_check(&tmp);
-    cost_addition(&MILLER_OPT_AFFINE_COST,&tmp);
-    #endif
-
-    //Final Exp.
-    gettimeofday(&tv_start,NULL);
-    g1g2_to_g3_final_exp_GS(ANS,ANS);
     gettimeofday(&tv_end,NULL);
     FINALEXP_OPT_AFFINE+=timedifference_msec(tv_start,tv_end);
 }
@@ -1879,7 +1760,7 @@ int debug_pairing(int pairing){
 
         cost_zero();
         gettimeofday(&tv_A,NULL);
-        g1g2_to_g3_pairing_GS(&test2,&P,&Q);
+        g1g2_to_g3_pairing_affine(&test2,&P,&Q);
         gettimeofday(&tv_B,NULL);
         opt_affine_time+=timedifference_msec(tv_A,tv_B);
         cost_check(&tmp);
@@ -1894,11 +1775,11 @@ int debug_pairing(int pairing){
     cost_substruction(&FINALEXP_OPT_PROJECTIVE_COST, &opt_cost, &MILLER_OPT_PROJECTIVE_COST);
     cost_substruction(&FINALEXP_OPT_AFFINE_COST, &opt_affine_cost, &MILLER_OPT_AFFINE_COST);
 
-    printf("bls12 opt ate montrick           : %.4f[ms]\n",opt_time/pairing);
+    printf("bls12 opt ate           : %.4f[ms]\n",opt_time/pairing);
     printf("bls12 opt ate (MILLER).          : %.4f[ms]\n",MILLER_OPT_PROJECTIVE/pairing);
     printf("bls12 opt ate (FINALEXP).        : %.4f[ms]\n",FINALEXP_OPT_PROJECTIVE/pairing);
 
-    printf("bls12 opt ate GS.                : %.4f[ms]\n",opt_affine_time/pairing);
+    printf("bls12 opt ate affine.                : %.4f[ms]\n",opt_affine_time/pairing);
     printf("bls12 opt ate (MILLER).          : %.4f[ms]\n",MILLER_OPT_AFFINE/pairing);
     printf("bls12 opt ate (FINALEXP).        : %.4f[ms]\n",FINALEXP_OPT_AFFINE/pairing);
 
@@ -1916,4 +1797,48 @@ int debug_pairing(int pairing){
     #endif
 
     return 0;
+}
+void g3_test(int exp){
+    g1_t A_g1;
+    g2_t A_g2;
+    g3_t A_g3;
+    fp12_t A_fp12;
+    fr_t sca_fr;
+    mpz_t sca;
+    //initialize
+    mpz_init(sca);
+    fr_init(&sca_fr);
+    g1_init(&A_g1);
+    g2_init(&A_g2);
+    g3_init(&A_g3);
+    fp12_init(&A_fp12);
+    //set
+    g1_set_random(&A_g1,state);
+    g2_set_random(&A_g2,state);
+    g1g2_to_g3_pairing(&A_g3,&A_g1,&A_g2);
+
+    //bench
+    int i=0;
+    float scm_time=0;
+    cost tmp,scm_cost;
+    struct timeval tv_A,tv_B;
+    for(i=0;i<exp;i++){
+        fr_set_random(&sca_fr,state);
+        //faster type
+        cost_zero();
+        gettimeofday(&tv_A,NULL);
+        g3_exp(&A_g3,&A_g3,&sca_fr);
+        gettimeofday(&tv_B,NULL);
+        scm_time+=timedifference_msec(tv_A,tv_B);
+        cost_check(&tmp);
+        cost_addition(&scm_cost,&tmp);
+    }
+    printf("bls12 g3 exp.     : %.4f[ms]\n",scm_time/exp);
+
+    #ifdef DEBUG_COST_A
+    printf("*********bls12 g2 scm fp COST.********         \n");
+    cost_printf("bls12 g3 exp",&scm_cost,exp);
+    printf("***************************************         \n");
+    #endif
+    mpz_clear(sca);
 }

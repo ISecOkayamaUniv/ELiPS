@@ -16,8 +16,8 @@ mp_limb_t buf[FPLIMB],tmp_mul[FPLIMB2],tmp1[FPLIMB],tmp2[FPLIMB];
 /*============================================================================*/
 
 gmp_randstate_t state;
-mpz_t X_z,prime_z,order_z,trace_z;
-mp_limb_t X[FXLIMB],X2[FXLIMB2],prime[FPLIMB],order[FRLIMB],trace[FPLIMB];
+mpz_t X_z,prime_z,order_z,trace_z,X_abs_z;
+mp_limb_t X_abs[FXLIMB],X2[FXLIMB2],prime[FPLIMB],order[FRLIMB],trace[FPLIMB];
 mp_limb_t prime_carry[FPLIMB];
 mp_limb_t prime2[FPLIMB2];
 fp2_t Alpha_1,Alpha_1_inv;

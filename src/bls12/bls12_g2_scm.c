@@ -107,12 +107,12 @@ void bls12_g2_scm(efp12_t *ANS,efp12_t *Q,mpz_t scalar){
     
     //set
     //s0,s1,s2,s3
-    mpz_set(x_1,X_z);
+    mpz_neg(x_1,X_z);
     mpz_mul(x_2,x_1,x_1);
     mpz_tdiv_qr(B,A,scalar,x_2);
     mpz_tdiv_qr(s[1],s[0],A,x_1);
     mpz_tdiv_qr(s[3],s[2],B,x_1);
-    
+
     //binary
     loop_length=0;
     for(i=0; i<4; i++){

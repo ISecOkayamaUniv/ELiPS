@@ -127,39 +127,6 @@ void bls12_fp12_pow_X(fp12_t *ANS,fp12_t *A){
 	}
 	fp12_set(ANS,&tmp);
 }
-#if defined(PARAM_TAXONOMY) || defined(PARAM_TAXONOMY_CHANGE_B)
-void bls12_fp12_pow_X_compress(fp12_t *ANS,fp12_t *A){
-    int i;
-    fp12_t tmp;
-    fp12_t tmp33,tmp50,tmp77;
-
-    fp12_init(&tmp);
-    fp12_set(&tmp,A);
-
-    for(i=0;i<77;i++){
-        fp12_sqr_compressed_lazy_montgomery(&tmp,&tmp);
-		if(i==32){
-            //fp12_sqr_recover_g1_lazy_montgomery(&tmp33,&tmp);
-            fp12_sqr_recover_g1_noninv(&tmp33,&tmp);
-
-		}
-		if(i==49){
-            //fp12_sqr_recover_g1_lazy_montgomery(&tmp50,&tmp);
-            fp12_sqr_recover_g1_noninv(&tmp50,&tmp);
-		}
-    }
-	fp12_sqr_recover_g1_noninv(&tmp77,&tmp);
-    fp12_sqr_recover_g1_montrick_montgomery_ham3(&tmp33,&tmp50,&tmp77);
-    fp12_sqr_recover_g0_lazy_montgomery(&tmp33,&tmp33);
-    fp12_sqr_recover_g0_lazy_montgomery(&tmp50,&tmp50);
-	fp12_sqr_recover_g0_lazy_montgomery(&tmp77,&tmp77);
-    fp12_frobenius_map_p6_montgomery(&tmp77,&tmp77);
-
-    fp12_mul_lazy_montgomery(&tmp,&tmp77,&tmp50);
-    fp12_mul_lazy_montgomery(&tmp,&tmp,&tmp33);
-    fp12_set(ANS,&tmp);
-}
-#endif
 void bls12_fp12_pow_X2(fp12_t *ANS,fp12_t *A){
     int i;
     fp12_t tmp,A_inv;
@@ -187,42 +154,6 @@ void bls12_fp12_pow_X2(fp12_t *ANS,fp12_t *A){
     }
     fp12_set(ANS,&tmp);
 }
-#if defined(PARAM_TAXONOMY) || defined(PARAM_TAXONOMY_CHANGE_B)
-void bls12_fp12_pow_X2_compress(fp12_t *ANS,fp12_t *A){
-    int i;
-    fp12_t tmp,A_inv;
-    fp12_t tmp32,tmp49,tmp76;
-
-    fp12_init(&tmp);
-    fp12_init(&A_inv);
-    fp12_frobenius_map_p6_montgomery(&A_inv,A);
-    fp12_set(&tmp,A);
-
-    for(i=0;i<76;i++){
-        fp12_sqr_compressed_lazy_montgomery(&tmp,&tmp);
-		if(i==31){
-            //fp12_sqr_recover_g1_lazy_montgomery(&tmp32,&tmp);
-            fp12_sqr_recover_g1_noninv(&tmp32,&tmp);
-        }
-		if(i==48){
-            //fp12_sqr_recover_g1_lazy_montgomery(&tmp49,&tmp);
-            fp12_sqr_recover_g1_noninv(&tmp49,&tmp);
-		}
-    }
-
-	//fp12_sqr_recover_g1_lazy_montgomery(&tmp76,&tmp);
-	fp12_sqr_recover_g1_noninv(&tmp76,&tmp);
-    fp12_sqr_recover_g1_montrick_montgomery_ham3(&tmp76,&tmp49,&tmp32);
-	fp12_sqr_recover_g0_lazy_montgomery(&tmp76,&tmp76);
-    fp12_sqr_recover_g0_lazy_montgomery(&tmp32,&tmp32);
-    fp12_sqr_recover_g0_lazy_montgomery(&tmp49,&tmp49);
-    fp12_frobenius_map_p6_montgomery(&tmp76,&tmp76);
-
-    fp12_mul_lazy_montgomery(&tmp,&tmp76,&tmp49);
-    fp12_mul_lazy_montgomery(&tmp,&tmp,&tmp32);
-    fp12_set(ANS,&tmp);
-}
-#endif
 void bls12_final_exp_optimal(fp12_t *ANS,fp12_t *A){
     fp12_t tmp,t0,t1,t2,t3,t4,t5, test;
     fp12_init(&tmp);
@@ -314,17 +245,17 @@ void bls12_pow_hardpart_compress_montgomery(fp12_t *ANS, fp12_t *A){
     // fp12_init(&At);
     //HARDPART
     fp12_sqr_GS_lazy_montgomery(&t0, A);
-    bls12_fp12_pow_X_compress(&t1, &t0);
+    bls12_fp12_pow_X_compress_montrick(&t1, &t0);
 
     //lamda3
-    bls12_fp12_pow_X2_compress(&t2,&t1);//t2:=t1^(u2);
+    bls12_fp12_pow_X2_compress_montrick(&t2,&t1);//t2:=t1^(u2);
     fp12_frobenius_map_p6_montgomery(&t3,A);//t3:=f^(-1);
     fp12_mul_lazy_montgomery(&t1,&t3,&t1);//t1:=t3*t1;
     fp12_frobenius_map_p6_montgomery(&t1,&t1);//t1:=t1^(-1);
     fp12_mul_lazy_montgomery(&t1,&t1,&t2);//t1:=t1*t2;
 
-    bls12_fp12_pow_X_compress(&t2,&t1);//t2:=t1^(u);
-    bls12_fp12_pow_X_compress(&t3,&t2);//t3:=t2^(u);
+    bls12_fp12_pow_X_compress_montrick(&t2,&t1);//t2:=t1^(u);
+    bls12_fp12_pow_X_compress_montrick(&t3,&t2);//t3:=t2^(u);
 
     //(lamda3)^(-1)
     fp12_frobenius_map_p6_montgomery(&t1,&t1);//t1:=t1^(-1);
@@ -338,7 +269,7 @@ void bls12_pow_hardpart_compress_montgomery(fp12_t *ANS, fp12_t *A){
 
 
     fp12_mul_lazy_montgomery(&t1,&t1,&t2);//t1:=t1*t2;
-    bls12_fp12_pow_X_compress(&t2,&t3);//t2:=t3^(u);
+    bls12_fp12_pow_X_compress_montrick(&t2,&t3);//t2:=t3^(u);
     fp12_mul_lazy_montgomery(&t2,&t2,&t0);//t2:=t2*t0;
     fp12_mul_lazy_montgomery(&t2,&t2,A);//t2:=t2*f;
     fp12_mul_lazy_montgomery(&t1,&t1,&t2);//t1:=t1*t2;

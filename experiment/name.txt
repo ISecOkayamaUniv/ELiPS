@@ -246,8 +246,6 @@ fr.h,g1g2_to_g3_hardpart
 fr.h,g1g2_to_g3_final_exp
 fr.h,g1g2_to_g3_pairing
 fr.h,debug_pairing
-fr.h,g1g2_to_g3_hardpart_GS
-fr.h,g1g2_to_g3_final_exp_GS
 fp4cv.h,fp4cv_init
 fp4cv.h,fp4cv_printf
 fp4cv.h,fp4cv_println
@@ -403,11 +401,9 @@ bls_twist.h,efpm2_to_efp2cv_for_g2
 bls_twist.h,efp2cv_to_efpm2_for_g2
 bls_twist.h,efpm2_to_efp2cv_for_g1
 bls12_final_exp.h,bls12_fp12_pow_X_compress_montrick
-bls12_final_exp.h,bls12_fp12_pow_X2_compress_montrick
 bls12_final_exp.h,bls12_fp12_pow_X
 bls12_final_exp.h,bls12_fp12_pow_X2
 bls12_final_exp.h,bls12_fp12_pow_X_compress
-bls12_final_exp.h,bls12_fp12_pow_X2_compress
 bls12_final_exp.h,bls12_final_exp_optimal
 bls12_final_exp.h,bls12_final_exp_optimal_compress
 fp12cv.h,fp12cv_init

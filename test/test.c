@@ -22,7 +22,7 @@ int main(void){
     //bls12_test_g1_scm(1);
 
     //bls12_test_rational_point();
-    bls12_test_opt_ate_pairing(10000);
+    bls12_test_opt_ate_pairing(1000);
     //bls12_test_symmmetric_opt_ate_pairing(10);
     //bls12_test_g1_scm(100);
     //bls12_test_g2_scm(1);

@@ -28,6 +28,7 @@ void bls12_generate_X(){
             mpz_sub(X_z,X_z,buf);
         }
     }
+    mpz_abs(X_abs_z,X_z);
 }
 
 int bls12_generate_prime(){

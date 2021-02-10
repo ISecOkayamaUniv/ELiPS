@@ -251,8 +251,8 @@ enum f_state{
 	f_p1,f_p2,f_p3,f_p4,f_p5,f_p6,f_p7,f_p8,f_p9,f_p10,f_p11,f_p12
 };
 extern gmp_randstate_t state;
-extern mpz_t X_z,prime_z,order_z,trace_z;
-extern mp_limb_t X[FXLIMB],X2[FXLIMB2],prime[FPLIMB],order[FRLIMB],trace[FPLIMB];
+extern mpz_t X_z,prime_z,order_z,trace_z,X_abs_z;
+extern mp_limb_t X_abs[FXLIMB],X2[FXLIMB2],prime[FPLIMB],order[FRLIMB],trace[FPLIMB];
 extern mp_limb_t prime_carry[FPLIMB];
 extern mp_limb_t prime2[FPLIMB2];
 extern fp2_t Alpha_1,Alpha_1_inv;

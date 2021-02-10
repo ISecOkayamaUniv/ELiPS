@@ -16,12 +16,11 @@
 
 extern void bls12_fp12_pow_X_compress_montrick(fp12_t *ANS,fp12_t *A);
 extern void bls12_fp12_pow_X2_compress_montrick(fp12_t *ANS,fp12_t *A);
+extern void bls12_pow_hardpart_compress_montgomery(fp12_t *ANS, fp12_t *A);
 
 extern void bls12_fp12_pow_X(fp12_t *ANS,fp12_t *A);
 extern void bls12_fp12_pow_X2(fp12_t *ANS,fp12_t *A);
 
-extern void bls12_fp12_pow_X_compress(fp12_t *ANS,fp12_t *A);
-extern void bls12_fp12_pow_X2_compress(fp12_t *ANS,fp12_t *A);
 
 /**
  * @brief Calculation final exponentiation on prime field for Optimal-ate pairing
