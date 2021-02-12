@@ -44,10 +44,10 @@ void ff_ltt_precompute(efp2_projective_t *T,int i){
     fp2_mod_montgomery_double(&T->y, &u0);
 
     fp2_mul_lazy_montgomery(&T->z, &tmp1_fp2, &miller_table[1][i]);
-#ifdef EP_TYPE2
+#ifdef TWIST_PHI_INV
     fp2_sub_nonmod_single(&miller_table[2][i], &tmp2_fp2, &tmp1_fp2);
 #endif
-#ifdef EP_TYPE1
+#ifdef TWIST_PHI
     fp2_sub_nonmod_single(&miller_table[2][i], &tmp2_fp2, &tmp1_fp2);
 #endif
 }
@@ -80,10 +80,10 @@ void f_ltq_precompute(efp2_projective_t *T,efp2_projective_t *Q,int i){
     fp2_mul_lazy_montgomery(&T->z, &T->z, &tmp3_fp2);
 
     fp2_mul_lazy_montgomery(&tmp3_fp2, &Q->y, &miller_table[2][i]);
-    #ifdef EP_TYPE2
+    #ifdef TWIST_PHI_INV
     fp2_sub_nonmod_single(&miller_table[1][i], &tmp5_fp2, &tmp3_fp2);
     #endif
-    #ifdef EP_TYPE1
+    #ifdef TWIST_PHI
     fp2_sub_nonmod_single(&miller_table[1][i], &tmp5_fp2, &tmp3_fp2);
     #endif
 }
@@ -97,14 +97,14 @@ void ff_ltt_using_precompute(fp12_t *f,efp_t *P,int i){
 
     fp12_sqr_lazy_montgomery(&tmp1_fp12, f);
 
-#ifdef EP_TYPE2
+#ifdef TWIST_PHI_INV
     fp2_set(&tmp2_fp12.x1.x1, &miller_table[2][i]);
     fp_mulmod_montgomery(&tmp2_fp12.x1.x0.x0, &miller_table[0][i].x0, &P->x);
     fp_mulmod_montgomery(&tmp2_fp12.x1.x0.x1, &miller_table[0][i].x1, &P->x);
     fp_mulmod_montgomery(&tmp2_fp12.x0.x0.x0, &miller_table[1][i].x0, &P->y);
     fp_mulmod_montgomery(&tmp2_fp12.x0.x0.x1, &miller_table[1][i].x1, &P->y);
 #endif
-#ifdef EP_TYPE1
+#ifdef TWIST_PHI
     fp2_set(&tmp2_fp12.x0.x0, &miller_table[2][i]);
     fp_mulmod_montgomery(&tmp2_fp12.x0.x1.x0, &miller_table[0][i].x0, &P->x);
     fp_mulmod_montgomery(&tmp2_fp12.x0.x1.x1, &miller_table[0][i].x1, &P->x);
@@ -116,20 +116,20 @@ void ff_ltt_using_precompute(fp12_t *f,efp_t *P,int i){
 void f_ltq_using_precompute(fp12_t *f,efp_t *P,int i){
     static fp2_t tmp1_fp2,tmp2_fp2,tmp3_fp2,tmp4_fp2,tmp5_fp2;
     static fp12_t tmp1_fp12;
-    #ifdef EP_TYPE2
+    #ifdef TWIST_PHI_INV
     fp_mulmod_montgomery(&tmp1_fp12.x1.x0.x0, &miller_table[0][i].x0, &P->x);
     fp_mulmod_montgomery(&tmp1_fp12.x1.x0.x1, &miller_table[0][i].x1, &P->x);
     #endif
-    #ifdef EP_TYPE1
+    #ifdef TWIST_PHI
     fp_mulmod_montgomery(&tmp1_fp12.x0.x1.x0, &miller_table[0][i].x0, &P->x);
     fp_mulmod_montgomery(&tmp1_fp12.x0.x1.x1, &miller_table[0][i].x1, &P->x);
     #endif
-    #ifdef EP_TYPE2
+    #ifdef TWIST_PHI_INV
     fp2_set(&tmp1_fp12.x1.x1, &miller_table[1][i]);
     fp_mulmod_montgomery(&tmp1_fp12.x0.x0.x0, &miller_table[2][i].x0, &P->y);
     fp_mulmod_montgomery(&tmp1_fp12.x0.x0.x1, &miller_table[2][i].x1, &P->y);
     #endif
-    #ifdef EP_TYPE1
+    #ifdef TWIST_PHI
     fp2_set(&tmp1_fp12.x0.x0, &miller_table[1][i]);
     fp_mulmod_montgomery(&tmp1_fp12.x1.x1.x0, &miller_table[2][i].x0, &P->y);
     fp_mulmod_montgomery(&tmp1_fp12.x1.x1.x1, &miller_table[2][i].x1, &P->y);
@@ -400,7 +400,7 @@ int bench_pairing(int pairing){
 //         printf("ok!");
 //     }
 // }
-void billlinear_test_precompute(){
+void billinear_test_precompute(){
     fr_t a,b,c;
     g1_t P,aP;
     g2_t Q,bQ;
@@ -429,6 +429,6 @@ void billlinear_test_precompute(){
 //     fr_order_init();
 //     bench_pairing(100000);
 //     //miller_test();
-//     //billlinear_test_precompute();
+//     //billinear_test_precompute();
 //     return 0;
 // }

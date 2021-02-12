@@ -764,7 +764,7 @@ void efp2_scm(efp2_t *ANS,efp2_t *P,mpz_t scalar){
 
 //skew_frobenius_map
 void efp2_skew_frobenius_map_p1(efp2_t *ANS,efp2_t *A){
-#ifdef EP_TYPE2
+#ifdef TWIST_PHI_INV
     //x(w2w3)
     fp_set(&ANS->x.x0,&A->x.x0);
     fp_set_neg(&ANS->x.x1,&A->x.x1);
@@ -774,7 +774,7 @@ void efp2_skew_frobenius_map_p1(efp2_t *ANS,efp2_t *A){
     fp_set_neg(&ANS->y.x1,&A->y.x1);
     fp2_mul(&ANS->y,&ANS->y,&frobenius_constant[f_p1][4]);
 #endif
-#ifdef EP_TYPE1
+#ifdef TWIST_PHI
     //x(w4w5)
     fp2_inv_basis(&ANS->x,&A->x);
     fp_set(&ANS->x.x0,&ANS->x.x0);
@@ -792,13 +792,13 @@ void efp2_skew_frobenius_map_p1(efp2_t *ANS,efp2_t *A){
 }
 
 void efp2_skew_frobenius_map_p2(efp2_t *ANS,efp2_t *A){
-#ifdef EP_TYPE2
+#ifdef TWIST_PHI_INV
     //x
     fp2_mul(&ANS->x,&A->x,&frobenius_constant[f_p2][1]);
     //y
     fp2_mul(&ANS->y,&A->y,&frobenius_constant[f_p2][4]);
 #endif
-#ifdef EP_TYPE1
+#ifdef TWIST_PHI
     //x(w4w5)
     fp2_inv_basis(&ANS->x,&A->x);
     fp2_mul(&ANS->x,&ANS->x,&frobenius_constant[f_p2][2]);
@@ -813,7 +813,7 @@ void efp2_skew_frobenius_map_p2(efp2_t *ANS,efp2_t *A){
 }
 
 void efp2_skew_frobenius_map_p3(efp2_t *ANS,efp2_t *A){
-#ifdef EP_TYPE2
+#ifdef TWIST_PHI_INV
     //x
     fp_set(&ANS->x.x0,&A->x.x0);
     fp_set_neg(&ANS->x.x1,&A->x.x1);
@@ -823,7 +823,7 @@ void efp2_skew_frobenius_map_p3(efp2_t *ANS,efp2_t *A){
     fp_set_neg(&ANS->y.x1,&A->y.x1);
     fp2_mul(&ANS->y,&ANS->y,&frobenius_constant[f_p3][4]);
 #endif
-#ifdef EP_TYPE1
+#ifdef TWIST_PHI
     //x(w4w5)
     fp2_inv_basis(&ANS->x,&A->x);
     fp_set(&ANS->x.x0,&ANS->x.x0);
@@ -841,7 +841,7 @@ void efp2_skew_frobenius_map_p3(efp2_t *ANS,efp2_t *A){
 }
 
 void efp2_jacobian_skew_frobenius_map_p1(efp2_jacobian_t *ANS,efp2_jacobian_t *A){
-#ifdef EP_TYPE2
+#ifdef TWIST_PHI_INV
     //x
     fp_set(&ANS->x.x0,&A->x.x0);
     fp_set_neg(&ANS->x.x1,&A->x.x1);
@@ -853,7 +853,7 @@ void efp2_jacobian_skew_frobenius_map_p1(efp2_jacobian_t *ANS,efp2_jacobian_t *A
     //z
     fp2_set(&ANS->z,&A->z);
 #endif
-#ifdef EP_TYPE1
+#ifdef TWIST_PHI
     //x(w4w5)
     fp2_inv_basis(&ANS->x,&A->x);
     fp_set(&ANS->x.x0,&ANS->x.x0);
@@ -873,7 +873,7 @@ void efp2_jacobian_skew_frobenius_map_p1(efp2_jacobian_t *ANS,efp2_jacobian_t *A
 }
 
 void efp2_jacobian_skew_frobenius_map_p2(efp2_jacobian_t *ANS,efp2_jacobian_t *A){
-#ifdef EP_TYPE2
+#ifdef TWIST_PHI_INV
     //x
     fp2_mul(&ANS->x,&A->x,&frobenius_constant[f_p2][1]);
     //y
@@ -881,7 +881,7 @@ void efp2_jacobian_skew_frobenius_map_p2(efp2_jacobian_t *ANS,efp2_jacobian_t *A
     //z
     fp2_set(&ANS->z,&A->z);
 #endif
-#ifdef EP_TYPE1
+#ifdef TWIST_PHI
     //x(w4w5)
     fp2_inv_basis(&ANS->x,&A->x);
     fp_set(&ANS->x.x0,&ANS->x.x0);
@@ -913,7 +913,7 @@ void efp2_jacobian_skew_frobenius_map_p3(efp2_jacobian_t *ANS,efp2_jacobian_t *A
     fp2_set(&ANS->z,&A->z);
 }
 void efp2_skew_frobenius_map_p1_montgomery(efp2_t *ANS,efp2_t *A){
-#ifdef EP_TYPE2
+#ifdef TWIST_PHI_INV
     //x(w2w3)
     fp_set(&ANS->x.x0,&A->x.x0);
     fp_set_neg(&ANS->x.x1,&A->x.x1);
@@ -923,7 +923,7 @@ void efp2_skew_frobenius_map_p1_montgomery(efp2_t *ANS,efp2_t *A){
     fp_set_neg(&ANS->y.x1,&A->y.x1);
     fp2_mul_lazy_montgomery(&ANS->y,&ANS->y,&frobenius_constant_montgomery[f_p1][4]);
 #endif
-#ifdef EP_TYPE1
+#ifdef TWIST_PHI
     //x(w4w5)
     fp2_inv_basis(&ANS->x,&A->x);
     fp_set(&ANS->x.x0,&ANS->x.x0);
@@ -940,7 +940,7 @@ void efp2_skew_frobenius_map_p1_montgomery(efp2_t *ANS,efp2_t *A){
 #endif
 }
 void efp2_jacobian_skew_frobenius_map_p1_montgomery(efp2_jacobian_t *ANS,efp2_jacobian_t *A){
-#ifdef EP_TYPE2
+#ifdef TWIST_PHI_INV
     //x
     fp_set(&ANS->x.x0,&A->x.x0);
     fp_set_neg(&ANS->x.x1,&A->x.x1);
@@ -952,7 +952,7 @@ void efp2_jacobian_skew_frobenius_map_p1_montgomery(efp2_jacobian_t *ANS,efp2_ja
     //z
     fp2_set(&ANS->z,&A->z);
 #endif
-#ifdef EP_TYPE1
+#ifdef TWIST_PHI
     //x(w4w5)
     fp2_inv_basis(&ANS->x,&A->x);
     fp_set(&ANS->x.x0,&ANS->x.x0);
@@ -972,7 +972,7 @@ void efp2_jacobian_skew_frobenius_map_p1_montgomery(efp2_jacobian_t *ANS,efp2_ja
 }
 
 void efp2_jacobian_skew_frobenius_map_p2_montgomery(efp2_jacobian_t *ANS,efp2_jacobian_t *A){
-#ifdef EP_TYPE2
+#ifdef TWIST_PHI_INV
     //x
     fp2_mul_lazy_montgomery(&ANS->x,&A->x,&frobenius_constant_montgomery[f_p2][1]);
     //y
@@ -980,7 +980,7 @@ void efp2_jacobian_skew_frobenius_map_p2_montgomery(efp2_jacobian_t *ANS,efp2_ja
     //z
     fp2_set(&ANS->z,&A->z);
 #endif
-#ifdef EP_TYPE1
+#ifdef TWIST_PHI
     //x(w4w5)
     fp2_inv_basis(&ANS->x,&A->x);
     fp2_mul_lazy_montgomery(&ANS->x,&ANS->x,&frobenius_constant_montgomery[f_p2][2]);
@@ -996,7 +996,7 @@ void efp2_jacobian_skew_frobenius_map_p2_montgomery(efp2_jacobian_t *ANS,efp2_ja
 }
 
 void efp2_jacobian_skew_frobenius_map_p3_montgomery(efp2_jacobian_t *ANS,efp2_jacobian_t *A){
-#ifdef EP_TYPE2
+#ifdef TWIST_PHI_INV
     //x
     fp_set(&ANS->x.x0,&A->x.x0);
     fp_set_neg(&ANS->x.x1,&A->x.x1);
@@ -1008,7 +1008,7 @@ void efp2_jacobian_skew_frobenius_map_p3_montgomery(efp2_jacobian_t *ANS,efp2_ja
     //z
     fp2_set(&ANS->z,&A->z);
 #endif
-#ifdef EP_TYPE1
+#ifdef TWIST_PHI
     //x(w4w5)
     fp2_inv_basis(&ANS->x,&A->x);
     fp_set(&ANS->x.x0,&ANS->x.x0);

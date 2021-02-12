@@ -18,6 +18,9 @@ void bls12_get_epsilon(){
 
     mpn_copyd(epsilon1,result1.x0,FPLIMB);
     mpn_copyd(epsilon2,result2.x0,FPLIMB);
+
+    mpn_to_montgomery(epsilon1_montgomery.x0,epsilon1);
+    mpn_to_montgomery(epsilon2_montgomery.x0,epsilon1);
 }
 
 void bls12_set_basis(){

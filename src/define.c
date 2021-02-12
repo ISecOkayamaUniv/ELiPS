@@ -22,6 +22,7 @@ mp_limb_t prime_carry[FPLIMB];
 mp_limb_t prime2[FPLIMB2];
 fp2_t Alpha_1,Alpha_1_inv;
 mp_limb_t epsilon1[FPLIMB],epsilon2[FPLIMB];
+fp_t epsilon1_montgomery,epsilon2_montgomery;
 mpz_t efp_total,efp12_total;
 fp2_t frobenius_constant[12][6];
 fp2_t frobenius_constant_montgomery[12][6];

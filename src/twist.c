@@ -1,6 +1,6 @@
 #include <ELiPS/twist.h>
 //twist
-#ifdef EP_TYPE2
+#ifdef TWIST_PHI_INV
 void efp12_to_efp2(efp2_t *ANS,efp12_t *A){
     fp2_set(&ANS->x,&A->x.x0.x1);
     fp2_set(&ANS->y,&A->y.x1.x1);
@@ -15,7 +15,7 @@ void efp2_to_efp12(efp12_t *ANS,efp2_t *A){
     ANS->infinity=A->infinity;
 }
 #endif
-#ifdef EP_TYPE1
+#ifdef TWIST_PHI
 void efp12_to_efp2(efp2_t *ANS,efp12_t *A){
     fp2_mul_basis(&ANS->x,&A->x.x0.x2);
     fp2_mul_basis(&ANS->y,&A->y.x1.x1);

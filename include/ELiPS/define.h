@@ -28,7 +28,7 @@
 //taxonomy cahnge b
 #ifdef PARAM_TAXONOMY_CHANGE_B
 #define X_MINUS
-#define EP_TYPE1
+#define TWIST_PHI
 #define CURVE_B_8_3_TYPE1
 #define exp_type_2
 #define PRIME_BIT 461
@@ -257,6 +257,7 @@ extern mp_limb_t prime_carry[FPLIMB];
 extern mp_limb_t prime2[FPLIMB2];
 extern fp2_t Alpha_1,Alpha_1_inv;
 extern mp_limb_t epsilon1[FPLIMB],epsilon2[FPLIMB];
+extern fp_t epsilon1_montgomery,epsilon2_montgomery;
 extern mpz_t efp_total,efp12_total;
 extern fp2_t frobenius_constant[12][6];
 extern fp2_t frobenius_constant_montgomery[12][6];

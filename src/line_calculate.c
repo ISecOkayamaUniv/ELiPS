@@ -356,7 +356,7 @@ void fp12_6_sparse_mul_montgomery(fp12_t *C, fp12_t *A, fp12_t *B)
     fp6_t tmp0_fp6, tmp1_fp6, tmp2_fp6;
     fp2_t v0, v1, v2, v3, v4;
     fp6_t tmp_C;
-#ifdef EP_TYPE2
+#ifdef TWIST_PHI_INV
     fp2_mul_lazy_montgomery(&tmp0_fp6.x0, &A->x0.x0, &B->x0.x0);
     fp2_mul_lazy_montgomery(&tmp0_fp6.x1, &A->x0.x1, &B->x0.x0);
     fp2_mul_lazy_montgomery(&tmp0_fp6.x2, &A->x0.x2, &B->x0.x0);
@@ -365,7 +365,7 @@ void fp12_6_sparse_mul_montgomery(fp12_t *C, fp12_t *A, fp12_t *B)
 
     fp6_6_sparse_mul_montgomery(&tmp1_fp6, &A->x1, &B->x1);
 #endif
-#ifdef EP_TYPE1
+#ifdef TWIST_PHI
     fp6_6_sparse_mul_montgomery(&tmp0_fp6, &A->x0, &B->x0);
     fp2_mul_lazy_montgomery(&tmp2_fp6.x0, &A->x1.x2, &B->x1.x1);
     fp2_mul_basis_nonmod_single(&tmp1_fp6.x0, &tmp2_fp6.x0);
@@ -412,7 +412,7 @@ void fp6_6_sparse_mul_lazy_montgomery(fpd6_t *C, fp6_t *A, fp6_t *B){
 //     fp6_t tmp0_fp6;
 //     fp6_t tmp0_fpd6,tmp1_fpd6,tmp2_fpd6;
 //     fpd6_t tmp_C0,tmp_C1;
-// #ifdef EP_TYPE2
+// #ifdef TWIST_PHI_INV
 //     /* t0 = a_0 * b_0 */
 //     fp2_mul_lazy_montgomery(&tmp0_fpd6.x0, &A->x0.x0, &B->x0.x0);
 //     fp2_mul_lazy_montgomery(&tmp0_fpd6.x1, &A->x0.x1, &B->x0.x0);
@@ -424,7 +424,7 @@ void fp6_6_sparse_mul_lazy_montgomery(fpd6_t *C, fp6_t *A, fp6_t *B){
 //     fp6_6_sparse_mul_lazy_montgomery(&tmp_C0, &A->x1, &B->x1);
 //     fp6_mod_montgomery_double(&tmp1_fpd6,&tmp_C0);
 // #endif
-// #ifdef EP_TYPE1
+// #ifdef TWIST_PHI
 //     // fp6_6_sparse_mul_lazy_montgomery(&tmp_C0, &A->x0, &B->x0);
 //     // fp6_mod_montgomery_double(&tmp1_fpd6,&tmp_C0);
 //     // fp2_mul_lazy_montgomery(&tmp0_fpd6.x1, &A->x1.x2, &B->x1.x1);
@@ -463,7 +463,7 @@ void fp6_6_sparse_mul_lazy_montgomery(fpd6_t *C, fp6_t *A, fp6_t *B){
 void fp12_6_sparse_mul_lazy_montgomery(fp12_t *C, fp12_t *A, fp12_t *B){
     fp6_t tmp0_fpd6,tmp1_fpd6,tmp2_fpd6;
     fpd6_t tmp_C0,tmp_C1;
-#ifdef EP_TYPE2
+#ifdef TWIST_PHI_INV
     /* t0 = a_0 * b_0 */
     fp2_mul_lazy_montgomery(&tmp0_fpd6.x0, &A->x0.x0, &B->x0.x0);
     fp2_mul_lazy_montgomery(&tmp0_fpd6.x1, &A->x0.x1, &B->x0.x0);
@@ -475,7 +475,7 @@ void fp12_6_sparse_mul_lazy_montgomery(fp12_t *C, fp12_t *A, fp12_t *B){
     fp6_6_sparse_mul_lazy_montgomery(&tmp_C0, &A->x1, &B->x1);
     fp6_mod_montgomery_double(&tmp1_fpd6,&tmp_C0);
 #endif
-#ifdef EP_TYPE1
+#ifdef TWIST_PHI
     /* t0 = a_0 * b_0. */
     fp6_6_sparse_mul_lazy_montgomery(&tmp_C0, &A->x0, &B->x0);
     fp6_mod_montgomery_double(&tmp0_fpd6,&tmp_C0);
@@ -720,14 +720,6 @@ void ff_ltt_projective_lazy_montgomery(fp12_t *f,efp2_projective_t *T,efp_t *P){
     fp2_sqr_lazy_montgomery(&tmp1_fp2, &T->y);
     fp2_add_nonmod_single(&tmp5_fp2, &tmp0_fp2, &tmp1_fp2);
 
-    // fp2_add_nonmod_single(&tmp4_fp2,&tmp0_fp2,&tmp0_fp2);
-    // fp2_add_nonmod_single(&tmp4_fp2,&tmp4_fp2,&tmp0_fp2);
-    // fp2_add_nonmod_single(&tmp4_fp2,&tmp4_fp2,&tmp4_fp2);
-    // fp2_add_nonmod_single(&tmp4_fp2,&tmp4_fp2,&tmp4_fp2);
-    // fp2_add_nonmod_single(&tmp0_fp2,&tmp4_fp2,&tmp4_fp2);
-
-    // fp_add_nonmod_single(&tmp2_fp2.x0,&tmp0_fp2.x0,&tmp0_fp2.x1);
-    // fp_sub_nonmod_single(&tmp2_fp2.x1,&tmp0_fp2.x1,&tmp0_fp2.x0);
     fp2_mul_3_twist_b(&tmp2_fp2,&tmp0_fp2);
 
     fp2_sqr_lazy_montgomery(&tmp0_fp2, &T->x);
@@ -736,7 +728,6 @@ void ff_ltt_projective_lazy_montgomery(fp12_t *f,efp2_projective_t *T,efp_t *P){
     fp_r1shift(&tmp4_fp2.x0, &tmp4_fp2.x0);
     fp_r1shift(&tmp4_fp2.x1, &tmp4_fp2.x1);
     fp2_add_nonmod_single(&tmp3_fp2, &tmp2_fp2, &tmp2_fp2);
-    //fp2_lshift_ui_nonmod_single(&tmp3_fp2, &tmp2_fp2, 1);
     fp2_add_nonmod_single(&tmp3_fp2, &tmp3_fp2, &tmp2_fp2);
     fp2_sub_nonmod_single(&T->x, &tmp1_fp2, &tmp3_fp2);
     fp2_mul_lazy_montgomery(&T->x, &T->x, &tmp4_fp2);
@@ -748,7 +739,6 @@ void ff_ltt_projective_lazy_montgomery(fp12_t *f,efp2_projective_t *T,efp_t *P){
     //Lazy
     fp2_sqr_nonmod_montgomery(&u0, &tmp2_fp2);
     fp2_add_nonmod_double(&u1, &u0, &u0);
-    //fp2_lshift_ui_nonmod_double(&u1, &u0, 1);
     fp2_add_nonmod_double(&u1, &u1, &u0);
     fp2_sqr_nonmod_montgomery(&u0, &tmp3_fp2);
     fp2_sub_nonmod_double(&u0, &u0, &u1);
@@ -760,7 +750,7 @@ void ff_ltt_projective_lazy_montgomery(fp12_t *f,efp2_projective_t *T,efp_t *P){
     fp2_mod_montgomery_double(&T->y, &u0);
 
     fp2_mul_lazy_montgomery(&T->z, &tmp1_fp2, &tmp3_fp2);
-#ifdef EP_TYPE2
+#ifdef TWIST_PHI_INV
     fp2_sub_nonmod_single(&tmp2_fp12.x1.x1, &tmp2_fp2, &tmp1_fp2);
 
     fp_mulmod_montgomery(&tmp2_fp12.x1.x0.x0, &tmp0_fp2.x0, &P->x);
@@ -769,7 +759,7 @@ void ff_ltt_projective_lazy_montgomery(fp12_t *f,efp2_projective_t *T,efp_t *P){
     fp_mulmod_montgomery(&tmp2_fp12.x0.x0.x0, &tmp3_fp2.x0, &P->y);
     fp_mulmod_montgomery(&tmp2_fp12.x0.x0.x1, &tmp3_fp2.x1, &P->y);
 #endif
-#ifdef EP_TYPE1
+#ifdef TWIST_PHI
     fp2_sub_nonmod_single(&tmp2_fp12.x0.x0, &tmp2_fp2, &tmp1_fp2);
 
     fp_mulmod_montgomery(&tmp2_fp12.x0.x1.x0, &tmp0_fp2.x0, &P->x);
@@ -826,16 +816,14 @@ void ff_ltt_lazy_montgomery(fp12_t *f,efp2_t *T,efp_t *P,fp_t *L){
 	//TODO:1->RmodP?
 	//fp_set_ui(&tmp2_fp12.x0.x0.x0,1);
 	fp_set_mpn(&tmp2_fp12.x0.x0.x0,RmodP);
-#ifdef EP_TYPE2
+#ifdef TWIST_PHI_INV
 	fp2_set_neg(&tmp2_fp12.x1.x0,&tmp3_fp2);
 	fp2_mul_mpn_montgomery(&tmp2_fp12.x1.x1,&tmp5_fp2,L->x0);
-
 	Pseudo_8_sparse_mul_lazy_montgomery(f,&tmp1_fp12,&tmp2_fp12);
 #endif
-#ifdef EP_TYPE1
+#ifdef TWIST_PHI
 	fp2_set_neg(&tmp2_fp12.x1.x2,&tmp3_fp2);
 	fp2_mul_mpn_montgomery(&tmp2_fp12.x1.x1,&tmp5_fp2,L->x0);
-
 	//Pseudo_8_sparse_mul_lazy_montgomery(f,&tmp1_fp12,&tmp2_fp12);
     fp12_mul_lazy_montgomery(f,&tmp1_fp12,&tmp2_fp12);
 #endif
@@ -958,12 +946,12 @@ void f_ltq_lazy_montgomery(fp12_t *f,efp2_t *T,efp2_t *Q,efp_t *P,fp_t *L){
 	fp2_sub(&T->y,&tmp5_fp2,&T->y);
 	//set ltq
 	fp_set_mpn(&tmp1_fp12.x0.x0.x0,RmodP);
-#ifdef EP_TYPE2
+#ifdef TWIST_PHI_INV
 	fp2_set_neg(&tmp1_fp12.x1.x0,&tmp3_fp2);
 	fp2_mul_mpn_montgomery(&tmp1_fp12.x1.x1,&tmp5_fp2,L->x0);
 	Pseudo_8_sparse_mul_lazy_montgomery(f,f,&tmp1_fp12);
 #endif
-#ifdef EP_TYPE1
+#ifdef TWIST_PHI
 	fp2_set_neg(&tmp1_fp12.x1.x2,&tmp3_fp2);
 	fp2_mul_mpn_montgomery(&tmp1_fp12.x1.x1,&tmp5_fp2,L->x0);
 	fp12_mul_lazy_montgomery(f,f,&tmp1_fp12);
@@ -1027,12 +1015,12 @@ void f_ltq_projective_lazy_montgomery(fp12_t *f,efp2_projective_t *T,efp2_projec
     fp2_mul_lazy_montgomery(&tmp4_fp2, &tmp4_fp2, &T->z);
     fp2_add_nonmod_single(&tmp4_fp2, &tmp3_fp2, &tmp4_fp2);
 
-    #ifdef EP_TYPE2
+    #ifdef TWIST_PHI_INV
     fp_mulmod_montgomery(&tmp1_fp12.x1.x0.x0, &tmp2_fp2.x0, &P->x);
     fp_mulmod_montgomery(&tmp1_fp12.x1.x0.x1, &tmp2_fp2.x1, &P->x);
     //fp2_set_neg(&tmp1_fp12.x1.x0, &tmp1_fp12.x1.x0);
     #endif
-    #ifdef EP_TYPE1
+    #ifdef TWIST_PHI
     fp_mulmod_montgomery(&tmp1_fp12.x0.x1.x0, &tmp2_fp2.x0, &P->x);
     fp_mulmod_montgomery(&tmp1_fp12.x0.x1.x1, &tmp2_fp2.x1, &P->x);
     //fp2_set_neg(&tmp1_fp12.x0.x1, &tmp1_fp12.x1.x0);
@@ -1050,13 +1038,13 @@ void f_ltq_projective_lazy_montgomery(fp12_t *f,efp2_projective_t *T,efp2_projec
     fp2_mul_lazy_montgomery(&T->z, &T->z, &tmp3_fp2);
 
     fp2_mul_lazy_montgomery(&tmp3_fp2, &Q->y, &tmp1_fp2);
-    #ifdef EP_TYPE2
+    #ifdef TWIST_PHI_INV
     fp2_sub_nonmod_single(&tmp1_fp12.x1.x1, &tmp5_fp2, &tmp3_fp2);
 
     fp_mulmod_montgomery(&tmp1_fp12.x0.x0.x0, &tmp1_fp2.x0, &P->y);
     fp_mulmod_montgomery(&tmp1_fp12.x0.x0.x1, &tmp1_fp2.x1, &P->y);
     #endif
-    #ifdef EP_TYPE1
+    #ifdef TWIST_PHI
     fp2_sub_nonmod_single(&tmp1_fp12.x0.x0, &tmp5_fp2, &tmp3_fp2);
 
     fp_mulmod_montgomery(&tmp1_fp12.x1.x1.x0, &tmp1_fp2.x0, &P->y);

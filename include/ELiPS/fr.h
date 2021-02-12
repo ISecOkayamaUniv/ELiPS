@@ -51,6 +51,6 @@ extern void g1g2_to_g3_final_exp(g3_t *ANS,g3_t *A);
 extern void g1g2_to_g3_pairing(g3_t *ANS,g1_t *P,g2_t *Q);
 extern void g1g2_to_g3_pairing_affine(g3_t *ANS,g1_t *P,g2_t *Q);
 extern int debug_pairing(int pairing);
-extern void billlinear_test();
+extern void billinear_test();
 extern void g3_test(int exp);
 #endif
