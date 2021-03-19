@@ -2,7 +2,7 @@ This document describes how to make existing ELiPS library working in Linux envi
 This is expected that it will work any 64bit Unix distribution Ububtu.
 Autotools installation may vary for Linux.
 Please keep in mind that it is still in developing phase. 
-If found any bug related to installation, please infrom in `yuto_takahashi@s.okayama-u.ac.jp`
+If found any bug related to installation, please infrom in `daichi_hattori@s.okayama-u.ac.jp`
 
 
 1. Follow the instructions to install `GMP` library. Latest vesion is ok.
