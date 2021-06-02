@@ -264,6 +264,33 @@ void efp_ecd(efp_t *ANS,efp_t *P){
     }
 }
 
+void efp_ecd_lazy_montgomery(efp_t *ANS,efp_t *P){
+    static efp_t tmp1_efp;
+    static fp_t tmp1_fp,tmp2_fp,tmp3_fp;
+    if(fp_cmp_zero(&P->y)==0 || P->infinity==1){
+        ANS->infinity=1;
+    }else{
+        efp_set(&tmp1_efp,P);
+
+        fp_add(&tmp1_fp,&tmp1_efp.y,&tmp1_efp.y);
+        fp_inv_montgomery(&tmp1_fp,&tmp1_fp);
+
+        fp_sqrmod_montgomery(&tmp2_fp,&tmp1_efp.x);
+        fp_add(&tmp3_fp,&tmp2_fp,&tmp2_fp);
+        fp_add(&tmp2_fp,&tmp2_fp,&tmp3_fp);
+
+        fp_mulmod_montgomery(&tmp3_fp,&tmp1_fp,&tmp2_fp);
+        fp_sqrmod_montgomery(&tmp1_fp,&tmp3_fp);
+
+        fp_add(&tmp2_fp,&tmp1_efp.x,&tmp1_efp.x);
+        fp_sub(&ANS->x,&tmp1_fp,&tmp2_fp);
+
+        fp_sub(&tmp1_fp,&tmp1_efp.x,&ANS->x);
+        fp_mulmod_montgomery(&tmp2_fp,&tmp3_fp,&tmp1_fp);
+        fp_sub(&ANS->y,&tmp2_fp,&tmp1_efp.y);
+        ANS->infinity=0;
+    }
+}
 void efp_ecd_jacobian_lazy_montgomery(efp_jacobian_t *ANS,efp_jacobian_t *P){
     static fp_t s,m,T;
 
@@ -387,6 +414,43 @@ void efp_eca(efp_t *ANS,efp_t *P1,efp_t *P2){
 
         fp_sub(&tmp1_fp,&tmp1_efp.x,&ANS->x);
         fp_mul(&tmp2_fp,&tmp3_fp,&tmp1_fp);
+        fp_sub(&ANS->y,&tmp2_fp,&tmp1_efp.y);
+        ANS->infinity=0;
+    }
+}
+void efp_eca_lazy_montgomery(efp_t *ANS,efp_t *P1,efp_t *P2){
+    static efp_t tmp1_efp,tmp2_efp;
+    static fp_t tmp1_fp,tmp2_fp,tmp3_fp;
+    if(P1->infinity==1){
+        efp_set(ANS,P2);
+        return;
+    }else if(P2->infinity==1){
+        efp_set(ANS,P1);
+        return;
+    }else if(fp_cmp(&P1->x,&P2->x)==0){
+        if(fp_cmp(&P1->y,&P2->y)!=0){
+            ANS->infinity=1;
+            return;
+        }else{
+            efp_ecd_lazy_montgomery(ANS,P1);
+            return;
+        }
+    }else{
+        efp_set(&tmp1_efp,P1);
+        efp_set(&tmp2_efp,P2);
+
+        fp_sub(&tmp1_fp,&tmp2_efp.x,&tmp1_efp.x);
+        fp_inv_montgomery(&tmp1_fp,&tmp1_fp);
+        fp_sub(&tmp2_fp,&tmp2_efp.y,&tmp1_efp.y);
+        fp_mulmod_montgomery(&tmp3_fp,&tmp1_fp,&tmp2_fp);
+        fp_mulmod_montgomery(&tmp1_fp,&tmp3_fp,&tmp3_fp);
+
+
+        fp_sub(&tmp2_fp,&tmp1_fp,&tmp1_efp.x);
+        fp_sub(&ANS->x,&tmp2_fp,&tmp2_efp.x);
+
+        fp_sub(&tmp1_fp,&tmp1_efp.x,&ANS->x);
+        fp_mulmod_montgomery(&tmp2_fp,&tmp3_fp,&tmp1_fp);
         fp_sub(&ANS->y,&tmp2_fp,&tmp1_efp.y);
         ANS->infinity=0;
     }

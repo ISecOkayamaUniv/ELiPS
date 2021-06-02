@@ -170,6 +170,8 @@ extern void efp2_rational_point(efp2_t *P);
  * @param[in]P --a pointer in efp2_t.
  */
 extern void efp2_ecd(efp2_t *ANS,efp2_t *P);
+extern void efp2_ecd_lazy_montgomery(efp2_t *ANS,efp2_t *P);
+
 /**
  * @brief Doubling a efp2_jacobian_t type struct(jacobian + Lazy Reduction)
  *
@@ -186,6 +188,9 @@ extern void efp2_ecd_jacobian_lazy_montgomery(efp2_jacobian_t *ANS,efp2_jacobian
  * @param[in]P2 --a pointer in efp2_t.
  */
 extern void efp2_eca(efp2_t *ANS,efp2_t *P1,efp2_t *P2);
+
+extern void efp2_eca_lazy_montgomery(efp2_t *ANS,efp2_t *P1,efp2_t *P2);
+
 
 /**
  * @brief Addition a efp2_t type struct and a efp2_t type struct (jacobian + Lazy Reduction)

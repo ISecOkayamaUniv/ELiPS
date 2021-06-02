@@ -324,6 +324,14 @@ int g1_cmp_efp12(g1_t *A, efp12_t *B){
     return efp12_cmp(&A_efp12,B);
 }
 
+void g1_ecd(g1_t *ANS,g1_t *P){
+    efp_ecd_lazy_montgomery(ANS,P);    
+}
+
+void g1_eca(g1_t *ANS,g1_t *P,g1_t *Q){
+    efp_eca_lazy_montgomery(ANS,P,Q);
+}
+
 void g1_scm(g1_t *ANS,g1_t *P,fr_t *sca){
     if(P->infinity==1){
         g1_set(ANS,P);
@@ -577,8 +585,14 @@ int g2_cmp_efp12(g2_t *A, efp12_t *B){
     efp2_to_efp12(&A_efp12,&A_non_monty);
     return efp12_cmp(&A_efp12,B);
 }
-#if ARCBIT==64
+void g2_ecd(g2_t *ANS,g2_t *Q){
+    efp2_ecd_lazy_montgomery(ANS,Q);
+}
+void g2_eca(g2_t *ANS,g2_t *P,g2_t *Q){
+    efp2_eca_lazy_montgomery(ANS,P,Q);
+}
 void g2_scm(g2_t *ANS,g2_t *Q,fr_t *sca){
+#if ARCBIT==64
     if(Q->infinity==1){
         g2_set(ANS,Q);
     }else{
@@ -772,9 +786,7 @@ void g2_scm(g2_t *ANS,g2_t *Q,fr_t *sca){
         efp2_jacobian_to_affine_montgomery(ANS,&next_twistedJ_Q);
         ANS->infinity=next_twisted_Q.infinity;
     }
-}
 #else
-void g2_scm(g2_t *ANS,g2_t *Q,fr_t *sca){
     if(Q->infinity==1){
         g2_set(ANS,Q);
     }else{
@@ -975,9 +987,8 @@ void g2_scm(g2_t *ANS,g2_t *Q,fr_t *sca){
     }
     mpz_clear(scalar);
     }
-}
 #endif
-
+}
 
 
 void g2_set_random_with_basepoint(g2_t *ANS,g2_t *basepoint, gmp_randstate_t state){
@@ -1048,6 +1059,12 @@ void g3_init(g3_t *A){
 }
 int g3_cmp(g3_t *A,g3_t *B){
     return fp12_cmp(A,B);
+}
+void g3_mul(g3_t *ANS,g3_t *A,g3_t *B){
+    fp12_mul_lazy_montgomery(ANS,A,B);
+}
+void g3_sqr(g3_t *ANS,g3_t *A){
+    fp12_sqr_lazy_montgomery(ANS,A);
 }
 #if ARCBIT==64
 void g3_exp(g3_t *ANS,g3_t *A,fr_t *sca){

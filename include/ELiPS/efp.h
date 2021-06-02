@@ -184,6 +184,8 @@ extern void efp_set_random(efp_t *P);
  */
 extern void efp_ecd(efp_t *ANS,efp_t *P);
 
+extern void efp_ecd_lazy_montgomery(efp_t *ANS,efp_t *P);
+
 extern void efp_ecd_jacobian_lazy_montgomery(efp_jacobian_t *ANS,efp_jacobian_t *P);
 /**
  * @brief Addition a efp_t type struct and a efp_t type struct
@@ -193,6 +195,8 @@ extern void efp_ecd_jacobian_lazy_montgomery(efp_jacobian_t *ANS,efp_jacobian_t 
  * @param[in]P2 --a pointer in efp_t.
  */
 extern void efp_eca(efp_t *ANS,efp_t *P1,efp_t *P2);
+
+extern void efp_eca_lazy_montgomery(efp_t *ANS,efp_t *P1,efp_t *P2);
 
 
 extern void efp_eca_jacobian_lazy_montgomery(efp_jacobian_t *ANS,efp_jacobian_t *P1,efp_jacobian_t *P2);
