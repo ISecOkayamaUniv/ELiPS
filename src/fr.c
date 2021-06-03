@@ -1066,6 +1066,17 @@ void g3_mul(g3_t *ANS,g3_t *A,g3_t *B){
 void g3_sqr(g3_t *ANS,g3_t *A){
     fp12_sqr_lazy_montgomery(ANS,A);
 }
+void g3_printf(char *s,g3_t *A){
+    g3_t tmp;
+    fp12_mod_montgomery(&tmp,A);
+    fp12_printf(s,&tmp);
+}
+
+void g3_println(char *s,g3_t *A){
+    g3_t tmp;
+    fp12_mod_montgomery(&tmp,A);
+    fp12_println(s,&tmp);
+}
 #if ARCBIT==64
 void g3_exp(g3_t *ANS,g3_t *A,fr_t *sca){
     int i,length_s[4],loop_length;
