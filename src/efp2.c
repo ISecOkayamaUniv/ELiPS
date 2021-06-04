@@ -360,6 +360,33 @@ void efp2_ecd(efp2_t *ANS,efp2_t *P){
     fp2_mul(&tmp2_fp2,&tmp3_fp2,&tmp1_fp2);
     fp2_sub(&ANS->y,&tmp2_fp2,&tmp1_efp2.y);
 }
+
+void efp2_ecd_lazy_montgomery(efp2_t *ANS,efp2_t *P){
+    static efp2_t tmp1_efp2;
+    static fp2_t tmp1_fp2,tmp2_fp2,tmp3_fp2;
+    if(fp2_cmp_zero(&P->y)==0){
+        ANS->infinity=1;
+        return;
+    }
+
+    efp2_set(&tmp1_efp2,P);
+
+    fp2_add(&tmp1_fp2,&tmp1_efp2.y,&tmp1_efp2.y);
+
+    fp2_inv_lazy_montgomery(&tmp1_fp2,&tmp1_fp2);
+    fp2_sqr_lazy_montgomery(&tmp2_fp2,&tmp1_efp2.x);
+    fp2_add(&tmp3_fp2,&tmp2_fp2,&tmp2_fp2);
+    fp2_add(&tmp2_fp2,&tmp2_fp2,&tmp3_fp2);
+    fp2_mul_lazy_montgomery(&tmp3_fp2,&tmp1_fp2,&tmp2_fp2);
+
+    fp2_sqr_lazy_montgomery(&tmp1_fp2,&tmp3_fp2);
+    fp2_add(&tmp2_fp2,&tmp1_efp2.x,&tmp1_efp2.x);
+    fp2_sub(&ANS->x,&tmp1_fp2,&tmp2_fp2);
+
+    fp2_sub(&tmp1_fp2,&tmp1_efp2.x,&ANS->x);
+    fp2_mul_lazy_montgomery(&tmp2_fp2,&tmp3_fp2,&tmp1_fp2);
+    fp2_sub(&ANS->y,&tmp2_fp2,&tmp1_efp2.y);
+}
 /*
 void efp2_ecd_projective_lazy(efp2_projective_t *ANS,efp2_projective_t *P){
     static efp2_projective_t Pt;
@@ -505,6 +532,40 @@ void efp2_eca(efp2_t *ANS,efp2_t *P1,efp2_t *P2){
     fp2_sub(&ANS->x,&tmp2_fp2,&tmp2_efp2.x);
     fp2_sub(&tmp1_fp2,&tmp1_efp2.x,&ANS->x);
     fp2_mul(&tmp2_fp2,&tmp3_fp2,&tmp1_fp2);
+    fp2_sub(&ANS->y,&tmp2_fp2,&tmp1_efp2.y);
+}
+
+void efp2_eca_lazy_montgomery(efp2_t *ANS,efp2_t *P1,efp2_t *P2){
+    static efp2_t tmp1_efp2,tmp2_efp2;
+    static fp2_t tmp1_fp2,tmp2_fp2,tmp3_fp2;
+    if(P1->infinity==1){
+        efp2_set(ANS,P2);
+        return;
+    }else if(P2->infinity==1){
+        efp2_set(ANS,P1);
+        return;
+    }else if(fp2_cmp(&P1->x,&P2->x)==0){
+        if(fp2_cmp(&P1->y,&P2->y)!=0){
+            ANS->infinity=1;
+            return;
+        }else{
+            efp2_ecd_lazy_montgomery(ANS,P1);
+            return;
+        }
+    }
+
+    efp2_set(&tmp1_efp2,P1);
+    efp2_set(&tmp2_efp2,P2);
+
+    fp2_sub(&tmp1_fp2,&tmp2_efp2.x,&tmp1_efp2.x);
+    fp2_inv_lazy_montgomery(&tmp1_fp2,&tmp1_fp2);
+    fp2_sub(&tmp2_fp2,&tmp2_efp2.y,&tmp1_efp2.y);
+    fp2_mul_lazy_montgomery(&tmp3_fp2,&tmp1_fp2,&tmp2_fp2);
+    fp2_sqr_lazy_montgomery(&tmp1_fp2,&tmp3_fp2);
+    fp2_sub(&tmp2_fp2,&tmp1_fp2,&tmp1_efp2.x);
+    fp2_sub(&ANS->x,&tmp2_fp2,&tmp2_efp2.x);
+    fp2_sub(&tmp1_fp2,&tmp1_efp2.x,&ANS->x);
+    fp2_mul_lazy_montgomery(&tmp2_fp2,&tmp3_fp2,&tmp1_fp2);
     fp2_sub(&ANS->y,&tmp2_fp2,&tmp1_efp2.y);
 }
 /*

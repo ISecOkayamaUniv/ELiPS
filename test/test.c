@@ -71,41 +71,7 @@ int main(){
     if(g3_cmp(&F,&s1s2F)==0 && g3_cmp(&F,&s2s1F)==0) printf("\nbillinear success!\n");
     else printf("error!\n");
 
-    //example of g1;
-    fr_set_ui(&s1,3);
-    g1_set_random(&P,state);
-    //s1P=[3]P
-    g1_scm(&s1P,&P,&s1);
-    //s2P=[2]P+P
-    g1_ecd(&s2P,&P);
-    g1_eca(&s2P,&P,&s2P);
-    //cmp
-    if(g1_cmp(&s1P,&s2P)==0) printf("\nsuccess!\n");
-    else printf("error!\n");
-
-    //example of g2;
-    fr_set_ui(&s1,3);
-    g2_set_random(&Q,state);
-    //s1P=[3]P
-    g2_scm(&s1Q,&Q,&s1);
-    //s2P=[2]P+P
-    g2_ecd(&s2Q,&Q);
-    g2_eca(&s2Q,&Q,&s2Q);
-    //cmp
-    if(g2_cmp(&s1Q,&s2Q)==0) printf("\nsuccess!\n");
-    else printf("error!\n");
-
-    //example of g3;
-    fr_set_ui(&s1,3);
-    g1g2_to_g3_pairing(&F,&s1P,&s2Q);
-    //s1P=[3]P
-    g3_exp(&s1s2F,&F,&s1);
-    //s2P=[2]P+P
-    g3_sqr(&s2s1F,&F);
-    g3_mul(&s2s1F,&F,&s2s1F);
-    //cmp
-    if(g3_cmp(&s1s2F,&s2s1F)==0) printf("\nsuccess!\n");
-    else printf("error!\n");
+    
 
     
 
