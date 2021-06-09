@@ -964,6 +964,7 @@ int test_fp_montgomery(int fp_n){
     float mul_time=0,mul_nonmod_time=0;
     float inv_time=0,inv_lazy_time=0;
     float sqr_time=0,sqr_nonmod=0;
+    float mod_time=0;
     struct timeval tv_A,tv_B;
     mp_limb_t test1_mpn[FPLIMB2],test2_mpn[FPLIMB2];
     fp_t A_fp,B_fp,test1_fp,test2_fp;
@@ -990,6 +991,11 @@ n=1000;
 for(i=0;i<fp_n;i++){
     fp_set_random_montgomery(&A_fp,state);
     fp_set_random_montgomery(&B_fp,state);
+    fp_mul_nonmod(&A_fpd,&A_fp,&B_fp);
+    fp_set_random_montgomery(&A_fp,state);
+    fp_set_random_montgomery(&B_fp,state);
+    fp_mul_nonmod(&B_fpd,&A_fp,&B_fp);
+
 
     gettimeofday(&tv_A,NULL);
     for(j=0;j<n;j++)fp_add(&test1_fp,&A_fp,&B_fp);
@@ -1000,6 +1006,12 @@ for(i=0;i<fp_n;i++){
     for(j=0;j<n;j++)fp_add_nonmod_single(&test2_fp,&A_fp,&B_fp);
     gettimeofday(&tv_B,NULL);
     add_nonmod_single+=timedifference_msec(tv_A,tv_B)/n;
+
+    gettimeofday(&tv_A,NULL);
+    for(j=0;j<n;j++)fp_add_nonmod_double(&A_fpd,&A_fpd,&B_fpd);
+    gettimeofday(&tv_B,NULL);
+    add_nonmod_double+=timedifference_msec(tv_A,tv_B)/n;
+    
 
     fp_mod_montgomery(&test1_fp,&test1_fp);
     fp_mod_montgomery(&test2_fp,&test2_fp);
@@ -1014,55 +1026,59 @@ for(i=0;i<fp_n;i++){
 }
     printf("fp add.        : %.7f[ms]\n",add_time/fp_n);
     printf("fp add nonmod. : %.7f[ms]\n",add_nonmod_single/fp_n);
+    printf("fp add nonmod double. : %.7f[ms]\n",add_nonmod_double/fp_n);
 
-printf("------------------------------------------------------------------------------------\n");
-    printf("fp_lshift test\n");
-lshift_nonmod_time=0,l1shift_nonmod_time=0,lshift3_nonmod_time=0;
-n=1000;
-for(i=0;i<fp_n;i++){
-    fp_set_random_montgomery(&A_fp,state);
-    fp_set_random_montgomery(&B_fp,state);
 
-    gettimeofday(&tv_A,NULL);
-    for(j=0;j<n;j++)fp_lshift_ui_nonmod_single(&test1_fp,&A_fp,1);
-    //for(j=0;j<n;j++)fp_mul_ui_nonmod_single(&test1_fp,&A_fp,2);
-    gettimeofday(&tv_B,NULL);
-    lshift_nonmod_time+=timedifference_msec(tv_A,tv_B)/n;
+// printf("------------------------------------------------------------------------------------\n");
+//     printf("fp_lshift test\n");
+// lshift_nonmod_time=0,l1shift_nonmod_time=0,lshift3_nonmod_time=0;
+// n=1000;
+// for(i=0;i<fp_n;i++){
+//     fp_set_random_montgomery(&A_fp,state);
+//     fp_set_random_montgomery(&B_fp,state);
 
-    gettimeofday(&tv_A,NULL);
-    for(j=0;j<n;j++)fp_lshift_ui_nonmod_single(&test2_fp,&A_fp,2);
-    gettimeofday(&tv_B,NULL);
-    l1shift_nonmod_time+=timedifference_msec(tv_A,tv_B)/n;
+    
 
-    gettimeofday(&tv_A,NULL);
-    for(j=0;j<n;j++)fp_lshift_ui_nonmod_single(&test2_fp,&A_fp,3);
-    gettimeofday(&tv_B,NULL);
-    lshift3_nonmod_time+=timedifference_msec(tv_A,tv_B)/n;
+//     gettimeofday(&tv_A,NULL);
+//     for(j=0;j<n;j++)fp_lshift_ui_nonmod_single(&test1_fp,&A_fp,1);
+//     //for(j=0;j<n;j++)fp_mul_ui_nonmod_single(&test1_fp,&A_fp,2);
+//     gettimeofday(&tv_B,NULL);
+//     lshift_nonmod_time+=timedifference_msec(tv_A,tv_B)/n;
 
-    // fp_mod_montgomery(&test1_fp,&test1_fp);
-    // fp_mod_montgomery(&test2_fp,&test2_fp);
+//     gettimeofday(&tv_A,NULL);
+//     for(j=0;j<n;j++)fp_lshift_ui_nonmod_single(&test2_fp,&A_fp,2);
+//     gettimeofday(&tv_B,NULL);
+//     l1shift_nonmod_time+=timedifference_msec(tv_A,tv_B)/n;
 
-    // if(fp_cmp(&test1_fp,&test2_fp)!=0){
-    //     printf("failed!\n\n");
-    // 	fp_printf("",&test1_fp);
-	//     fp_printf("\n",&test2_fp);
-	//     printf("\n\n");
-	//     return 1;
-    // }
-}
-    printf("fp lshift1.        : %.7f[ms]\n",lshift_nonmod_time/fp_n);
-    printf("fp l1shift. : %.7f[ms]\n",l1shift_nonmod_time/fp_n);
-    printf("fp lshift3. : %.7f[ms]\n",lshift3_nonmod_time/fp_n);
+  
+//     // fp_mod_montgomery(&test1_fp,&test1_fp);
+//     // fp_mod_montgomery(&test2_fp,&test2_fp);
+
+//     // if(fp_cmp(&test1_fp,&test2_fp)!=0){
+//     //     printf("failed!\n\n");
+//     // 	fp_printf("",&test1_fp);
+// 	//     fp_printf("\n",&test2_fp);
+// 	//     printf("\n\n");
+// 	//     return 1;
+//     // }
+// }
+//     // printf("fp lshift1.        : %.7f[ms]\n",lshift_nonmod_time/fp_n);
+//     // printf("fp l1shift. : %.7f[ms]\n",l1shift_nonmod_time/fp_n);
+//     // printf("fp lshift3. : %.7f[ms]\n",lshift3_nonmod_time/fp_n);
 
 
 
 printf("------------------------------------------------------------------------------------\n");
     printf("fp_sub test\n");
-sub_time=0,sub_nonmod_single=0;
+sub_time=0,sub_nonmod_single=0,sub_nonmod_double=0;
 n=1000;
 for(i=0;i<fp_n;i++){
     fp_set_random_montgomery(&A_fp,state);
     fp_set_random_montgomery(&B_fp,state);
+    fp_mul_nonmod(&A_fpd,&A_fp,&B_fp);
+    fp_set_random_montgomery(&A_fp,state);
+    fp_set_random_montgomery(&B_fp,state);
+    fp_mul_nonmod(&B_fpd,&A_fp,&B_fp);
 
     gettimeofday(&tv_A,NULL);
     for(j=0;j<n;j++)fp_sub(&test1_fp,&A_fp,&B_fp);
@@ -1073,6 +1089,11 @@ for(i=0;i<fp_n;i++){
     for(j=0;j<n;j++)fp_sub_nonmod_single(&test2_fp,&A_fp,&B_fp);
     gettimeofday(&tv_B,NULL);
     sub_nonmod_single+=timedifference_msec(tv_A,tv_B)/n;
+    
+    gettimeofday(&tv_A,NULL);
+    for(j=0;j<n;j++)fp_sub_nonmod_double(&A_fpd,&A_fpd,&B_fpd);
+    gettimeofday(&tv_B,NULL);
+    sub_nonmod_double+=timedifference_msec(tv_A,tv_B)/n;
 
     fp_mod_montgomery(&test1_fp,&test1_fp);
     fp_mod_montgomery(&test2_fp,&test2_fp);
@@ -1086,7 +1107,9 @@ for(i=0;i<fp_n;i++){
     }
 }
     printf("fp sub.      : %.7f[ms]\n",sub_time/fp_n);
-    printf("fp sub lazy. : %.7f[ms]\n",sub_nonmod_single/fp_n);
+    printf("fp sub nonmod single. : %.7f[ms]\n",sub_nonmod_single/fp_n);
+    printf("fp sub nonmod double. : %.7f[ms]\n",sub_nonmod_double/fp_n);
+
 
 printf("------------------------------------------------------------------------------------\n");
     printf("fp_mul test\n");
@@ -1164,16 +1187,41 @@ for(i=0;i<fp_n;i++){
 }
     printf("fp inv montgomery.      : %.6f[ms]\n",inv_time/fp_n);
 
+    printf("------------------------------------------------------------------------------------\n");
+    printf("fp_inv test\n");
+mod_time=0;
+n=1000;
+for(i=0;i<fp_n;i++){
+    fp_set_random(&A_fp,state);
+    fp_set_random(&B_fp,state);
+    fp_mul_nonmod(&A_fpd,&A_fp,&B_fp);
+
+
+    gettimeofday(&tv_A,NULL);
+    for(j=0;j<n;j++)    mpn_mod_montgomery(A_fp.x0,FPLIMB,A_fpd.x0,FPLIMB2);
+
+    gettimeofday(&tv_B,NULL);
+    mod_time+=timedifference_msec(tv_A,tv_B)/n;
+
+}
+    printf("fp mod montgomery.      : %.6f[ms]\n",mod_time/fp_n);
+
     printf("fp rate\n");
     printf("fp add.        : %.7f\n",(add_time/fp_n)/(add_time/fp_n));
     printf("fp add nonmod. : %.7f\n",(add_nonmod_single/fp_n)/(add_time/fp_n));
+    printf("fp add double. : %.7f\n",(add_nonmod_double/fp_n)/(add_time/fp_n));
+
     printf("fp sub. : %.7f\n",(sub_time/fp_n)/(add_time/fp_n));
     printf("fp sub nonmod. : %.7f\n",(sub_nonmod_single/fp_n)/(add_time/fp_n));
+    printf("fp sub nonmod double. : %.7f\n",(sub_nonmod_single/fp_n)/(add_time/fp_n));
+
     printf("fp mul mod. : %.7f\n",(mul_time/fp_n)/(add_time/fp_n));
     printf("fp mul nonmod. : %.7f[ms]\n",(mul_nonmod_time/fp_n)/(add_time/fp_n));
     printf("fp sqr mod. : %.7f[ms]\n",(sqr_time/fp_n)/(add_time/fp_n));
     printf("fp sqr nonmod. : %.7f[ms]\n",(sqr_nonmod/fp_n)/(add_time/fp_n));
     printf("fp inv. : %.7f[ms]\n",(inv_time/fp_n)/(add_time/fp_n));
+    printf("fp mod montgomery. : %.7f[ms]\n",(mod_time/fp_n)/(add_time/fp_n));
+
 
     return 0;
 }
