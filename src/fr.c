@@ -1066,6 +1066,9 @@ void g3_mul(g3_t *ANS,g3_t *A,g3_t *B){
 void g3_sqr(g3_t *ANS,g3_t *A){
     fp12_sqr_lazy_montgomery(ANS,A);
 }
+void g3_inv(g3_t *ANS,g3_t *A){
+    fp12_inv_lazy_montgomery(ANS,A);
+}
 void g3_printf(char *s,g3_t *A){
     g3_t tmp;
     fp12_mod_montgomery(&tmp,A);

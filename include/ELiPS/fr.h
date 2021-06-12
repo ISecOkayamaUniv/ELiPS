@@ -52,6 +52,7 @@ extern int g3_cmp(g3_t *A,g3_t *B);
 extern void g3_mul(g3_t *ANS,g3_t *A,g3_t *B);
 extern void g3_sqr(g3_t *ANS,g3_t *A);
 extern void g3_exp(g3_t *ANS,g3_t *A,fr_t *sca);
+extern void g3_inv(g3_t *ANS,g3_t *A);
 extern void g3_printf(char *s,g3_t *A);
 extern void g3_println(char *s,g3_t *A);
 extern void g1g2_to_g3_miller_algo(g3_t *ANS,g1_t *P,g2_t *Q);
