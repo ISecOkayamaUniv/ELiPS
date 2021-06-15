@@ -325,7 +325,7 @@ int g1_cmp_efp12(g1_t *A, efp12_t *B){
 }
 
 void g1_ecd(g1_t *ANS,g1_t *P){
-    efp_ecd_lazy_montgomery(ANS,P);    
+    efp_ecd_lazy_montgomery(ANS,P);
 }
 
 void g1_eca(g1_t *ANS,g1_t *P,g1_t *Q){
@@ -1057,6 +1057,9 @@ void g2_test(int scm){
 void g3_init(g3_t *A){
     fp12_init(A);
 }
+void g3_set(g3_t *A,g3_t *B){
+	fp12_set(A,B);
+}
 int g3_cmp(g3_t *A,g3_t *B){
     return fp12_cmp(A,B);
 }
@@ -1064,7 +1067,8 @@ void g3_mul(g3_t *ANS,g3_t *A,g3_t *B){
     fp12_mul_lazy_montgomery(ANS,A,B);
 }
 void g3_sqr(g3_t *ANS,g3_t *A){
-    fp12_sqr_lazy_montgomery(ANS,A);
+    //fp12_sqr_lazy_montgomery(ANS,A);
+	fp12_sqr_GS_lazy_montgomery(ANS,A);
 }
 void g3_inv(g3_t *ANS,g3_t *A){
     fp12_inv_lazy_montgomery(ANS,A);

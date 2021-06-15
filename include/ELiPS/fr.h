@@ -48,6 +48,7 @@ extern int g2_cmp(g2_t *A,g2_t *B);
 
 extern void g2_test(int scm);
 extern void g3_init(g3_t *A);
+extern void g3_set(g3_t *A,g3_t *B);
 extern int g3_cmp(g3_t *A,g3_t *B);
 extern void g3_mul(g3_t *ANS,g3_t *A,g3_t *B);
 extern void g3_sqr(g3_t *ANS,g3_t *A);
