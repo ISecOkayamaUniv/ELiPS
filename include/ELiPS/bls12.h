@@ -7,5 +7,6 @@
 #include <ELiPS/test.h>
 #include <ELiPS/field_test.h>
 #include <ELiPS/fr.h>
+#include <ELiPS/file.h>
 
 #endif

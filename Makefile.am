@@ -53,4 +53,5 @@ include/ELiPS/bls_pairing.h\
 include/ELiPS/bls_twist.h\
 include/ELiPS/bls.h\
 include/ELiPS/bls12.h\
-include/ELiPS/fr.h
+include/ELiPS/fr.h\
+include/ELiPS/file.h

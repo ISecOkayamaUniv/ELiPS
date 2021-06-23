@@ -55,6 +55,7 @@ test.c\
 field_test.c\
 time.c\
 fr.c\
+file.c\
 ../include/ELiPS/define.h\
 ../include/ELiPS/define_cvma.h\
 ../include/ELiPS/scalar.h\
@@ -84,4 +85,5 @@ fr.c\
 ../include/ELiPS/time.h\
 ../include/ELiPS/bls.h\
 ../include/ELiPS/bls12.h\
-../include/ELiPS/fr.h
+../include/ELiPS/fr.h\
+../include/ELiPS/file.h
