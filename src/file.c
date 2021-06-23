@@ -114,10 +114,10 @@ void g2_read(g2_t *A,FILE *file){
 }
 
 void g3_write(FILE *file,g3_t *A){
-    g3_write(file,A);
+    fp12_write(file,A);
 }
 void g3_read(g3_t *A,FILE *file){
-    g3_read(A,file);
+    fp12_read(A,file);
 }
 
 void fr_write(FILE *file,fr_t *A){
