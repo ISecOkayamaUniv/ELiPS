@@ -760,12 +760,12 @@ void ff_ltt_projective_lazy_montgomery(fp12_t *f,efp2_projective_t *T,efp_t *P){
     fp_mulmod_montgomery(&tmp2_fp12.x0.x0.x1, &tmp3_fp2.x1, &P->y);
 #endif
 #ifdef TWIST_PHI
-    fp2_sub_nonmod_single(&tmp2_fp12.x0.x0, &tmp2_fp2, &tmp1_fp2);
+    fp2_sub_nonmod_single(&tmp2_fp12.x0.x0, &tmp2_fp2, &tmp1_fp2); // (3b'Z^2-Y^2)
 
-    fp_mulmod_montgomery(&tmp2_fp12.x0.x1.x0, &tmp0_fp2.x0, &P->x);
-    fp_mulmod_montgomery(&tmp2_fp12.x0.x1.x1, &tmp0_fp2.x1, &P->x);
+    fp_mulmod_montgomery(&tmp2_fp12.x0.x1.x0, &tmp0_fp2.x0, &P->x); // Xt^2*(3xp) \beta
+    fp_mulmod_montgomery(&tmp2_fp12.x0.x1.x1, &tmp0_fp2.x1, &P->x); 
 
-    fp_mulmod_montgomery(&tmp2_fp12.x1.x1.x0, &tmp3_fp2.x0, &P->y);
+    fp_mulmod_montgomery(&tmp2_fp12.x1.x1.x0, &tmp3_fp2.x0, &P->y); // (-2YtZt*yp) \ganma \beta
     fp_mulmod_montgomery(&tmp2_fp12.x1.x1.x1, &tmp3_fp2.x1, &P->y);
 #endif
     //fp12_mul_lazy_montgomery(f, &tmp1_fp12, &tmp2_fp12);
@@ -1003,10 +1003,10 @@ void f_ltq_projective_lazy_montgomery(fp12_t *f,efp2_projective_t *T,efp2_projec
     static fp2_t tmp1_fp2,tmp2_fp2,tmp3_fp2,tmp4_fp2,tmp5_fp2;
     static fp12_t tmp1_fp12;
 
-    fp2_mul_lazy_montgomery(&tmp1_fp2, &T->z, &Q->x);
-    fp2_sub_nonmod_single(&tmp1_fp2, &T->x, &tmp1_fp2);
+    fp2_mul_lazy_montgomery(&tmp1_fp2, &T->z, &Q->x); 
+    fp2_sub_nonmod_single(&tmp1_fp2, &T->x, &tmp1_fp2); // Xt-ZtXq
     fp2_mul_lazy_montgomery(&tmp2_fp2, &T->z, &Q->y);
-    fp2_sub_nonmod_single(&tmp2_fp2, &T->y, &tmp2_fp2);
+    fp2_sub_nonmod_single(&tmp2_fp2, &T->y, &tmp2_fp2); // Yt-ZtYq
 
     fp2_sqr_lazy_montgomery(&tmp3_fp2, &tmp1_fp2);
     fp2_mul_lazy_montgomery(&T->x, &T->x, &tmp3_fp2);
@@ -1047,7 +1047,7 @@ void f_ltq_projective_lazy_montgomery(fp12_t *f,efp2_projective_t *T,efp2_projec
     #ifdef TWIST_PHI
     fp2_sub_nonmod_single(&tmp1_fp12.x0.x0, &tmp5_fp2, &tmp3_fp2);
 
-    fp_mulmod_montgomery(&tmp1_fp12.x1.x1.x0, &tmp1_fp2.x0, &P->y);
+    fp_mulmod_montgomery(&tmp1_fp12.x1.x1.x0, &tmp1_fp2.x0, &P->y); // yp
     fp_mulmod_montgomery(&tmp1_fp12.x1.x1.x1, &tmp1_fp2.x1, &P->y);
     #endif
     //fp12_mul_lazy_montgomery(f,&tmp1_fp12,f);

@@ -236,7 +236,7 @@ void bls12_pow_hardpart_compress_montgomery(fp12_t *ANS, fp12_t *A){
     fp12_t t0,t1,t2,t3;
     //fp12_init(&tmp);
     fp12_init(&t0);
-    fp12_init(&t1);
+    fp12_init(&t1); 
     fp12_init(&t2);
     fp12_init(&t3);
     // fp12_init(&t5);
