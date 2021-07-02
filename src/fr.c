@@ -215,6 +215,13 @@ void fr_add(fr_t *ANS,fr_t *A,fr_t *B){
     if(mpn_cmp(ANS->x0,order,FRLIMB)>=0)mpn_sub_n(ANS->x0,ANS->x0,order,FRLIMB);
 }
 
+void fr_neg(fr_t *ANS,fr_t *A){
+    if(mpn_cmp_ui(A->x0,FRLIMB,0)==0)
+        fr_set(ANS,A);
+    else
+        mpn_sub_n(ANS->x0,order,A->x0,FPLIMB);
+}
+
 void fr_mul(fr_t *ANS,fr_t *A,fr_t *B){
     static mp_limb_t tmp_mul[FRLIMB2];
     mpn_mul_n(tmp_mul,A->x0,B->x0,FRLIMB);
@@ -330,6 +337,12 @@ void g1_ecd(g1_t *ANS,g1_t *P){
 
 void g1_eca(g1_t *ANS,g1_t *P,g1_t *Q){
     efp_eca_lazy_montgomery(ANS,P,Q);
+}
+
+void g1_neg(g1_t *ANS,g1_t *P){
+    fp_set(&ANS->x,&P->x);
+    fp_set_neg(&ANS->y,&P->y);
+    ANS->infinity=P->infinity;
 }
 
 void g1_scm(g1_t *ANS,g1_t *P,fr_t *sca){
@@ -590,6 +603,11 @@ void g2_ecd(g2_t *ANS,g2_t *Q){
 }
 void g2_eca(g2_t *ANS,g2_t *P,g2_t *Q){
     efp2_eca_lazy_montgomery(ANS,P,Q);
+}
+void g2_neg(g2_t *ANS,g2_t *P){
+    fp2_set(&ANS->x,&P->x);
+    fp2_set_neg(&ANS->y,&P->y);
+    ANS->infinity=P->infinity;
 }
 void g2_scm(g2_t *ANS,g2_t *Q,fr_t *sca){
 #if ARCBIT==64
