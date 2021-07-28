@@ -15,8 +15,8 @@
 /*************OPTION*************/
 
 //bit
-#define ARCBIT 64 //64bit processor
-//#define ARCBIT 32 //32bit processor
+//#define ARCBIT 64 //64bit processor
+#define ARCBIT 32 //32bit processor
 
 //debug
 //#define DEBUG_COST_A
@@ -44,15 +44,15 @@
 
 #define FPLIMB (PRIME_BIT/ARCBIT+1)
 #define FPLIMB2 FPLIMB*2
-#define FPLIMB_BITS FPLIMB*64
+#define FPLIMB_BITS FPLIMB*ARCBIT
 
 #define FRLIMB (ORDER_BIT/ARCBIT+1)
 #define FRLIMB2 FRLIMB*2
-#define FRLIMB_BITS FRLIMB*64
+#define FRLIMB_BITS FRLIMB*ARCBIT
 
 #define FXLIMB (X_BIT/ARCBIT+1)
 #define FXLIMB2 ((X_BIT*2)/ARCBIT+1)
-#define FXLIMB_BITS FXLIMB*64
+#define FXLIMB_BITS FXLIMB*ARCBIT
 #define bls12_X_length X_BIT
 #define bls12_X2_length X_BIT-1
 

@@ -1357,7 +1357,7 @@ void g3_exp(fp12_t *ANS,fp12_t *A,fr_t *sca){
 
     //set
     //s0,s1,s2,s3
-    mpz_set(x_2,X_z);
+    mpz_set(x_2,X_abs_z);
     mpz_mul(x_4,x_2,x_2);
     mpz_tdiv_qr(B_s,A_s,scalar,x_4);
     mpz_tdiv_qr(s[1],s[0],A_s,x_2);
