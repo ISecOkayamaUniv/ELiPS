@@ -15,8 +15,8 @@
 /*************OPTION*************/
 
 //bit
-//#define ARCBIT 64 //64bit processor
-#define ARCBIT 32 //32bit processor
+#define ARCBIT 64 //64bit processor
+//#define ARCBIT 32 //32bit processor
 
 //debug
 //#define DEBUG_COST_A
