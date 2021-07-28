@@ -916,7 +916,7 @@ void g2_scm(g2_t *ANS,g2_t *Q,fr_t *sca){
 
     //set
     //s0,s1,s2,s3
-    mpz_set(x_1,X_z);
+    mpz_set(x_1,X_abs_z);
     mpz_mul(x_2,x_1,x_1);
     mpz_tdiv_qr(B,A,scalar,x_2);
     mpz_tdiv_qr(s[1],s[0],A,x_1);
