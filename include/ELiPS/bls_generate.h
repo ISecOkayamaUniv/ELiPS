@@ -16,4 +16,4 @@ extern void bls_weil_of_bls48();
 extern void bls_weil();
 extern int combination(int n, int r);
 extern void bls_search_curve();
-#endif 
+#endif

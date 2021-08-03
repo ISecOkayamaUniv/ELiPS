@@ -28,6 +28,6 @@ void g3_write(FILE *file, g3_t *A);
 void g3_read(g3_t *A, FILE *file);
 void fr_write(FILE *file, fr_t *A);
 void fr_read(fr_t *A, FILE *file);
-void fr_write(FILE *file,fr_t *A);
-void fr_read(fr_t *A,FILE *file);
+void fr_write(FILE *file, fr_t *A);
+void fr_read(fr_t *A, FILE *file);
 #endif

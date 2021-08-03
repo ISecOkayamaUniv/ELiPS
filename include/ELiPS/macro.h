@@ -4,7 +4,6 @@
 #define FPLIMB 8
 #define FPLIMB2 16
 
-
 /***Calculation type***/
 #define Optimaization_type
 #define Basic_type
@@ -35,7 +34,6 @@
 /***Reduction***/
 #define Reduction_basic
 #define Reduction_montgomery
-
 
 /***Field Macro***/
 #ifdef Field_basic

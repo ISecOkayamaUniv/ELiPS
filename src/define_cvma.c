@@ -7,9 +7,9 @@ int bls_X_binary[SIZE_BLS];
 int bls_X2_binary[SIZE_BLS];
 int bls_X_length;
 mpz_t efpm2_total;
-fpm2_t twist_g_sqrt,twist_g_sqrt_inv;
-fpm2_t twist_g_cbrt,twist_g_cbrt_inv;
-fpm2_t twist_g_sxrt,twist_g_sxrt_inv;
+fpm2_t twist_g_sqrt, twist_g_sqrt_inv;
+fpm2_t twist_g_cbrt, twist_g_cbrt_inv;
+fpm2_t twist_g_sxrt, twist_g_sxrt_inv;
 /*=================================================*/
 /*cvma TypeX*/
 /*=================================================*/

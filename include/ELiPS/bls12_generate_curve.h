@@ -13,13 +13,13 @@ extern void bls12_generate_X();
  * @brief generate prime.
  *
  */
-extern int  bls12_generate_prime();
+extern int bls12_generate_prime();
 
 /**
  * @brief generate order.
  *
  */
-extern int  bls12_generate_order();
+extern int bls12_generate_order();
 
 /**
  * @brief generate trace.

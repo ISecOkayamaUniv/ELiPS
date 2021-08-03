@@ -17,7 +17,7 @@ extern void matrix_inv(matrix_t *b, matrix_t *a);
 extern void matrix_build_fp12_and_fp12cv();
 extern void matrix_build_fp12_and_fpm2();
 extern void fp12_to_fp12cv(fp12cv_t *b, fp12_t *a);
-extern void fp12cv_to_fp12(fp12_t *b ,fp12cv_t *a);
+extern void fp12cv_to_fp12(fp12_t *b, fp12cv_t *a);
 extern void fp12_to_fpm2(fpm2_t *b, fp12_t *a);
 extern void fpm2_to_fp12(fp12_t *b, fpm2_t *a);
 /*----------test----------*/

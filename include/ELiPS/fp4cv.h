@@ -5,16 +5,16 @@
 #include <ELiPS/fp.h>
 
 extern void fp4cv_init(fp4cv_t *a);
-extern void fp4cv_printf(char *str,fp4cv_t *a);
-extern void fp4cv_println(char *str,fp4cv_t *a);
-extern void fpd4cv_println(char *str,fpd4cv_t *a);
+extern void fp4cv_printf(char *str, fp4cv_t *a);
+extern void fp4cv_println(char *str, fp4cv_t *a);
+extern void fpd4cv_println(char *str, fpd4cv_t *a);
 //set
 extern void fp4cv_set(fp4cv_t *b, fp4cv_t *a);
 extern void fpd4cv_set(fpd4cv_t *b, fpd4cv_t *a);
 extern void fp4cv_set_ui(fp4cv_t *a, unsigned long int b);
-extern void fp4cv_set_mpn(fp4cv_t *b,mp_limb_t *a);
+extern void fp4cv_set_mpn(fp4cv_t *b, mp_limb_t *a);
 extern void fp4cv_set_neg(fp4cv_t *b, fp4cv_t *a);
-extern void fp4cv_set_random(fp4cv_t *a,gmp_randstate_t state);
+extern void fp4cv_set_random(fp4cv_t *a, gmp_randstate_t state);
 //montgomery
 extern void fp4cv_to_montgomery(fp4cv_t *b, fp4cv_t *a);
 //add
@@ -39,8 +39,8 @@ extern void fp4cv_sqr_lazy(fp4cv_t *b, fp4cv_t *a);
 extern void fp4cv_frobenius(fp4cv_t *b, fp4cv_t *a);
 extern void fp4cv_frobenius_times(fp4cv_t *b, fp4cv_t *a, unsigned long int number);
 extern void fp4cv_inv(fp4cv_t *b, fp4cv_t *a);
-extern void fp4cv_pow(fp4cv_t *b,fp4cv_t *a,mpz_t scalar);
-extern void fp4cv_sqrt(fp4cv_t *b,fp4cv_t *a);
+extern void fp4cv_pow(fp4cv_t *b, fp4cv_t *a, mpz_t scalar);
+extern void fp4cv_sqrt(fp4cv_t *b, fp4cv_t *a);
 extern int fp4cv_legendre(fp4cv_t *a);
 //cmp
 extern int fp4cv_cmp(fp4cv_t *a, fp4cv_t *b);

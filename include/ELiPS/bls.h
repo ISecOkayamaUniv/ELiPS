@@ -1,7 +1,6 @@
 #ifndef INCLUDED_bls_h
 #define INCLUDED_bls_h
 
-
 #include <ELiPS/bls_final_exp.h>
 #include <ELiPS/bls_g1.h>
 #include <ELiPS/bls_g2.h>

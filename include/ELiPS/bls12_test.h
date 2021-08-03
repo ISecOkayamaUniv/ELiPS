@@ -1,12 +1,11 @@
 #ifndef BLS12_TEST_H
 #define BLS12_TEST_H
 
-#include <ELiPS/bls12_pairing.h>
-#include <ELiPS/bls12_sym.h>
 #include <ELiPS/bls12_g1_scm.h>
 #include <ELiPS/bls12_g2_scm.h>
 #include <ELiPS/bls12_g3_exp.h>
-
+#include <ELiPS/bls12_pairing.h>
+#include <ELiPS/bls12_sym.h>
 
 extern int bls12_test_rational_point();
 extern int bls12_test_opt_ate_pairing(int pairing);

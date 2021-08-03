@@ -3,7 +3,6 @@
 
 #include <ELiPS/fp2.h>
 
-
 /**
  * @brief get 1 cube root.
  *

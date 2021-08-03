@@ -6,7 +6,6 @@
 #include <ELiPS/efp12.h>
 #include <ELiPS/fr.h>
 
-
 /**
  * @brief Initializes a bls curve.
  *

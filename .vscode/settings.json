@@ -1,0 +1,7 @@
+{
+    "editor.formatOnSave": true,
+    "C_Cpp.clang_format_style": "{BasedOnStyle: Google, ColumnLimit: 0}",
+    "files.associations": {
+        "sstream": "c"
+    },
+}
