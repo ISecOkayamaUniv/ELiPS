@@ -11,6 +11,7 @@ extern void Pseudo_8_sparse_mul_lazy(fp12_t *ANS, fp12_t *A, fp12_t *B);
 extern void Pseudo_8_sparse_mul_lazy_montgomery(fp12_t *ANS, fp12_t *A, fp12_t *B);
 extern void fp12_6_sparse_mul_lazy(fp12_t *C, fp12_t *A, fp12_t *B);
 extern void fp6_6_sparse_mul_montgomery(fp6_t *C, fp6_t *A, fp6_t *B);
+extern void fp6_6_sparse_mul_lazy_montgomery(fpd6_t *C, fp6_t *A, fp6_t *B);
 extern void fp12_6_sparse_mul_montgomery(fp12_t *C, fp12_t *A, fp12_t *B);
 extern void fp12_6_sparse_mul_lazy_montgomery(fp12_t *C, fp12_t *A, fp12_t *B);
 extern void ff_ltt(fp12_t *f, efp2_t *T, efp_t *P, fp_t *L);
