@@ -5,14 +5,14 @@
 /*============================================================================*/
 int main(void) {
   bls12_init();
-  bikk();
   //test_fp_montgomery(100);
-  // g1_test(1);
-  // g2_test(1);
-  // g3_test(1);
-  // g1_set_random_test(1000);
-  //debug_pairing(1000);
+  int n=10000;
+  g1_test(n);
+  g2_test(n);
+  g3_test(n);
+  debug_pairing(n);
+  g1_set_random_test(n);
+  g2_set_random_test(n);
 
-  billinear_test();
   return 0;
 }
