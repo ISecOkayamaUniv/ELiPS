@@ -291,6 +291,13 @@ void fp_add_nonmod_double(fpd_t *ANS, fpd_t *A, fpd_t *B) {
   mpn_add_n(ANS->x0, A->x0, B->x0, FPLIMB2);
 }
 
+void fp_add_mpn_nonmod_single(fp_t *ANS, fp_t *A, mp_limb_t *B) {
+#ifdef DEBUG_COST_A
+  cost_add_nonmod++;
+#endif
+  mpn_add_n(ANS->x0, A->x0, B, FPLIMB);
+}
+
 void fp_add_ui(fp_t *ANS, fp_t *A, unsigned long int UI) {
 #ifdef DEBUG_COST_A
   cost_add_ui++;
@@ -509,7 +516,6 @@ void fp_sqrt(fp_t *ANS, fp_t *A) {
   mpz_clear(result);
 }
 
-//TODO: To montgomery
 void fp_pow(fp_t *ANS, fp_t *A, mpz_t scalar) {
   int i, length;
   length = (int)mpz_sizeinbase(scalar, 2);
@@ -524,6 +530,24 @@ void fp_pow(fp_t *ANS, fp_t *A, mpz_t scalar) {
     fp_mul(&tmp, &tmp, &tmp);
     if (binary[i] == '1') {
       fp_mul(&tmp, A, &tmp);
+    }
+  }
+  fp_set(ANS, &tmp);
+}
+
+void fp_pow_montgomery(fp_t *ANS, fp_t *A, mpz_t scalar) {
+  int length = (int)mpz_sizeinbase(scalar, 2);
+  char binary[length + 1];
+  mpz_get_str(binary, 2, scalar);
+  fp_t tmp;
+  fp_init(&tmp);  //not need?
+
+  fp_set(&tmp, A);
+
+  for (int i = 1; i < length; i++) {
+    fp_mulmod_montgomery(&tmp, &tmp, &tmp);
+    if (binary[i] == '1') {
+      fp_mulmod_montgomery(&tmp, A, &tmp);
     }
   }
   fp_set(ANS, &tmp);
@@ -617,5 +641,28 @@ int fp_legendre_sqrt(fp_t *ANS, fp_t *A) {
 
   //sqrt
   fp_mul(ANS, &C, A);
+  return 1;
+}
+
+int fp_legendre_sqrt_montgomery(fp_t *ANS, fp_t *A) {
+  //need to 4|(p+1)
+
+  if (fp_cmp_zero(A) == 0) {
+    fp_set(ANS, A);
+    return 0;
+  }
+
+  fp_t C, D, A_tmp;
+
+  //legendre
+  fp_pow_montgomery(&C, A, sqrt_power_z);
+  fp_mulmod_montgomery(&D, &C, &C);
+  fp_mulmod_montgomery(&D, &D, A);
+  if (fp_cmp_mpn(&D, RmodP) != 0) {
+    return -1;
+  }
+
+  //sqrt
+  fp_mulmod_montgomery(ANS, &C, A);
   return 1;
 }

@@ -51,3 +51,8 @@ float MILLER_OPT_PROJECTIVE, FINALEXP_OPT_PROJECTIVE;
 
 cost MILLER_OPT_AFFINE_COST, FINALEXP_OPT_AFFINE_COST;
 cost MILLER_OPT_PROJECTIVE_COST, FINALEXP_OPT_PROJECTIVE_COST;
+
+mpz_t to_g1_expo, to_g2_expo;
+fp_t curve_b_montgomery;
+fp2_t twist_curve_b_montgomery;
+fp_t inv2_montgomery;

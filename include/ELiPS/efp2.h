@@ -217,6 +217,8 @@ extern void efp2_eca_mixture_lazy_montgomery(efp2_jacobian_t *ANS, efp2_jacobian
  * @param[in]scalar --a pointer in mpz.
  */
 extern void efp2_scm(efp2_t *ANS, efp2_t *P, mpz_t scalar);
+extern void efp2_scm_X_jacobian_lazy_montgomery(efp2_jacobian_t *ANS, efp2_jacobian_t *P);
+
 
 //skew_frobenius_map
 extern void efp2_skew_frobenius_map_p1(efp2_t *ANS, efp2_t *A);

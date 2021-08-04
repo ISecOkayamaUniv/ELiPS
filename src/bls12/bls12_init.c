@@ -17,6 +17,11 @@ void bls12_init() {
     pre_montgomery();
     bls12_power_init();
     fr_order_init();
+    to_g1_expo_init();
+    to_g2_expo_init();
+    curve_b_montgomery_init();
+    twist_curve_b_montgomery_init();
+    inv2_montgomery_init();
   } else {
     bls12_clear();
     printf("error : prime\nexit\n");

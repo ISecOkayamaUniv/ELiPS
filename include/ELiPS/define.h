@@ -299,4 +299,9 @@ extern float MILLER_OPT_PROJECTIVE, FINALEXP_OPT_PROJECTIVE;
 extern cost MILLER_OPT_AFFINE_COST, FINALEXP_OPT_AFFINE_COST;
 extern cost MILLER_OPT_PROJECTIVE_COST, FINALEXP_OPT_PROJECTIVE_COST;
 
+extern mpz_t to_g1_expo, to_g2_expo;
+extern fp_t curve_b_montgomery;
+extern fp2_t twist_curve_b_montgomery;
+extern fp_t inv2_montgomery;
+
 #endif

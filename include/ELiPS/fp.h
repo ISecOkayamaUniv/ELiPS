@@ -191,6 +191,7 @@ extern void fp_add(fp_t *ANS, fp_t *A, fp_t *B);
  */
 extern void fp_add_nonmod_single(fp_t *ANS, fp_t *A, fp_t *B);
 extern void fp_add_nonmod_double(fpd_t *ANS, fpd_t *A, fpd_t *B);
+extern void fp_add_mpn_nonmod_single(fp_t *ANS, fp_t *A, mp_limb_t *B);
 
 /**
  * @brief Addition a fp_t type struct and an unsigned long int on prime field
@@ -296,6 +297,9 @@ extern void fp_sqrt(fp_t *ANS, fp_t *A);
  */
 extern void fp_pow(fp_t *ANS, fp_t *A, mpz_t scalar);
 
+extern void fp_pow_montgomery(fp_t *ANS, fp_t *A, mpz_t scalar);
+
+
 /**
  * @brief Power a by mpn type struct
  *
@@ -362,4 +366,5 @@ extern void fp_lshift_ui_nonmod_single(fp_t *ANS, fp_t *A, int s);
 extern void fp_lshift_ui_nonmod_double(fpd_t *ANS, fpd_t *A, int s);
 extern void fpd_mod_montgomery(fp_t *ANS, fpd_t *A);
 extern int fp_legendre_sqrt(fp_t *ANS, fp_t *A);
+extern int fp_legendre_sqrt_montgomery(fp_t *ANS, fp_t *A);
 #endif

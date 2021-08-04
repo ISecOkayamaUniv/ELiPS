@@ -821,6 +821,30 @@ void efp2_scm(efp2_t *ANS, efp2_t *P, mpz_t scalar) {
   efp2_set(ANS, &Next_P);
 }
 
+void efp2_scm_X_jacobian_lazy_montgomery(efp2_jacobian_t *ANS, efp2_jacobian_t *P) {
+#ifdef X_PLUS
+  printf("TODO: efp2_scm_X_jacobian_lazy_montgomery(), X_PLUS\n");
+#endif
+
+  efp2_jacobian_t tmp_ANS, tmp_P, tmp_P_neg;
+  efp2_jacobian_init(&tmp_ANS);
+  efp2_jacobian_init(&tmp_P);
+  efp2_jacobian_init(&tmp_P_neg);
+
+  efp2_jacobian_set(&tmp_P, P);
+  efp2_jacobian_set_neg(&tmp_P_neg, &tmp_P);
+  efp2_jacobian_set(&tmp_ANS, &tmp_P_neg);
+  for (int i = bls12_X_length - 1; i >= 0; i--) {
+    efp2_ecd_jacobian_lazy_montgomery(&tmp_ANS, &tmp_ANS);
+    if (bls12_X_binary[i] == 1) {
+      efp2_eca_jacobian_lazy_montgomery(&tmp_ANS, &tmp_ANS, &tmp_P);
+    } else if (bls12_X_binary[i] == -1) {
+      efp2_eca_jacobian_lazy_montgomery(&tmp_ANS, &tmp_ANS, &tmp_P_neg);
+    }
+  }
+  efp2_jacobian_set(ANS, &tmp_ANS);
+}
+
 //skew_frobenius_map
 void efp2_skew_frobenius_map_p1(efp2_t *ANS, efp2_t *A) {
 #ifdef TWIST_PHI_INV

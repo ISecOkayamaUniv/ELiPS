@@ -799,6 +799,34 @@ void efp_scm(efp_t *ANS, efp_t *P, mpz_t scalar) {
   efp_set(ANS, &Next_P);
 }
 
+void efp_scm_jacobian_lazy_montgomery(efp_jacobian_t *ANS, efp_jacobian_t *P, mpz_t scalar) {
+  if (mpz_cmp_ui(scalar, 0) == 0) {
+    ANS->infinity = 1;
+    return;
+  } else if (mpz_cmp_ui(scalar, 1) == 0) {
+    efp_jacobian_set(ANS, P);
+    return;
+  }
+
+  efp_jacobian_t tmp_ANS, tmp_P;
+  efp_jacobian_init(&tmp_ANS);
+  efp_jacobian_init(&tmp_P);
+  int length = (int)mpz_sizeinbase(scalar, 2);
+  char binary[length + 1];
+  mpz_get_str(binary, 2, scalar);
+
+  efp_jacobian_set(&tmp_P, P);
+  efp_jacobian_set(&tmp_ANS, &tmp_P);
+  for (int i = 1; i < length; i++) {
+    efp_ecd_jacobian_lazy_montgomery(&tmp_ANS, &tmp_ANS);
+    if (binary[i] == '1') {
+      efp_eca_jacobian_lazy_montgomery(&tmp_ANS, &tmp_ANS, &tmp_P);
+    }
+  }
+
+  efp_jacobian_set(ANS, &tmp_ANS);
+}
+
 //skew frobenius map
 void efp_skew_frobenius_map_p2(efp_t *ANS, efp_t *A) {
   fp_mul_mpn(&ANS->x, &A->x, epsilon1);

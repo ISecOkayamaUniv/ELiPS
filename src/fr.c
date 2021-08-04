@@ -45,6 +45,68 @@ void fr_order_init() {
   mpn_mul(tmp, X_abs, FXLIMB, X_abs, FXLIMB);
   mpn_copyd(X2, tmp, FXLIMB2);
 }
+
+void to_g1_expo_init() {
+  mpz_init(to_g1_expo);
+  mpz_tdiv_q(to_g1_expo, efp_total, order_z);
+}
+
+void to_g2_expo_init() {
+  mpz_init(to_g2_expo);
+
+  // (x^8 -4x^7 +5x^6 -4x^4 +6x^3 -4x^2 -4x +13) / 9
+  mpz_t tmp;
+  mpz_init(tmp);
+
+  mpz_pow_ui(tmp, X_z, 8);
+  mpz_set(to_g2_expo, tmp);
+  mpz_pow_ui(tmp, X_z, 7);
+  mpz_mul_ui(tmp, tmp, 4);
+  mpz_sub(to_g2_expo, to_g2_expo, tmp);
+  mpz_pow_ui(tmp, X_z, 6);
+  mpz_mul_ui(tmp, tmp, 5);
+  mpz_add(to_g2_expo, to_g2_expo, tmp);
+  mpz_pow_ui(tmp, X_z, 4);
+  mpz_mul_ui(tmp, tmp, 4);
+  mpz_sub(to_g2_expo, to_g2_expo, tmp);
+  mpz_pow_ui(tmp, X_z, 3);
+  mpz_mul_ui(tmp, tmp, 6);
+  mpz_add(to_g2_expo, to_g2_expo, tmp);
+  mpz_pow_ui(tmp, X_z, 2);
+  mpz_mul_ui(tmp, tmp, 4);
+  mpz_sub(to_g2_expo, to_g2_expo, tmp);
+  mpz_mul_ui(tmp, X_z, 4);
+  mpz_sub(to_g2_expo, to_g2_expo, tmp);
+  mpz_add_ui(to_g2_expo, to_g2_expo, 13);
+
+  if (mpz_divisible_ui_p(to_g2_expo, 9) == 0) {
+    printf("error to_g2_expo_init()\n");
+    fflush(stdout);
+  }
+  mpz_divexact_ui(to_g2_expo, to_g2_expo, 9);
+
+  mpz_clear(tmp);
+}
+
+void curve_b_montgomery_init() {
+  fp_init(&curve_b_montgomery);
+  fp_set_mpn(&curve_b_montgomery, curve_b);
+  fp_to_montgomery(&curve_b_montgomery, &curve_b_montgomery);
+}
+
+void twist_curve_b_montgomery_init() {
+  fp2_init(&twist_curve_b_montgomery);
+  fp_set_mpn(&twist_curve_b_montgomery.x0, curve_b);
+  fp_set_mpn(&twist_curve_b_montgomery.x1, curve_b);
+  fp2_to_montgomery(&twist_curve_b_montgomery, &twist_curve_b_montgomery);
+}
+
+void inv2_montgomery_init() {
+  fp_init(&inv2_montgomery);
+  fp_set_ui(&inv2_montgomery, 2);
+  fp_inv(&inv2_montgomery, &inv2_montgomery);
+  fp_to_montgomery(&inv2_montgomery, &inv2_montgomery);
+}
 int w_naf_frt(int *dw, mpz_t d, int w) {
   int i = 0;
   mp_limb_t tmp_d[FRLIMB];
@@ -310,6 +372,7 @@ int g1_cmp(g1_t *ANS, g1_t *A) {
 }
 
 void g1_set_random(g1_t *ANS, gmp_randstate_t state) {
+#if 0
   efp12_t P;
   g1_t P_twisted;
   //bls12_generate_g1(&P);
@@ -318,6 +381,32 @@ void g1_set_random(g1_t *ANS, gmp_randstate_t state) {
   efp12_to_efp(&P_twisted, &P);
   efp_to_montgomery(ANS, &P_twisted);
   ANS->infinity = 0;
+#else
+  efp_t P;
+  efp_init(&P);
+  P.infinity = 0;
+  fp_set_random(&P.x, state);
+  fp_to_montgomery(&P.x, &P.x);
+
+  fp_t tmp1, tmp2, tmp_x;
+  fp_init(&tmp1);
+  fp_init(&tmp2);
+  fp_init(&tmp_x);
+  while (1) {
+    fp_sqrmod_montgomery(&tmp1, &P.x);
+    fp_mulmod_montgomery(&tmp2, &tmp1, &P.x);
+    fp_add(&tmp_x, &tmp2, &curve_b_montgomery);
+    if (fp_legendre_sqrt_montgomery(&P.y, &tmp_x) != -1) {
+      break;
+    }
+    fp_add_mpn(&P.x, &P.x, RmodP);
+  }
+
+  efp_jacobian_t P_jacobian;
+  efp_affine_to_jacobian_montgomery(&P_jacobian, &P);
+  efp_scm_jacobian_lazy_montgomery(&P_jacobian, &P_jacobian, to_g1_expo);
+  efp_jacobian_to_affine_montgomery(ANS, &P_jacobian);
+#endif
 }
 
 //check function
@@ -551,18 +640,18 @@ void g1_set_random_test(int scm) {
   for (i = 0; i < scm; i++) {
     //normal type
     gettimeofday(&tv_A, NULL);
-    g1_set_random(&P_test, state);
+    g1_set_random_schoolbook(&P_test, state);
     gettimeofday(&tv_B, NULL);
     random_time += timedifference_msec(tv_A, tv_B);
 
     //faster type
     gettimeofday(&tv_A, NULL);
-    g1_set_random_schoolbook(&P_test, state);
+    g1_set_random(&P_test, state);
     gettimeofday(&tv_B, NULL);
     random_fast_time += timedifference_msec(tv_A, tv_B);
   }
-  printf("g1_set_random.          : %.4f[ms]\n", random_time / scm);
-  printf("g1_set_random_schoolbook.     : %.4f[ms]\n", random_fast_time / scm);
+  printf("g1_set_random_schoolbook.     : %.4f[ms]\n", random_time / scm);
+  printf("g1_set_random.          : %.4f[ms]\n", random_fast_time / scm);
 }
 
 /************g2_t**************/
@@ -592,12 +681,41 @@ int g2_cmp(g2_t *ANS, g2_t *A) {
 }
 
 void g2_set_random(g2_t *ANS, gmp_randstate_t state) {
+#if 0
   efp12_t Q;
   g2_t Q_twisted;
   bls12_generate_g2(&Q);
   efp12_to_efp2(&Q_twisted, &Q);
   efp2_to_montgomery(ANS, &Q_twisted);
   ANS->infinity = 0;
+#else
+  efp2_t P;
+  efp2_init(&P);
+  P.infinity = 0;
+  fp2_set_random(&P.x, state);
+  fp2_to_montgomery(&P.x, &P.x);
+
+  fp2_t tmp1, tmp2, tmp_x;
+  fp2_init(&tmp1);
+  fp2_init(&tmp2);
+  fp2_init(&tmp_x);
+  while (1) {
+    fp2_sqr_lazy_montgomery(&tmp1, &P.x);
+    fp2_mul_lazy_montgomery(&tmp2, &tmp1, &P.x);
+#ifdef TWIST_PHI
+    fp2_add(&tmp_x, &tmp2, &twist_curve_b_montgomery);
+#endif
+#ifdef TWIST_PHI_INV
+    printf("TODO: peks_hash1_g2(), EP_TYPE2\n");
+#endif
+    if (fp2_sqrt_complex_method_montgomery(&P.y, &tmp_x) == 1) {
+      break;
+    }
+    fp_add_mpn(&P.x.x0, &P.x.x0, RmodP);
+  }
+
+  map_to_g2_montgomery(ANS, &P);
+#endif
 }
 
 //check function
@@ -621,6 +739,106 @@ void g2_neg(g2_t *ANS, g2_t *P) {
   fp2_set_neg(&ANS->y, &P->y);
   ANS->infinity = P->infinity;
 }
+void map_to_g2(g2_t *ANS, efp2_t *A) {
+  // (χ<0, z = α + 1)
+  // It is diffrent output between Scott et al. method and Fuentes et al. method. But both method is map to g2.
+  // Fuentes et al. method is faster than the other
+
+#if 0  // Scott et al. method
+  efp2_t A0, A1, A2;
+  efp2_t tmp1, tmp2;
+  efp2_init(&A0);
+  efp2_init(&A1);
+  efp2_init(&A2);
+  efp2_init(&tmp1);
+  efp2_init(&tmp2);
+
+  efp2_set(&A0, A);                      // A0 = A
+  efp2_skew_frobenius_map_p1(&A1, &A0);  // A1 = ψ(A)
+  efp2_skew_frobenius_map_p2(&A2, &A0);  // A2 = ψ^2(A)
+
+  efp2_eca(&tmp1, &A0, &A1);
+  efp2_set_neg(&tmp1, &tmp1);  // tmp1 = -(A + ψ(A))
+  efp2_scm(ANS, &tmp1, X_abs_z);
+
+  efp2_set_neg(&tmp2, &A2);
+  efp2_eca(&tmp2, &tmp1, &tmp2);  // tmp2 = -(A + ψ(A) + ψ^2(A))
+  efp2_eca(ANS, ANS, &tmp2);
+  efp2_scm(ANS, ANS, X_abs_z);
+  efp2_set_neg(ANS, ANS);
+
+  efp2_eca(&tmp2, &tmp1, &A2);  // tmp2 = -(A + ψ(A)) + ψ^2(A)
+  efp2_eca(&tmp1, &tmp2, &A2);  // tmp1 = -(A + ψ(A)) + [2]ψ^2(A)
+  efp2_eca(ANS, ANS, &tmp1);
+  efp2_scm(ANS, ANS, X_abs_z);
+  efp2_set_neg(ANS, ANS);
+
+  efp2_ecd(&tmp1, &A0);
+  efp2_eca(&tmp1, &tmp1, &A0);    // tmp1 = [3](A)
+  efp2_set_neg(&tmp2, &tmp2);     // tmp2 = A + ψ(A) - ψ^2(A)
+  efp2_eca(&tmp2, &tmp2, &tmp1);  // tmp2 = [4]A + ψ(A) - ψ^2(A)
+  efp2_eca(ANS, ANS, &tmp2);
+#else  // Fuentes et al. method
+  efp2_t A0, A1, A2;
+  efp2_init(&A0);
+  efp2_init(&A1);
+  efp2_init(&A2);
+
+  efp2_set_neg(&A0, A);                // A0 = -A
+  efp2_skew_frobenius_map_p1(&A1, A);  // A1 = ψ(A)
+  efp2_ecd(&A2, A);
+  efp2_skew_frobenius_map_p2(&A2, &A2);  // A2 = ψ^2(2A)
+
+  efp2_scm(ANS, &A0, X_abs_z);
+
+  efp2_eca(ANS, ANS, &A0);
+  efp2_eca(ANS, ANS, &A1);
+  efp2_scm(ANS, ANS, X_abs_z);
+  efp2_set_neg(ANS, ANS);
+
+  efp2_set_neg(&A1, &A1);  // A1 = -ψ(A)
+  efp2_eca(ANS, ANS, &A0);
+  efp2_eca(ANS, ANS, &A1);
+  efp2_eca(ANS, ANS, &A2);
+#endif
+  efp2_to_montgomery(ANS, ANS);
+}
+void map_to_g2_montgomery(g2_t *ANS, efp2_t *A) {
+  // (χ<0, z = α + 1)
+  // It is diffrent output between Scott et al. method and Fuentes et al. method. But both method is map to g2.
+
+  // Fuentes et al. method
+  efp2_t tmp, ans;
+  efp2_init(&tmp);
+  efp2_init(&ans);
+  efp2_jacobian_t A_jacobian, ANS_jacobian, A0, A1, A2;
+  efp2_jacobian_init(&A_jacobian);
+  efp2_jacobian_init(&A0);
+  efp2_jacobian_init(&A1);
+  efp2_jacobian_init(&A2);
+
+  efp2_affine_to_jacobian_montgomery(&A_jacobian, A);
+  efp2_jacobian_set_neg(&A0, &A_jacobian);                           // A0 = -A
+  efp2_jacobian_skew_frobenius_map_p1_montgomery(&A1, &A_jacobian);  // A1 = ψ(A)
+  efp2_ecd_jacobian_lazy_montgomery(&A2, &A_jacobian);
+  efp2_jacobian_skew_frobenius_map_p2_montgomery(&A2, &A2);  // A2 = ψ^2(2A)
+
+  efp2_scm_X_jacobian_lazy_montgomery(&ANS_jacobian, &A0);
+  efp2_jacobian_set_neg(&ANS_jacobian, &ANS_jacobian);
+
+  efp2_eca_jacobian_lazy_montgomery(&ANS_jacobian, &ANS_jacobian, &A0);
+  efp2_eca_jacobian_lazy_montgomery(&ANS_jacobian, &ANS_jacobian, &A1);
+  efp2_scm_X_jacobian_lazy_montgomery(&ANS_jacobian, &ANS_jacobian);
+
+  efp2_jacobian_set_neg(&A1, &A1);  // A1 = -ψ(A)
+  efp2_eca_jacobian_lazy_montgomery(&ANS_jacobian, &ANS_jacobian, &A0);
+  efp2_eca_jacobian_lazy_montgomery(&ANS_jacobian, &ANS_jacobian, &A1);
+  efp2_eca_jacobian_lazy_montgomery(&ANS_jacobian, &ANS_jacobian, &A2);
+
+  efp2_jacobian_to_affine_montgomery(ANS, &ANS_jacobian);
+}
+
+
 void g2_scm(g2_t *ANS, g2_t *Q, fr_t *sca) {
 #if ARCBIT == 64
   if (Q->infinity == 1) {
@@ -1100,6 +1318,29 @@ void g2_test(int scm) {
   printf("***************************************         \n");
 #endif
   mpz_clear(sca);
+}
+
+void g2_set_random_test(int scm) {
+  g2_t P_test;
+  int i;
+  float random_time = 0, random_fast_time = 0;
+  struct timeval tv_A, tv_B;
+  for (i = 0; i < scm; i++) {
+    //normal type
+    // gettimeofday(&tv_A, NULL);
+    // g2_set_random_schoolbook(&P_test, state);
+    // gettimeofday(&tv_B, NULL);
+    // random_time += timedifference_msec(tv_A, tv_B);
+
+    //faster type
+    gettimeofday(&tv_A, NULL);
+    g2_set_random(&P_test, state);
+    gettimeofday(&tv_B, NULL);
+    random_fast_time += timedifference_msec(tv_A, tv_B);
+  }
+  //printf("g2_set_random_schoolbook.     : %.4f[ms]\n", random_time / scm);
+  printf("g2_set_random.          : %.4f[ms]\n", random_fast_time / scm);
+
 }
 /*******************g3_t******************************/
 void g3_init(g3_t *A) {

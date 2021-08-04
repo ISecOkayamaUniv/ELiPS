@@ -5,6 +5,12 @@ extern void fr_order_init();
 extern void mpn_set_mpz_size(mp_limb_t *ans, mpz_t a, mp_size_t size);
 extern int w_naf_frt(int *dw, mpz_t d, int w);
 extern void fr_init(fr_t *A);
+extern void to_g1_expo_init();
+extern void to_g2_expo_init();
+extern void curve_b_montgomery_init();
+extern void twist_curve_b_montgomery_init();
+extern void inv2_montgomery_init();
+
 extern void mpz_set_fr(mpz_t ans, fr_t *a);
 extern size_t fr_sizeinbase_2(fr_t *A);
 extern void fr_printf(char *str, fr_t *A);
@@ -45,9 +51,12 @@ extern int g2_cmp_efp12(g2_t *A, efp12_t *B);
 extern void g2_ecd(g2_t *ANS, g2_t *Q);
 extern void g2_eca(g2_t *ANS, g2_t *P, g2_t *Q);
 extern void g2_neg(g2_t *ANS, g2_t *A);
+extern void map_to_g2(g2_t *ANS, efp2_t *A);
+extern void map_to_g2_montgomery(g2_t *ANS, efp2_t *A);
 extern void g2_scm(g2_t *ANS, g2_t *Q, fr_t *sca);
 extern void g2_set_random_with_basepoint(g2_t *ANS, g2_t *basepoint, gmp_randstate_t state);
 extern int g2_cmp(g2_t *A, g2_t *B);
+extern void g2_set_random_test(int scm);
 
 extern void g2_test(int scm);
 extern void g3_init(g3_t *A);

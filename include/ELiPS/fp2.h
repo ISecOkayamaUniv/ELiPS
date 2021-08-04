@@ -317,6 +317,10 @@ extern int fp2_isCNR(fp2_t *A);
  */
 extern void fp2_sqrt(fp2_t *ANS, fp2_t *A);
 
+extern int fp2_sqrt_complex_method(fp2_t *ANS, fp2_t *A);
+extern int fp2_sqrt_complex_method_montgomery(fp2_t *ANS, fp2_t *A);
+
+
 /**
  * @brief Power A by mpz type struct
  *

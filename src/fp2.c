@@ -473,6 +473,120 @@ void fp2_sqrt(fp2_t *ANS, fp2_t *A) {
   mpz_clear(result);
 }
 
+int fp2_sqrt_complex_method(fp2_t *ANS, fp2_t *A) {
+  fp2_t tmp_A;
+  fp_t tmp0, tmp1;
+  int ret;
+  fp2_init(&tmp_A);
+  fp_init(&tmp0);
+  fp_init(&tmp1);
+
+  if (fp2_cmp_zero(A) == 0) {
+    fp2_set(ANS, A);
+    return 1;
+  }
+  if (fp_cmp_zero(&A->x1) == 0) {
+    fp_set_neg(&tmp0, &A->x0);
+    ret = fp_legendre_sqrt(&tmp0, &tmp0);
+    if (ret == 1) {
+      fp_set_ui(&ANS->x0, 0);
+      fp_set(&ANS->x1, &tmp0);
+      return 1;
+    }
+
+    ret = fp_legendre_sqrt(&tmp0, &A->x0);
+    if (ret == 1) {
+      fp_set(&ANS->x0, &tmp0);
+      fp_set_ui(&ANS->x1, 0);
+      return 1;
+    }
+    return 0;
+  }
+
+  fp2_set(&tmp_A, A);
+  fp_sqr(&tmp0, &tmp_A.x0);
+  fp_sqr(&tmp1, &tmp_A.x1);
+  fp_add(&tmp0, &tmp0, &tmp1);  // tmp0 = a0^2 - (a1 * alpha)^2
+  ret = fp_legendre_sqrt(&tmp0, &tmp0);
+  if (ret != 1) {
+    return 0;
+  }
+  fp_add(&tmp1, &tmp_A.x0, &tmp0);
+  fp_r1shift(&tmp1, &tmp1);
+  ret = fp_legendre_sqrt(&tmp1, &tmp1);
+  if (ret != 1) {
+    fp_sub(&tmp1, &tmp_A.x0, &tmp0);
+    fp_r1shift(&tmp1, &tmp1);
+    ret = fp_legendre_sqrt(&tmp1, &tmp1);
+    if (ret != 1) {
+      return 0;
+    }
+  }
+  fp_set(&ANS->x0, &tmp1);
+  fp_add(&tmp0, &tmp1, &tmp1);
+  fp_inv(&tmp0, &tmp0);
+  fp_mul(&ANS->x1, &tmp_A.x1, &tmp0);
+
+  return 1;
+}
+
+int fp2_sqrt_complex_method_montgomery(fp2_t *ANS, fp2_t *A) {
+  fp2_t tmp_A;
+  fp_t tmp0, tmp1;
+  int ret;
+  fp2_init(&tmp_A);
+  fp_init(&tmp0);
+  fp_init(&tmp1);
+
+  if (fp2_cmp_zero(A) == 0) {
+    fp2_set(ANS, A);
+    return 1;
+  }
+  if (fp_cmp_zero(&A->x1) == 0) {
+    fp_set_neg(&tmp0, &A->x0);
+    ret = fp_legendre_sqrt_montgomery(&tmp0, &tmp0);
+    if (ret == 1) {
+      fp_set_ui(&ANS->x0, 0);
+      fp_set(&ANS->x1, &tmp0);
+      return 1;
+    }
+
+    ret = fp_legendre_sqrt_montgomery(&tmp0, &A->x0);
+    if (ret == 1) {
+      fp_set(&ANS->x0, &tmp0);
+      fp_set_ui(&ANS->x1, 0);
+      return 1;
+    }
+    return 0;
+  }
+
+  fp2_set(&tmp_A, A);
+  fp_sqrmod_montgomery(&tmp0, &tmp_A.x0);
+  fp_sqrmod_montgomery(&tmp1, &tmp_A.x1);
+  fp_add(&tmp0, &tmp0, &tmp1);  // tmp0 = a0^2 - (a1 * alpha)^2
+  ret = fp_legendre_sqrt_montgomery(&tmp0, &tmp0);
+  if (ret != 1) {
+    return 0;
+  }
+  fp_add(&tmp1, &tmp_A.x0, &tmp0);
+  fp_mulmod_montgomery(&tmp1, &tmp1, &inv2_montgomery);
+  ret = fp_legendre_sqrt_montgomery(&tmp1, &tmp1);
+  if (ret != 1) {
+    fp_sub_nonmod_single(&tmp1, &tmp_A.x0, &tmp0);
+    fp_mulmod_montgomery(&tmp1, &tmp1, &inv2_montgomery);
+    ret = fp_legendre_sqrt_montgomery(&tmp1, &tmp1);
+    if (ret != 1) {
+      return 0;
+    }
+  }
+  fp_set(&ANS->x0, &tmp1);
+  fp_add(&tmp0, &tmp1, &tmp1);
+  fp_inv_montgomery(&tmp0, &tmp0);
+  fp_mulmod_montgomery(&ANS->x1, &tmp_A.x1, &tmp0);
+
+  return 1;
+}
+
 void fp2_pow(fp2_t *ANS, fp2_t *A, mpz_t scalar) {
   int i, length;
   length = (int)mpz_sizeinbase(scalar, 2);
