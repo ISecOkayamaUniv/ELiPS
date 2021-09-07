@@ -1,6 +1,7 @@
 #ifndef FR_H
 #define FR_H
 #include "ELiPS/bls12.h"
+extern void bls12_get_order(mpz_t order);
 extern void fr_order_init();
 extern void mpn_set_mpz_size(mp_limb_t *ans, mpz_t a, mp_size_t size);
 extern int w_naf_frt(int *dw, mpz_t d, int w);
@@ -18,10 +19,11 @@ extern void fr_println(char *str, fr_t *A);
 extern void fr_set(fr_t *ANS, fr_t *A);
 extern void fr_set_ui(fr_t *ANS, unsigned long int UI);
 extern void fr_set_mpn(fr_t *ANS, mp_limb_t *A);
-extern void fr_mod(fr_t *ans, mp_limb_t *a, mp_size_t size_a);
+extern void fr_mod(fr_t *ans, fr_t *a);
 extern void fr_add(fr_t *ANS, fr_t *A, fr_t *B);
 extern void fr_neg(fr_t *ANS, fr_t *A);
 extern void fr_mul(fr_t *ANS, fr_t *A, fr_t *B);
+extern void fr_div(fr_t *ANS, fr_t *A, fr_t *B);
 extern void fr_inv(fr_t *ANS, fr_t *A);
 extern void fr_pow(fr_t *ANS, fr_t *A, mpz_t scalar);
 extern void fr_sub(fr_t *ANS, fr_t *A, fr_t *B);
@@ -35,6 +37,7 @@ extern void g1_set_random(g1_t *ANS, gmp_randstate_t state);
 extern int g1_cmp_efp12(g1_t *A, efp12_t *B);
 extern void g1_ecd(g1_t *ANS, g1_t *P);
 extern void g1_eca(g1_t *ANS, g1_t *P, g1_t *Q);
+extern void g1_ecs(g1_t *ANS, g1_t *P, g1_t Q);
 extern void g1_neg(g1_t *ANS, g1_t *P);
 extern void g1_scm(g1_t *ANS, g1_t *P, fr_t *sca);
 extern void g1_set_random_with_basepoint(g1_t *ANS, g1_t *basepoint, gmp_randstate_t state);
@@ -51,13 +54,13 @@ extern int g2_cmp_efp12(g2_t *A, efp12_t *B);
 extern void g2_ecd(g2_t *ANS, g2_t *Q);
 extern void g2_eca(g2_t *ANS, g2_t *P, g2_t *Q);
 extern void g2_neg(g2_t *ANS, g2_t *A);
+extern void g2_ecs(g2_t *ANS, g2_t *P, g2_t Q);
 extern void map_to_g2(g2_t *ANS, efp2_t *A);
 extern void map_to_g2_montgomery(g2_t *ANS, efp2_t *A);
 extern void g2_scm(g2_t *ANS, g2_t *Q, fr_t *sca);
 extern void g2_set_random_with_basepoint(g2_t *ANS, g2_t *basepoint, gmp_randstate_t state);
 extern int g2_cmp(g2_t *A, g2_t *B);
 extern void g2_set_random_test(int scm);
-
 extern void g2_test(int scm);
 extern void g3_init(g3_t *A);
 extern void g3_set(g3_t *A, g3_t *B);

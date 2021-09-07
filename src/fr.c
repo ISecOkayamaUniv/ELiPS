@@ -1,4 +1,7 @@
 #include <ELiPS/fr.h>
+void bls12_get_order(mpz_t order) {
+  mpz_set(order, order_z);
+}
 /**************set up*******************/
 void mpn_set_mpz_size(mp_limb_t *ans, mpz_t a, mp_size_t size) {
   char *str;
@@ -269,9 +272,9 @@ void fr_set_mpn(fr_t *ANS, mp_limb_t *A) {
   mpn_copyd(ANS->x0, A, FRLIMB);
 }
 
-void fr_mod(fr_t *ans, mp_limb_t *a, mp_size_t size_a) {
-  mp_limb_t dumy[size_a];
-  mpn_tdiv_qr(dumy, ans->x0, 0, a, size_a, order, FRLIMB);
+void fr_mod(fr_t *ans, fr_t *a) {
+  mp_limb_t dumy[FRLIMB];
+  mpn_tdiv_qr(dumy, ans->x0, 0, a->x0, FRLIMB, order, FRLIMB);
 }
 
 void fr_add(fr_t *ANS, fr_t *A, fr_t *B) {
@@ -289,7 +292,15 @@ void fr_neg(fr_t *ANS, fr_t *A) {
 void fr_mul(fr_t *ANS, fr_t *A, fr_t *B) {
   static mp_limb_t tmp_mul[FRLIMB2];
   mpn_mul_n(tmp_mul, A->x0, B->x0, FRLIMB);
-  fr_mod(ANS, tmp_mul, FRLIMB2);
+  //fr_mod(ANS, tmp_mul, FRLIMB2);
+  mp_limb_t dumy[FRLIMB2];
+  mpn_tdiv_qr(dumy, ANS->x0, 0, tmp_mul, FRLIMB2, order, FRLIMB);
+}
+
+void fr_div(fr_t *ANS, fr_t *A, fr_t *B) {
+  fr_t tmp;
+  fr_inv(&tmp, B);
+  fr_mul(ANS, A, &tmp);
 }
 
 void fr_inv(fr_t *ANS, fr_t *A) {
@@ -348,7 +359,7 @@ void fr_set_random(fr_t *ANS, gmp_randstate_t state) {
 /************g1_t**************/
 void g1_init(g1_t *A) {
   efp_init(A);
-  //A->infinity=1;
+  //A->infinity = 1;
 }
 
 void g1_printf(char *s, g1_t *A) {
@@ -434,127 +445,10 @@ void g1_neg(g1_t *ANS, g1_t *P) {
   ANS->infinity = P->infinity;
 }
 
-void g1_scm(g1_t *ANS, g1_t *P, fr_t *sca) {
-  if (P->infinity == 1) {
-    g1_set(ANS, P);
-  } else {
-    //s=s0+s1[x^4]
-    int i, length_s[2], loop_length;
-    efp_t next_tmp_P, tmp_P;
-    efp_jacobian_t next_tmpJ_P, tmpJ_P[8], tmpJ_P_neg[8], tmpJ_P_4x[8], tmpJ_P_4x_neg[8], tmpJ_2P;
-    efp_init(&next_tmp_P);
-    efp_init(&tmp_P);
-    efp_jacobian_init(&tmpJ_2P);
-    for (i = 0; i < 8; i++) {
-      efp_jacobian_init(&tmpJ_P[i]);
-      efp_jacobian_init(&tmpJ_P_neg[i]);
-      efp_jacobian_init(&tmpJ_P_4x[i]);
-      efp_jacobian_init(&tmpJ_P_4x_neg[i]);
-    }
-    efp_jacobian_init(&next_tmpJ_P);
-
-    mp_limb_t s1[FRLIMB - FXLIMB2 + 1], s0[FXLIMB2];
-    //table
-    efp_jacobian_t table0[17], table1[17];
-    for (i = 0; i < 17; i++) {
-      efp_jacobian_init(&table0[i]);
-      efp_jacobian_init(&table1[i]);
-    }
-
-    //set
-    efp_set(&tmp_P, P);
-    efp_affine_to_jacobian_montgomery(&tmpJ_P[0], &tmp_P);
-    efp_ecd_jacobian_lazy_montgomery(&tmpJ_2P, &tmpJ_P[0]);
-    for (i = 1; i < 8; i++) {
-      efp_eca_jacobian_lazy_montgomery(&tmpJ_P[i], &tmpJ_P[i - 1], &tmpJ_2P);
-    }
-
-    fp_t point_table[8], inv_table[8];
-    for (i = 0; i < 8; i++) fp_set(&point_table[i], &tmpJ_P[i].z);
-    fp_montgomery_trick_montgomery(inv_table, point_table, 8);
-    for (i = 0; i < 8; i++) efp_jacobian_to_mixture_noninv_montgomery(&tmpJ_P[i], &tmpJ_P[i], &inv_table[i]);
-
-    for (i = 0; i < 8; i++) {
-      efp_jacobian_set_neg(&tmpJ_P_neg[i], &tmpJ_P[i]);                          //tmp_P_neg
-      efp_jacobian_skew_frobenius_map_p2_montgomery(&tmpJ_P_4x[i], &tmpJ_P[i]);  //tmp_P_4x
-      efp_jacobian_set_neg(&tmpJ_P_4x_neg[i], &tmpJ_P_4x[i]);                    //tmp_P_4x_neg
-    }
-    //set table
-    table0[0].infinity = 1;  //0
-    table1[0].infinity = 1;  //0
-
-    for (i = 0; i < 8; i++) {
-      efp_jacobian_set(&table0[i + 1], &tmpJ_P[i]);         //[1]P
-      efp_jacobian_set(&table0[i + 9], &tmpJ_P_neg[i]);     //[-1]P
-      efp_jacobian_set(&table1[i + 1], &tmpJ_P_4x[i]);      //[1]P'
-      efp_jacobian_set(&table1[i + 9], &tmpJ_P_4x_neg[i]);  //[-1]P'
-    }
-    mpn_tdiv_qr(s1, s0, 0, sca->x0, FRLIMB, X2, FXLIMB2);
-
-    //get loop_length
-    loop_length = 0;
-    length_s[0] = (int)mpn_sizeinbase(s0, FXLIMB2, 2);               //mpn
-    length_s[1] = (int)mpn_sizeinbase(s1, FRLIMB - FXLIMB2 + 1, 2);  //mpn
-    if (length_s[0] > length_s[1]) {
-      loop_length = length_s[0];
-    } else {
-      loop_length = length_s[1];
-    }
-
-    //naf
-    int naf_length, naf_length0, naf_length1;
-    int naf_binary[2][loop_length + 1];
-    for (i = 0; i < loop_length + 1; i++) {
-      naf_binary[0][i] = 0;
-      naf_binary[1][i] = 0;
-    }
-    int *naf_pointer[2];
-    naf_pointer[0] = naf_binary[0];
-    naf_pointer[1] = naf_binary[1];
-
-    naf_length0 = w_naf_frt_mpn_size(naf_binary[0], s0, FXLIMB2, 5);
-    naf_length1 = w_naf_frt_mpn_size(naf_binary[1], s1, FRLIMB - FXLIMB2 + 1, 5);
-    if (naf_length0 < naf_length1)
-      naf_length = naf_length1;
-    else
-      naf_length = naf_length0;
-
-    //naf_length=loop_length-1;
-    int binary0[naf_length + 1], binary1[naf_length + 1];
-
-    for (i = naf_length; i >= 0; i--) {
-      if (naf_binary[0][i] == 0)
-        binary0[i] = 0;
-      else if (naf_binary[0][i] > 0)
-        binary0[i] = (naf_binary[0][i] + 1) >> 1;
-      else
-        binary0[i] = ((17 - (naf_binary[0][i] + 16)) >> 1) + 8;
-
-      if (naf_binary[1][i] == 0)
-        binary1[i] = 0;
-      else if (naf_binary[1][i] > 0)
-        binary1[i] = (naf_binary[1][i] + 1) >> 1;
-      else
-        binary1[i] = ((17 - (naf_binary[1][i] + 16)) >> 1) + 8;
-    }
-    if (naf_length0 == naf_length1)
-      efp_eca_jacobian_lazy_montgomery(&next_tmpJ_P, &table0[binary0[naf_length]], &table1[binary1[naf_length]]);
-    else if (naf_length0 < naf_length1)
-      efp_jacobian_set(&next_tmpJ_P, &table1[binary1[naf_length]]);
-    else
-      efp_jacobian_set(&next_tmpJ_P, &table0[binary0[naf_length]]);
-
-    //scm
-    for (i = naf_length - 1; i >= 0; i--) {
-      efp_ecd_jacobian_lazy_montgomery(&next_tmpJ_P, &next_tmpJ_P);
-      if (binary0[i] != 0) efp_eca_mixture_lazy_montgomery_ignore_inf(&next_tmpJ_P, &next_tmpJ_P, &table0[binary0[i]]);
-      if (binary1[i] != 0) efp_eca_mixture_lazy_montgomery_ignore_inf(&next_tmpJ_P, &next_tmpJ_P, &table1[binary1[i]]);
-    }
-
-    efp_jacobian_to_affine_montgomery(&next_tmp_P, &next_tmpJ_P);
-    efp_set(ANS, &next_tmp_P);
-    ANS->infinity = next_tmp_P.infinity;
-  }
+void g1_ecs(g1_t *ANS, g1_t *P, g1_t *Q) {
+  g1_t tmp;
+  g1_neg(&tmp, Q);
+  g1_eca(ANS, P, &tmp);
 }
 
 void g1_set_random_with_basepoint(g1_t *ANS, g1_t *basepoint, gmp_randstate_t state) {
@@ -739,6 +633,11 @@ void g2_neg(g2_t *ANS, g2_t *P) {
   fp2_set_neg(&ANS->y, &P->y);
   ANS->infinity = P->infinity;
 }
+void g2_ecs(g2_t *ANS, g2_t *P, g2_t *Q) {
+  g2_t tmp;
+  g2_neg(&tmp, Q);
+  g2_eca(ANS, P, &tmp);
+}
 void map_to_g2(g2_t *ANS, efp2_t *A) {
   // (χ<0, z = α + 1)
   // It is diffrent output between Scott et al. method and Fuentes et al. method. But both method is map to g2.
@@ -837,7 +736,6 @@ void map_to_g2_montgomery(g2_t *ANS, efp2_t *A) {
 
   efp2_jacobian_to_affine_montgomery(ANS, &ANS_jacobian);
 }
-
 
 void g2_scm(g2_t *ANS, g2_t *Q, fr_t *sca) {
 #if ARCBIT == 64
@@ -1340,7 +1238,6 @@ void g2_set_random_test(int scm) {
   }
   //printf("g2_set_random_schoolbook.     : %.4f[ms]\n", random_time / scm);
   printf("g2_set_random.          : %.4f[ms]\n", random_fast_time / scm);
-
 }
 /*******************g3_t******************************/
 void g3_init(g3_t *A) {
