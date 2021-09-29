@@ -212,7 +212,6 @@ extern void efp_eca_mixture_lazy_montgomery(efp_jacobian_t *ANS, efp_jacobian_t 
 extern void efp_scm(efp_t *ANS, efp_t *P, mpz_t scalar);
 extern void efp_scm_jacobian_lazy_montgomery(efp_jacobian_t *ANS, efp_jacobian_t *P, mpz_t scalar);
 
-
 //skew_frobenius_map
 extern void efp_skew_frobenius_map_p2(efp_t *ANS, efp_t *A);
 extern void efp_skew_frobenius_map_p2_montgomery(efp_t *ANS, efp_t *A);
@@ -222,5 +221,8 @@ extern void efp_ecd_jacobian_lazy_montgomery(efp_jacobian_t *ANS, efp_jacobian_t
 extern void efp_eca_jacobian_lazy_montgomery(efp_jacobian_t *ANS, efp_jacobian_t *P1, efp_jacobian_t *P2);
 extern void efp_eca_mixture_lazy_montgomery_ignore_inf(efp_jacobian_t *ANS, efp_jacobian_t *P1, efp_jacobian_t *P2);
 
-extern void efp_set_random_fast(efp_t *P, gmp_randstate_t state);
+//extern void efp_set_random_fast(efp_t *P, gmp_randstate_t state);
+extern int efp_compute_y_from_x(fp_t *y, fp_t *x);
+extern int efp_compute_y_from_x_montgomery(fp_t *y, fp_t *x);
+extern void efp_set_random_montgomery(efp_t *P, gmp_randstate_t state);
 #endif

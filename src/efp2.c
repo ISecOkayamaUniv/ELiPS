@@ -1114,3 +1114,29 @@ void efp2_skew_frobenius_map_p10(efp2_t *ANS, efp2_t *A) {
   //y
   fp2_mul(&ANS->y, &A->y, &frobenius_constant[f_p10][4]);
 }
+
+int efp2_twist_compute_y_from_x_montgomery(fp2_t *y, fp2_t *x) {
+  fp2_t tmp1;
+  fp2_init(&tmp1);
+  fp2_mul_lazy_montgomery(&tmp1, x, x);
+  fp2_mul_lazy_montgomery(&tmp1, &tmp1, x);
+  fp2_add(&tmp1, &tmp1, &twist_curve_b_montgomery);
+  if (fp2_sqrt_complex_method_montgomery(y, &tmp1) == 1)
+    return 1;
+  else
+    return 0;
+}
+
+void efp2_twist_set_random_montgomery(efp2_t *Q, gmp_randstate_t state) {
+  fp2_t tmp1, tmp2, tmp_x;
+  fp2_init(&tmp1);
+  fp2_init(&tmp2);
+  fp2_init(&tmp_x);
+  fp2_set_random_montgomery(&Q->x, state);
+
+  while (1) {
+    if (efp2_twist_compute_y_from_x_montgomery(&Q->y, &Q->x)) break;
+    fp2_add_mpn(&Q->x, &Q->x, RmodP);
+  }
+  Q->infinity = 0;
+}

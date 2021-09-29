@@ -109,6 +109,12 @@ void fp2_set_random(fp2_t *ANS, gmp_randstate_t state) {
   fp_set_random(&ANS->x0, state);
   fp_set_random(&ANS->x1, state);
 }
+
+void fp2_set_random_montgomery(fp2_t *ANS, gmp_randstate_t state) {
+  fp_set_random_montgomery(&ANS->x0, state);
+  fp_set_random_montgomery(&ANS->x1, state);
+}
+
 void fp2_mul(fp2_t *ANS, fp2_t *A, fp2_t *B) {
   static fp_t tmp1_fp, tmp2_fp, tmp3_fp, tmp4_fp;
 

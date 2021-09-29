@@ -98,6 +98,7 @@ extern void fp2_r1shift(fp2_t *ANS, fp2_t *A);
  */
 extern void fp2_set_random(fp2_t *ANS, gmp_randstate_t state);
 
+extern void fp2_set_random_montgomery(fp2_t *ANS, gmp_randstate_t state);
 /**
  * @brief Multiplication a fp2_t type struct and a fp2_t type struct on prime field
  *
@@ -319,7 +320,6 @@ extern void fp2_sqrt(fp2_t *ANS, fp2_t *A);
 
 extern int fp2_sqrt_complex_method(fp2_t *ANS, fp2_t *A);
 extern int fp2_sqrt_complex_method_montgomery(fp2_t *ANS, fp2_t *A);
-
 
 /**
  * @brief Power A by mpz type struct

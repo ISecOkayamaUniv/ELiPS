@@ -381,43 +381,18 @@ void g1_set(g1_t *ANS, g1_t *A) {
 int g1_cmp(g1_t *ANS, g1_t *A) {
   return efp_cmp(ANS, A);
 }
-
-void g1_set_random(g1_t *ANS, gmp_randstate_t state) {
-#if 0
-  efp12_t P;
-  g1_t P_twisted;
-  //bls12_generate_g1(&P);
-  bls12_generate_g1_fast(&P);
-
-  efp12_to_efp(&P_twisted, &P);
-  efp_to_montgomery(ANS, &P_twisted);
-  ANS->infinity = 0;
-#else
-  efp_t P;
-  efp_init(&P);
-  P.infinity = 0;
-  fp_set_random(&P.x, state);
-  fp_to_montgomery(&P.x, &P.x);
-
-  fp_t tmp1, tmp2, tmp_x;
-  fp_init(&tmp1);
-  fp_init(&tmp2);
-  fp_init(&tmp_x);
-  while (1) {
-    fp_sqrmod_montgomery(&tmp1, &P.x);
-    fp_mulmod_montgomery(&tmp2, &tmp1, &P.x);
-    fp_add(&tmp_x, &tmp2, &curve_b_montgomery);
-    if (fp_legendre_sqrt_montgomery(&P.y, &tmp_x) != -1) {
-      break;
-    }
-    fp_add_mpn(&P.x, &P.x, RmodP);
-  }
-
+void g1_map_from_efp(g1_t *ANS, efp_t *P) {
   efp_jacobian_t P_jacobian;
-  efp_affine_to_jacobian_montgomery(&P_jacobian, &P);
+  efp_affine_to_jacobian_montgomery(&P_jacobian, P);
   efp_scm_jacobian_lazy_montgomery(&P_jacobian, &P_jacobian, to_g1_expo);
   efp_jacobian_to_affine_montgomery(ANS, &P_jacobian);
-#endif
+}
+
+void g1_set_random(g1_t *ANS, gmp_randstate_t state) {
+  efp_t P;
+  efp_init(&P);
+  efp_set_random_montgomery(&P, state);
+  g1_map_from_efp(ANS, &P);
 }
 
 //check function
@@ -575,41 +550,10 @@ int g2_cmp(g2_t *ANS, g2_t *A) {
 }
 
 void g2_set_random(g2_t *ANS, gmp_randstate_t state) {
-#if 0
-  efp12_t Q;
-  g2_t Q_twisted;
-  bls12_generate_g2(&Q);
-  efp12_to_efp2(&Q_twisted, &Q);
-  efp2_to_montgomery(ANS, &Q_twisted);
-  ANS->infinity = 0;
-#else
   efp2_t P;
   efp2_init(&P);
-  P.infinity = 0;
-  fp2_set_random(&P.x, state);
-  fp2_to_montgomery(&P.x, &P.x);
-
-  fp2_t tmp1, tmp2, tmp_x;
-  fp2_init(&tmp1);
-  fp2_init(&tmp2);
-  fp2_init(&tmp_x);
-  while (1) {
-    fp2_sqr_lazy_montgomery(&tmp1, &P.x);
-    fp2_mul_lazy_montgomery(&tmp2, &tmp1, &P.x);
-#ifdef TWIST_PHI
-    fp2_add(&tmp_x, &tmp2, &twist_curve_b_montgomery);
-#endif
-#ifdef TWIST_PHI_INV
-    printf("TODO: peks_hash1_g2(), EP_TYPE2\n");
-#endif
-    if (fp2_sqrt_complex_method_montgomery(&P.y, &tmp_x) == 1) {
-      break;
-    }
-    fp_add_mpn(&P.x.x0, &P.x.x0, RmodP);
-  }
-
-  map_to_g2_montgomery(ANS, &P);
-#endif
+  efp2_twist_set_random_montgomery(&P, state);
+  g2_map_from_efp2(ANS, &P);
 }
 
 //check function
@@ -760,71 +704,8 @@ void g2_ecs(g2_t *ANS, g2_t *P, g2_t *Q) {
   g2_neg(&tmp, Q);
   g2_eca(ANS, P, &tmp);
 }
-void map_to_g2(g2_t *ANS, efp2_t *A) {
-  // (χ<0, z = α + 1)
-  // It is diffrent output between Scott et al. method and Fuentes et al. method. But both method is map to g2.
-  // Fuentes et al. method is faster than the other
 
-#if 0  // Scott et al. method
-  efp2_t A0, A1, A2;
-  efp2_t tmp1, tmp2;
-  efp2_init(&A0);
-  efp2_init(&A1);
-  efp2_init(&A2);
-  efp2_init(&tmp1);
-  efp2_init(&tmp2);
-
-  efp2_set(&A0, A);                      // A0 = A
-  efp2_skew_frobenius_map_p1(&A1, &A0);  // A1 = ψ(A)
-  efp2_skew_frobenius_map_p2(&A2, &A0);  // A2 = ψ^2(A)
-
-  efp2_eca(&tmp1, &A0, &A1);
-  efp2_set_neg(&tmp1, &tmp1);  // tmp1 = -(A + ψ(A))
-  efp2_scm(ANS, &tmp1, X_abs_z);
-
-  efp2_set_neg(&tmp2, &A2);
-  efp2_eca(&tmp2, &tmp1, &tmp2);  // tmp2 = -(A + ψ(A) + ψ^2(A))
-  efp2_eca(ANS, ANS, &tmp2);
-  efp2_scm(ANS, ANS, X_abs_z);
-  efp2_set_neg(ANS, ANS);
-
-  efp2_eca(&tmp2, &tmp1, &A2);  // tmp2 = -(A + ψ(A)) + ψ^2(A)
-  efp2_eca(&tmp1, &tmp2, &A2);  // tmp1 = -(A + ψ(A)) + [2]ψ^2(A)
-  efp2_eca(ANS, ANS, &tmp1);
-  efp2_scm(ANS, ANS, X_abs_z);
-  efp2_set_neg(ANS, ANS);
-
-  efp2_ecd(&tmp1, &A0);
-  efp2_eca(&tmp1, &tmp1, &A0);    // tmp1 = [3](A)
-  efp2_set_neg(&tmp2, &tmp2);     // tmp2 = A + ψ(A) - ψ^2(A)
-  efp2_eca(&tmp2, &tmp2, &tmp1);  // tmp2 = [4]A + ψ(A) - ψ^2(A)
-  efp2_eca(ANS, ANS, &tmp2);
-#else  // Fuentes et al. method
-  efp2_t A0, A1, A2;
-  efp2_init(&A0);
-  efp2_init(&A1);
-  efp2_init(&A2);
-
-  efp2_set_neg(&A0, A);                // A0 = -A
-  efp2_skew_frobenius_map_p1(&A1, A);  // A1 = ψ(A)
-  efp2_ecd(&A2, A);
-  efp2_skew_frobenius_map_p2(&A2, &A2);  // A2 = ψ^2(2A)
-
-  efp2_scm(ANS, &A0, X_abs_z);
-
-  efp2_eca(ANS, ANS, &A0);
-  efp2_eca(ANS, ANS, &A1);
-  efp2_scm(ANS, ANS, X_abs_z);
-  efp2_set_neg(ANS, ANS);
-
-  efp2_set_neg(&A1, &A1);  // A1 = -ψ(A)
-  efp2_eca(ANS, ANS, &A0);
-  efp2_eca(ANS, ANS, &A1);
-  efp2_eca(ANS, ANS, &A2);
-#endif
-  efp2_to_montgomery(ANS, ANS);
-}
-void map_to_g2_montgomery(g2_t *ANS, efp2_t *A) {
+void g2_map_from_efp2(g2_t *ANS, efp2_t *A) {
   // (χ<0, z = α + 1)
   // It is diffrent output between Scott et al. method and Fuentes et al. method. But both method is map to g2.
 
