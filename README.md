@@ -1,10 +1,11 @@
+# ELiPS
 This document describes how to make existing ELiPS library working in Linux environment.
 This is expected that it will work any 64bit Unix distribution Ububtu.
 Autotools installation may vary for Linux.
 Please keep in mind that it is still in developing phase. 
 If found any bug related to installation, please infrom in `daichi_hattori@s.okayama-u.ac.jp`
 
-
+## Build
 1. Follow the instructions to install `GMP` library. Latest vesion is ok.
 2. Check if `autoconf` is installed in your environment. `autoconf --version`. You migh see someting like this . If it is not installed then follow point 3.
     autoconf (GNU Autoconf) 2.69
@@ -53,3 +54,11 @@ If you face `cannot open shared object file: No such file or directory` while ru
 4. Check if again of `echo $LD_LIBRARY_PATH`. If path is set then run again.
 
 Retun to github account https://github.com/ISecOkayamaUniv 
+
+## Example
+`ELiPS/test/example` is example of ELiPS. This can runs following steps.
+It confirms pairing on bls12.
+```
+gcc example.c -lgmp -lelips
+./a.out
+```
